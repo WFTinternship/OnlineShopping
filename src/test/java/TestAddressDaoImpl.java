@@ -124,6 +124,20 @@ public class TestAddressDaoImpl{
         Address address1 = addressDao.getAddressByID(lastInsertedIndex);
         assertNull(address1);
     }
+    @Test(expected = RuntimeException.class)
+    public void insertAddress_duplicate(){
+        Address address1 = getRandomAddress();
+        addressDao.insertAddress(address1);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void updateAddress_dulicate(){
+        Address address1 = getRandomAddress();
+        address1.setAddress("NewAddress");
+        addressDao.insertAddress(address1);
+        address1.setAddress(address.getAddress());
+        addressDao.updateAddress(address1);
+    }
     @Test
     public void deleteAllAddresses(){
         addressDao.deleteAllAddresses();

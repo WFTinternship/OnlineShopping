@@ -58,10 +58,10 @@ public class TestOrderItemDaoImpl {
     @After
     public void tearDown() {
 
-       userDao.deleteAllUsers();
-       categoryDao.deleteAllCategories();
-        productDao.deleteAllProducts();
-       orderItemDao.deleteAllOrderItems();
+      // userDao.deleteAllUsers();
+      // categoryDao.deleteAllCategories();
+      //  productDao.deleteAllProducts();
+      // orderItemDao.deleteAllOrderItems();
     }
 
     @Test

@@ -188,11 +188,12 @@ public class BasketDaoImpl extends GeneralDao implements BasketDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            String sql = "UPDATE baskets SET total_price = ?, user_id=? where basket_id = ?";
+            String sql = "UPDATE baskets SET total_price = ?, user_id=?, basket_status = ? where basket_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setDouble(1, basket.getTotalPrice());
             preparedStatement.setInt(2, basket.getUserID());
-            preparedStatement.setInt(3, basket.getBasketID());
+            preparedStatement.setString(3, basket.getBasketStatus());
+            preparedStatement.setInt(4, basket.getBasketID());
 
             preparedStatement.executeUpdate();
 

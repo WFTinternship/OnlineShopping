@@ -32,7 +32,8 @@ public class TestCategoryDaoImpl  {
 
     @After
     public void tearDown() {
-        categoryDao.deleteAllCategories();
+
+        //categoryDao.deleteAllCategories();
     }
 
     @Test
@@ -47,6 +48,20 @@ public class TestCategoryDaoImpl  {
 
         doAssertion(category2, category1);
 
+    }
+    @Test(expected = RuntimeException.class)
+    public void insertCategory_duplicate(){
+        Category category1 = getRandomCategory();
+        categoryDao.insertCategory(category1);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void updateCategory_dulicate(){
+        Category category1 = getRandomCategory();
+        category1.setName("NewName");
+        categoryDao.insertCategory(category1);
+        category1.setName(category.getName());
+        categoryDao.updateCategory(category1);
     }
 
     @Test
@@ -83,24 +98,19 @@ public class TestCategoryDaoImpl  {
 
             categoryDao.deleteAllCategories();
 
-            List<Category> categories = new ArrayList<>();
 
+        List<Category> categories = new ArrayList<>();
 
-            Category category = getRandomCategory();
-            category.setName("NewName2");
-            categoryDao.insertCategory(category);
-            categories.add(category);
+        Category category = getRandomCategory();
+        Category category1 = getRandomCategory();
+        category1.setName("NewName");
+        categoryDao.insertCategory(category);
+        categoryDao.insertCategory(category1);
+        categories = categoryDao.getAllCategories();
 
-            Category category1 = getRandomCategory();
-            category1.setName("newCategory1");
-            categoryDao.insertCategory(category1);
-            categories.add(category1);
+        doAssertion(category, categories.get(1));
+        doAssertion(category1, categories.get(0));
 
-            List<Category>categories1 = categoryDao.getAllCategories();
-
-            for (int i = 0; i < categories1.size(); i++) {
-                doAssertion(categories.get(i), categories1.get(i));
-            }
     }
     @Test
     public void deleteCategoryByID() {

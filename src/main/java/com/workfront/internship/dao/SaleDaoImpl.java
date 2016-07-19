@@ -91,20 +91,14 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         Basket basket = null;
         BasketDao basketDao = new BasketDaoImpl(dataSource);
         while (resultSet.next()) {
-            int saleId = resultSet.getInt("sale_id");
-            int userId = resultSet.getInt("user_id");
-            java.util.Date date = resultSet.getTimestamp("date_of_purchuase");
-            int cardId = resultSet.getInt("card_id");
-            int addressId = resultSet.getInt("address_id");
-            int basketId = resultSet.getInt("basket_id");
-            basket = basketDao.getBasket(basketId);
+            basket = basketDao.getBasket(resultSet.getInt("basket_id"));
             sale = new Sale();
-            sale = sale.setSaleID(saleId).
-                    setAddressID(addressId).
+            sale = sale.setSaleID(resultSet.getInt("sale_id")).
+                    setAddressID(resultSet.getInt("address_id")).
                     setBasket(basket).
-                    setCreditCard(cardId).
-                    setDate(date).
-                    setUserID(userId);
+                    setCreditCard(resultSet.getInt("card_id")).
+                    setDate(resultSet.getTimestamp("date_of_purchuase")).
+                    setUserID(resultSet.getInt("user_id"));
             sales.add(sale);
         }
         return sales;
@@ -165,16 +159,22 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
             connection = dataSource.getConnection();
             connection.setAutoCommit(false);
             BasketDao basketDao = new BasketDaoImpl(dataSource);
+            CreditCardDao creditCardDao = new CreditCardDaoImpl(dataSource);
             basket.setUserID(sale.getUserID()).setTotalPrice(0.0).setBasketStatus("current");
 
             basketDao.insertBasket(connection, basket);
 
             basketDao.updateBasket(connection, sale.getBasket());
 
+            CreditCard creditCard = creditCardDao.getCreditCardByCardID(sale.getCreditCardID());
+            creditCard.setBalance(creditCard.getBalance() - sale.getBasket().getTotalPrice());
+            creditCardDao.updateCreditCard(creditCard);
+
+
             String sql = "INSERT into sales(user_id, card_id, address_id, basket_id) VALUES (?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, sale.getUserID());
-            preparedStatement.setTimestamp(2, new Timestamp(sale.getDate().getTime()));
+//            preparedStatement.setTimestamp(2, new Timestamp(sale.getDate().getTime()));
             preparedStatement.setInt(2, sale.getCreditCardID());
             preparedStatement.setInt(3, sale.getAddressID());
             preparedStatement.setInt(4, sale.getBasket().getBasketID());
