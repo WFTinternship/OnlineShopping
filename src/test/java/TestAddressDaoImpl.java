@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
@@ -66,6 +67,7 @@ public class TestAddressDaoImpl{
         Address address1 = getRandomAddress();
         int insertindex = addressDao.insertAddress(address1);
 
+
         Address address2 = addressDao.getAddressByID(insertindex);
 
         doAssertion(address2, address1);
@@ -92,7 +94,7 @@ public class TestAddressDaoImpl{
         addresses.add(address);
 
         Address address1 = getRandomAddress();
-        address1.setAddress("newShippingAddress1");
+
         addressDao.insertAddress(address1);
         addresses.add(address1);
 
@@ -127,6 +129,7 @@ public class TestAddressDaoImpl{
     @Test(expected = RuntimeException.class)
     public void insertAddress_duplicate(){
         Address address1 = getRandomAddress();
+        address1.setAddress(address.getAddress());
         addressDao.insertAddress(address1);
     }
 
@@ -171,8 +174,10 @@ public class TestAddressDaoImpl{
     }
 
     private Address getRandomAddress() {
+        Random random = new Random();
+        int x = random.nextInt(10000);
         Address address = new Address();
-        address.setUserID(user.getUserID()).setAddress("randomAddress");
+        address.setUserID(user.getUserID()).setAddress("randomAddress" + x);
         return address;
     }
     private User getRandomUser() {

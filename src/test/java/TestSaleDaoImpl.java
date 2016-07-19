@@ -162,8 +162,10 @@ public class TestSaleDaoImpl {
         return basket;
     }
     private User getRandomUser() {
+        Random random = new Random();
+        int x = random.nextInt(100000);
         User user = new User();
-        user.setFirstname("Anahit").setLastname("galstyan").setUsername("anigal").setPassword("anahitgal85").setEmail("galstyan@gmailgom").setConfirmationStatus(true).setAccessPrivilege("user");
+        user.setFirstname("Anahit").setLastname("galstyan").setUsername("anigal" + x).setPassword("anahitgal85").setEmail("galstyan" + x + "@gmailgom").setConfirmationStatus(true).setAccessPrivilege("user");
         return user;
     }
 
@@ -192,8 +194,10 @@ public class TestSaleDaoImpl {
         return creditCard;
     }
     private Address getRandomAddress() {
+        Random ran = new Random();
+        int x = ran.nextInt(1000) + 10;
         Address address = new Address();
-        address.setAddress("randomAddress");
+        address.setAddress("randomAddress" + x);
         return address;
     }
     private void doAssertion(Sale sale, Sale sale1){

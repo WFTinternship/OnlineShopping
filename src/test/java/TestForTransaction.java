@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TestForTransaction {
 
-    public static void main(String[] args) throws IOException, SQLException {
+  /*  public static void main(String[] args) throws IOException, SQLException {
         DataSource dataSource = DataSource.getInstance();
         OrderItemDao orderItemDao = new OrderItemDaoImpl(dataSource);
         OrderItem orderItem = new OrderItem();
@@ -27,5 +27,5 @@ public class TestForTransaction {
 
 
 
-    }
+    }*/
 }

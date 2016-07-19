@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -81,10 +82,10 @@ public class TestOrderItemDaoImpl {
 
     @Test
     public void insertOrderItem() {
-        product.setName("newProductName");
-        productDao.insertProduct(product);
+        Product product1 = getRandomProduct();
+        productDao.insertProduct(product1);
         OrderItem orderItem1 = getRandomOrderItem();
-        orderItem1.setProduct(product);
+        orderItem1.setProduct(product1);
 
         int insertindex = orderItemDao.insertOrderItem(orderItem1);
 
@@ -179,8 +180,10 @@ public class TestOrderItemDaoImpl {
         return basket;
     }
     private User getRandomUser() {
+        Random random = new Random();
+        int x = random.nextInt(100000);
         User user = new User();
-        user.setFirstname("Anahit").setLastname("galstyan").setUsername("anigal").setPassword("anahitgal85").setEmail("galstyan@gmailgom").setConfirmationStatus(true).setAccessPrivilege("user");
+        user.setFirstname("Anahit").setLastname("galstyan").setUsername("anigal" + x).setPassword("anahitgal85").setEmail("galstyan@gmailgom" + x + "@gmailgom").setConfirmationStatus(true).setAccessPrivilege("user");
         return user;
     }
     private OrderItem getRandomOrderItem() {
@@ -190,14 +193,18 @@ public class TestOrderItemDaoImpl {
     }
 
     private Category getRandomCategory(){
+        Random random = new Random();
+        int x = random.nextInt(100000);
         category = new Category();
-        category.setName("hat");
+        category.setName("hat" +x);
         return category;
     }
 
     private Product getRandomProduct(){
+        Random random = new Random();
+        int x = random.nextInt(100000);
         product = new Product();
-        product.setName("baby hat").setPrice(50).setDescription("color:white").setShippingPrice(1).setQuantity(50).setCategory(category);
+        product.setName("baby hat" + x).setPrice(50).setDescription("color:white").setShippingPrice(1).setQuantity(50).setCategory(category);
         return product;
     }
     private void doAssertion(OrderItem orderItem, OrderItem orderItem1){

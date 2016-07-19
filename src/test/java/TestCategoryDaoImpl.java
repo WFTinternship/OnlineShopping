@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -40,9 +41,9 @@ public class TestCategoryDaoImpl  {
     public void insertCategory() {
 
         Category category1 = getRandomCategory();
-        category1.setName("NewName");
+
         int insertindex = categoryDao.insertCategory(category1);
-        category1.setCategoryID(insertindex);
+
 
         Category category2 = categoryDao.getCategoryByID(insertindex);
 
@@ -52,13 +53,14 @@ public class TestCategoryDaoImpl  {
     @Test(expected = RuntimeException.class)
     public void insertCategory_duplicate(){
         Category category1 = getRandomCategory();
+        category1.setName(category.getName());
         categoryDao.insertCategory(category1);
     }
 
     @Test(expected = RuntimeException.class)
     public void updateCategory_dulicate(){
         Category category1 = getRandomCategory();
-        category1.setName("NewName");
+
         categoryDao.insertCategory(category1);
         category1.setName(category.getName());
         categoryDao.updateCategory(category1);
@@ -121,8 +123,10 @@ public class TestCategoryDaoImpl  {
     }
 
     private Category getRandomCategory() {
+        Random random = new Random();
+        int x = random.nextInt(100000);
         Category category = new Category();
-        category.setName("oldCategory");
+        category.setName("oldCategory" + x);
         return category;
     }
     private void doAssertion(Category category, Category category1){
