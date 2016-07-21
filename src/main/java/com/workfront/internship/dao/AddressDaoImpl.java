@@ -144,11 +144,31 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
     public int insertAddress(Address address) {
         int lastId = 0;
         Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            lastId = insesrtAddress(connection, address);
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                LOGGER.error("SQL exception occurred!");
+                throw new RuntimeException(e);
+            }
+        }
+        return  lastId;
+    }
+    @Override
+    public int insesrtAddress(Connection connection, Address address){
+        int lastId = 0;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            connection = dataSource.getConnection();
-
             String sql = "INSERT into addresses(shipping_address, user_id) VALUES (?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, address.getAddress());

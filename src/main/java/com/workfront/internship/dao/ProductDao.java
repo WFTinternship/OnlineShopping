@@ -18,5 +18,6 @@ public interface ProductDao {
      void updateProduct(Connection connection, Product product);
      void deleteAllProducts();
      List<Product> getAllProducts();
+     List<Product> getProdactsByCategoryID(int id);
 
 }

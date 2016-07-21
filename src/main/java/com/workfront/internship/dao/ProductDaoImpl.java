@@ -259,6 +259,28 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         }
         return products;
     }
+    public List<Product> getProdactsByCategoryID(int id){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Product> products = new ArrayList<>();
+        try {
+            connection = dataSource.getConnection();
+            String sql = "SELECT * FROM products where category_id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+            products = createProductList(resultSet);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return products;
+
+    }
 
     private List<Product> createProductList(ResultSet resultSet) throws SQLException, IOException {
         List<Product> products = new ArrayList<>();

@@ -2,6 +2,7 @@ package com.workfront.internship.dao;
 
 import com.workfront.internship.common.Address;
 
+import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -12,6 +13,7 @@ public interface AddressDao {
     void deleteAddressesByUserID(int userId);
     void deleteAddressesByAddressID(int addressId);
     int insertAddress(Address address);
+    int insesrtAddress(Connection connection, Address address);
     void updateAddress(Address address);
     Address getAddressByID(int id);
     void deleteAllAddresses();

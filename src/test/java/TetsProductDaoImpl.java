@@ -104,10 +104,10 @@ public class TetsProductDaoImpl{
 
         Product product1 = getRandomProduct();
         product1.setName("newName");
-        System.out.println("product1Name   "  +  product1.getName());
+
         productDao.insertProduct(product1);
         product1.setName(product.getName());
-        System.out.println("product1Name   "  +  product1.getName());
+
         productDao.updateProduct(product1);
 
     }
@@ -138,6 +138,29 @@ public class TetsProductDaoImpl{
         products.add(product1);
 
         List<Product> products1 = productDao.getAllProducts();
+
+        for (int i = 0; i < products1.size(); i++) {
+            doAssertion(products.get(i), products1.get(i));
+        }
+    }
+    @Test
+    public void getProductsByCategoryID(){
+
+        productDao.deleteAllProducts();
+
+        List<Product> products = new ArrayList<>();
+
+
+        Product product = getRandomProduct();
+        productDao.insertProduct(product);
+        products.add(product);
+
+        Product product1 = getRandomProduct();
+        product1.setName("newProductName");
+        productDao.insertProduct(product1);
+        products.add(product1);
+
+        List<Product> products1 = productDao.getProdactsByCategoryID(category.getCategoryID());
 
         for (int i = 0; i < products1.size(); i++) {
             doAssertion(products.get(i), products1.get(i));
