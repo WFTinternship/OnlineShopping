@@ -7,4 +7,5 @@ import com.workfront.internship.common.User;
  */
 public interface UserManager {
     int registration(User user);
+    User login(String username);
 }

@@ -1,7 +1,6 @@
 package com.workfront.internship.business;
 
-import com.workfront.internship.common.Address;
-import com.workfront.internship.common.User;
+import com.workfront.internship.common.*;
 
 import com.workfront.internship.dao.*;
 import org.apache.log4j.Logger;
@@ -20,26 +19,32 @@ public class UserManagerImlp {
         userDao = new UserDaoImpl(dataSource);
 
     }
-
+//TODO address hashing
     public int registration(User user)  {
         int index = 0;
+        if(!user.getShippingAddresses().isEmpty())
+            index = userDao.insertUserWithShippingAddresses(user);
+        else
         index = userDao.insertUser(user);
-        try {
-            BasketDao basketDao = new BasketDaoImpl(dataSource);
-            AddressDao addressDao = new AddressDaoImpl(dataSource);
-            basketDao.insertBasket(user.getBasket());
-            List<Address> addresses = user.getShippingAddresses();
-            if(!addresses.isEmpty())
-                for(int i = 0; i<addresses.size(); i++)
-                    addressDao.insertAddress(addresses.get(i));
 
-        } catch (IOException |SQLException e) {
-            e.printStackTrace();
-            e.printStackTrace();
-            LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException(e);
-        }
+        return index;
+    }
 
-     return index;
+    public User login(String username) throws IOException, SQLException {
+        AddressDao addressDao = new AddressDaoImpl(dataSource);
+        BasketDao basketDao = new BasketDaoImpl(dataSource);
+        SaleDao saleDao = new SaleDaoImpl(dataSource);
+
+        User user = userDao.getUserByUsername(username);
+        int userID = user.getUserID();
+
+        List<Address> addresses = addressDao.getShippingAddressByUserID(userID);
+        Basket basket = basketDao.getCurrentBasket(userID);
+        List<Product> wishlist = userDao.getWishlist(userID);
+        List<Sale> sales = saleDao.getSales(userID);
+
+        user.setBasket(basket).setWishList(wishlist).setShippingAddresses(addresses).setSales(sales);
+
+        return user;
     }
 }

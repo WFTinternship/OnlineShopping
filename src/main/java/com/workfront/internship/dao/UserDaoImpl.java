@@ -77,7 +77,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-
+            connection.setAutoCommit(false);
             addressDao = new AddressDaoImpl(dataSource);
             for(int i = 0; i< user.getShippingAddresses().size(); i++)
             addressDao.insesrtAddress(connection, user.getShippingAddresses().get(i));
@@ -97,6 +97,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             preparedStatement.setBoolean(7, user.getConfirmationStatus());
             preparedStatement.setString(8, user.getAccessPrivilege());
             preparedStatement.executeUpdate();
+            connection.commit();
             resultSet = preparedStatement.getGeneratedKeys();
 
             while (resultSet.next()) {
@@ -106,6 +107,11 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
             LOGGER.error("SQL exception occurred!");
             throw new RuntimeException(e);
         } finally {
