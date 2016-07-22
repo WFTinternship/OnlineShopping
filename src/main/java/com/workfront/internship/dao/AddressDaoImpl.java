@@ -121,14 +121,30 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
     @Override
     public void deleteAddressesByAddressID(int addressId) {
         Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            deleteAddressesByAddressID(connection, addressId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    @Override
+    public void  deleteAddressesByAddressID(Connection connection, int id){
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            connection = dataSource.getConnection();
 
             String sql = "DELETE from addresses where address_id = ?";
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, addressId);
+            preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -146,7 +162,7 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
         Connection connection = null;
         try {
             connection = dataSource.getConnection();
-            lastId = insesrtAddress(connection, address);
+            lastId = insertAddress(connection, address);
 
         } catch (SQLException e) {
 
@@ -164,7 +180,7 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
         return  lastId;
     }
     @Override
-    public int insesrtAddress(Connection connection, Address address){
+    public int insertAddress(Connection connection, Address address){
         int lastId = 0;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -182,7 +198,6 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
 
 
         } catch (SQLException e) {
-
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
             throw new RuntimeException(e);

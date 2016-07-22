@@ -12,8 +12,9 @@ public interface AddressDao {
     List<Address> getShippingAddressByUserID(int ID);
     void deleteAddressesByUserID(int userId);
     void deleteAddressesByAddressID(int addressId);
+    void deleteAddressesByAddressID(Connection connection, int addressId);
     int insertAddress(Address address);
-    int insesrtAddress(Connection connection, Address address);
+    int insertAddress(Connection connection, Address address);
     void updateAddress(Address address);
     Address getAddressByID(int id);
     void deleteAllAddresses();

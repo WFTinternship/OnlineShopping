@@ -1,6 +1,7 @@
 package com.workfront.internship.dao;
 
 import com.workfront.internship.common.Basket;
+import com.workfront.internship.common.Product;
 
 import java.sql.Connection;
 import java.util.List;
@@ -17,6 +18,8 @@ public interface BasketDao {
     void updateBasket(Connection connection, Basket basket);
     void deleteBasketByBasketID(int basketid);
     void deleteBasketByUserId(int userid);
+  //  int insertProductIntoBasket(Basket basket, Product product);
+  //  void deleteProductFromBasket(Basket basket, Product product);
     void deleteAllBaskets();
     List<Basket> getAllBaskets();
 

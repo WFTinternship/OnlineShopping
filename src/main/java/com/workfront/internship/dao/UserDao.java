@@ -1,6 +1,7 @@
 package com.workfront.internship.dao;
 import com.workfront.internship.common.*;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 
@@ -16,6 +17,7 @@ public interface UserDao {
     void deleteUser(int userid);
     List<Product> getWishlist(int userid);
     void deleteWishlistByUserID(int userid);
+    void deleteFromWishlistByUserIDAndProductID(int userid, int productid);
     void insertIntoWishlist(int userID, int productID);
     void deleteAllUsers();
     List<User> getAllUsers();

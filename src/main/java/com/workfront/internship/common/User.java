@@ -29,11 +29,11 @@ public class User {
         return this;
     }
 
-    public List<Sale> getSales() {
+    public List<Sale> getRecords() {
         return sales;
     }
 
-    public User setSales(List<Sale> sales) {
+    public User setRecords(List<Sale> sales) {
         this.sales = sales;
         return this;
     }

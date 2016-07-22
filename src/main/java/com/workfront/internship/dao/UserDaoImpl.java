@@ -1,14 +1,12 @@
 package com.workfront.internship.dao;
 
+import com.workfront.internship.common.Address;
 import com.workfront.internship.common.Product;
 import com.workfront.internship.common.User;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         this.dataSource = dataSource;
     }
     @Override
-    public int insertUser(User user) {
+    public int insertUser(User user){
         int lastId = 0;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -53,7 +51,11 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
                 user.setUserID(lastId);
             }
 
-        } catch (SQLException  | IOException e) {
+        }catch(SQLIntegrityConstraintViolationException e){
+                e.printStackTrace();
+            LOGGER.error("Duplicate entry!");
+            throw new RuntimeException(e);
+        }catch (SQLException  | IOException e) {
                 e.printStackTrace();
             try {
                 connection.rollback();
@@ -80,7 +82,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             connection.setAutoCommit(false);
             addressDao = new AddressDaoImpl(dataSource);
             for(int i = 0; i< user.getShippingAddresses().size(); i++)
-            addressDao.insesrtAddress(connection, user.getShippingAddresses().get(i));
+            addressDao.insertAddress(connection, user.getShippingAddresses().get(i));
 
             basketDao = new BasketDaoImpl(dataSource);
             basketDao.insertBasket(connection, user.getBasket());
@@ -107,14 +109,15 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
+            LOGGER.error("SQL exception occured!");
             try {
                 connection.rollback();
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
-            LOGGER.error("SQL exception occurred!");
+            LOGGER.error("could not rollback");
             throw new RuntimeException(e);
-        } finally {
+        }finally {
             close(resultSet, preparedStatement, connection);
         }
         return lastId;
@@ -188,12 +191,24 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(User user){
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
+            connection.setAutoCommit(false);
+
+            AddressDao addressDao = new AddressDaoImpl(dataSource);
+            List<Address> oldAddresses = addressDao.getShippingAddressByUserID(user.getUserID());
+            List<Address> newAddresses = user.getShippingAddresses();
+            for(int i = 0; i < newAddresses.size(); i ++)
+                if(!oldAddresses.contains(newAddresses.get(i)))
+                    addressDao.insertAddress(connection, newAddresses.get(i));
+            for(int i = 0; i < oldAddresses.size(); i ++)
+                if(!newAddresses.contains(oldAddresses.get(i)))
+                    addressDao.deleteAddressesByAddressID(connection, oldAddresses.get(i).getAddressID());
+
             String sql = "UPDATE users SET firstname = ?, lastname = ?, username = ?, password = ?, phone = ?, email = ?," +
                     "confirmation_status = ?, access_privilege = ? where user_id = ?";
             preparedStatement = connection.prepareStatement(sql);
@@ -206,13 +221,24 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             preparedStatement.setBoolean(7, user.getConfirmationStatus());
             preparedStatement.setString(8, user.getAccessPrivilege());
             preparedStatement.setInt(9, user.getUserID());
-
             preparedStatement.executeUpdate();
+            connection.commit();
 
 
-        } catch (SQLException e) {
+
+        }catch(SQLIntegrityConstraintViolationException e){
+            e.printStackTrace();
+            LOGGER.error("Duplicate entry!");
+            throw new RuntimeException(e);
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                LOGGER.error("SQL exception occurred!");
+            }
             throw new RuntimeException(e);
         } finally {
             close(resultSet, preparedStatement, connection);
@@ -282,6 +308,30 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             close(resultSet, preparedStatement, connection);
         }
     }
+    @Override
+    public void deleteFromWishlistByUserIDAndProductID(int userID, int productID){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+
+            String sql = "DELETE from wishlist where user_id = ? and product_id =?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, userID);
+            preparedStatement.setInt(2, productID);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        }  finally {
+            close(resultSet, preparedStatement, connection);
+        }
+    }
+
     @Override
     public void insertIntoWishlist(int userId, int productId){
         Connection connection = null;

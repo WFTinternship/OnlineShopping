@@ -12,6 +12,7 @@ public interface OrderItemDao {
     List<OrderItem> getOrderItemByBasketID(int basketid);
     OrderItem getOrderItemByItemID(int id);
     void deleteOrderItemByItemID(int itemid);
+    OrderItem getOrderItemByProductID(int id);
     void deleteOrderItemByProductID(int productid);
     void updateOrderItem(OrderItem orderItem);
     int insertOrderItem(OrderItem orderItem);

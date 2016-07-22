@@ -11,10 +11,7 @@ import org.junit.Test;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,8 +84,8 @@ public class TestUserDaoImpl{
         assertEquals(true, whishlist.isEmpty());
 
     }
-    @Test(expected = RuntimeException.class)
-    public void insert_user_duplicate(){
+    @Test(expected = SQLIntegrityConstraintViolationException.class)
+    public void insert_user_duplicate() throws SQLIntegrityConstraintViolationException{
         userDao.insertUser(user);
 
     }

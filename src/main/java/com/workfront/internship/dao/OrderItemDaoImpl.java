@@ -76,7 +76,31 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         return orderItem;
 
     }
+    @Override
+    public OrderItem getOrderItemByProductID(int productid) {
+        OrderItem orderItem = null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            orderItem = new OrderItem();
+            String sql = "SELECT * from orderitems where oproduct_id =?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, productid);
+            resultSet = preparedStatement.executeQuery();
+            orderItem = createOrderItem(resultSet);
 
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return orderItem;
+
+    }
     private List<OrderItem> createListOfOrderItems(ResultSet resultSet) throws SQLException, IOException {
         Product product = null;
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
