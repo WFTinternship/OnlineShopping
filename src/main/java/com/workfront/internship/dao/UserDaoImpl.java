@@ -346,7 +346,11 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             preparedStatement.setInt(2, productId);
             preparedStatement.executeUpdate();
 
-        }  catch (SQLException e) {
+        }catch(SQLIntegrityConstraintViolationException e){
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        }catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
             throw new RuntimeException(e);
@@ -388,20 +392,23 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         User user = null;
         while (resultSet.next()) {
 
-            int uid = resultSet.getInt("user_id");
-            String fname = resultSet.getString("firstname");
-            String lname = resultSet.getString("lastname");
-            String uname = resultSet.getString("username");
-            String pass = resultSet.getString("password");
-            String phone = resultSet.getString("phone");
-            String email = resultSet.getString("email");
-            boolean status = resultSet.getBoolean("confirmation_status");
-            String access = resultSet.getString("access_privilege");
             BasketDao basketDao = new BasketDaoImpl(dataSource);
             SaleDao saleDao = new SaleDaoImpl(dataSource);
             AddressDao addressDao = new AddressDaoImpl(dataSource);
             user = new User();
-            user.setUserID(uid).setFirstname(fname).setLastname(lname).setUsername(uname).setPassword(pass).setPhone(phone).setEmail(email).setBasket(basketDao.getCurrentBasket(uid)).setWishList(getWishlist(uid)).setSales(saleDao.getSales(uid)).setShippingAddresses(addressDao.getShippingAddressByUserID(uid)).setConfirmationStatus(status).setAccessPrivilege(access);
+            user.setUserID(resultSet.getInt("user_id")).
+                    setFirstname(resultSet.getString("firstname")).
+                    setLastname(resultSet.getString("lastname")).
+                    setUsername(resultSet.getString("username")).
+                    setPassword(resultSet.getString("password")).
+                    setPhone(resultSet.getString("phone")).
+                    setEmail(resultSet.getString("email")).
+                    setBasket(basketDao.getCurrentBasket(resultSet.getInt("user_id"))).
+                    setWishList(getWishlist(resultSet.getInt("user_id"))).
+                    setRecords(saleDao.getSales(resultSet.getInt("user_id"))).
+                    setShippingAddresses(addressDao.getShippingAddressByUserID(resultSet.getInt("user_id"))).
+                    setConfirmationStatus(resultSet.getBoolean("confirmation_status")).
+                    setAccessPrivilege(resultSet.getString("access_privilege"));
         }
         return user;
     }
@@ -427,7 +434,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         while (resultSet.next()) {
             user = new User();
             userId = resultSet.getInt("user_id");
-            user.setUserID(userId).setFirstname(resultSet.getString("firstname")).setLastname(resultSet.getString("lastname")).setUsername(resultSet.getString("username")).setPassword(resultSet.getString("password")).setPhone(resultSet.getString("phone")).setEmail(resultSet.getString("email")).setBasket(basketDao.getCurrentBasket(userId)).setShippingAddresses(addressDao.getShippingAddressByUserID(userId)).setSales(saleDao.getSales(userId)).setAccessPrivilege(resultSet.getString("access_privilege")).setConfirmationStatus(resultSet.getBoolean("confirmation_status"));
+            user.setUserID(userId).setFirstname(resultSet.getString("firstname")).setLastname(resultSet.getString("lastname")).setUsername(resultSet.getString("username")).setPassword(resultSet.getString("password")).setPhone(resultSet.getString("phone")).setEmail(resultSet.getString("email")).setBasket(basketDao.getCurrentBasket(userId)).setShippingAddresses(addressDao.getShippingAddressByUserID(userId)).setRecords(saleDao.getSales(userId)).setAccessPrivilege(resultSet.getString("access_privilege")).setConfirmationStatus(resultSet.getBoolean("confirmation_status"));
             users.add(user);
 
         }

@@ -101,6 +101,31 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         return orderItem;
 
     }
+    @Override
+    public OrderItem getOrderItemByProductAndBasketID(int productid, int basketId) {
+        OrderItem orderItem = null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            orderItem = new OrderItem();
+            String sql = "SELECT * from orderitems where oproduct_id =? and basket_id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, productid);
+            preparedStatement.setInt(2, basketId);
+            resultSet = preparedStatement.executeQuery();
+            orderItem = createOrderItem(resultSet);
+
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return orderItem;
+    }
     private List<OrderItem> createListOfOrderItems(ResultSet resultSet) throws SQLException, IOException {
         Product product = null;
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
@@ -145,6 +170,28 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
             String sql = "DELETE from orderitems where orderitem_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, itemid);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+    }
+    @Override
+    public void deleteOrderItemByProducttIDAndByBasketID(int productId, int basketId){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+
+            String sql = "DELETE from orderitems where product_id = ? and basket_id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, productId);
+            preparedStatement.setInt(2, basketId);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -214,14 +261,14 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         int lastId = 0;
 
         try {
-            connection = DataSource.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            connection = dataSource.getConnection();
+          //  connection.setAutoCommit(false);
 
-            Product product = orderItem.getProduct();
-            product.setQuantity(product.getQuantity() - orderItem.getQuantity());
+          //  Product product = orderItem.getProduct();
+          //  product.setQuantity(product.getQuantity() - orderItem.getQuantity());
 
-            ProductDao productDao = new ProductDaoImpl(dataSource);
-            productDao.updateProduct(connection, product);
+          //  ProductDao productDao = new ProductDaoImpl(dataSource);
+          //  productDao.updateProduct(connection, product);
 
             String sql = "INSERT into orderitems(basket_id, product_id, quantity) VALUES (?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
@@ -229,24 +276,24 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
             preparedStatement.setInt(2, orderItem.getProduct().getProductID());
             preparedStatement.setInt(3, orderItem.getQuantity());
             preparedStatement.executeUpdate();
-            connection.commit();
+          //  connection.commit();
             ResultSet resultSet1 = preparedStatement.getGeneratedKeys();
             while (resultSet1.next()) {
                 lastId = resultSet1.getInt(1);
                 orderItem.setOrderItemID(lastId);
             }
 
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
 
-            try {
+          /*  try {
                 connection.rollback();
             } catch (SQLException e1) {
                 e.printStackTrace();
                 LOGGER.error("SQL exception occurred!");
 
-            }
+            }*/
             throw new RuntimeException(e);
         } finally {
             close(resultSet, preparedStatement, connection);

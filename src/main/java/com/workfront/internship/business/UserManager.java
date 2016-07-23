@@ -15,8 +15,13 @@ public interface UserManager {
     User login(String username, String password);
     void editProfile(User user);
     void deleteAccount(User user);
-    List<Product> getWishlist(int id);
-    Basket getBasket(int id)throws IOException, SQLException;
-    List<Address> getListOfShippingAddresses(int id)throws IOException, SQLException;
-    List<Sale> getRecords(int id)throws IOException, SQLException;
+    List<Product> getWishlist(User user);
+    Basket getBasket(User user)throws IOException, SQLException;
+    List<Address> getListOfShippingAddresses(User user)throws IOException, SQLException;
+    List<Sale> getRecords(User user)throws IOException, SQLException;
+    void addToCart(User user, Product product, int quantity) throws IOException, SQLException;
+    void deleteFromCart(User user, OrderItem orderItem)throws IOException, SQLException;
+    void updateCart(User user, OrderItem orderItem, int quantity)throws IOException, SQLException;
+    void addToList(User user, Product product);
+    void deleteFromList(User user, Product product);
 }

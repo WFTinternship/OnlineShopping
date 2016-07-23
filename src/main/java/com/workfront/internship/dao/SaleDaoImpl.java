@@ -1,5 +1,6 @@
 package com.workfront.internship.dao;
 
+import com.mysql.cj.mysqlx.protobuf.MysqlxCrud;
 import com.workfront.internship.common.*;
 import org.apache.log4j.Logger;
 
@@ -152,19 +153,29 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-
+        Product product = new Product();
         Basket basket = new Basket();
         int lastId = 0;
         try {
             connection = dataSource.getConnection();
             connection.setAutoCommit(false);
             BasketDao basketDao = new BasketDaoImpl(dataSource);
+            OrderItemDao orderItemDao = new OrderItemDaoImpl(dataSource);
+            ProductDao productDao = new ProductDaoImpl(dataSource);
             CreditCardDao creditCardDao = new CreditCardDaoImpl(dataSource);
             basket.setUserID(sale.getUserID()).setTotalPrice(0.0).setBasketStatus("current");
 
             basketDao.insertBasket(connection, basket);
 
             basketDao.updateBasket(connection, sale.getBasket());
+
+            List<OrderItem> orderItems = orderItemDao.getOrderItemByBasketID(sale.getBasket().getBasketID());
+            for(int i = 0; i<orderItems.size(); i++) {
+
+                product = orderItems.get(i).getProduct();
+                product.setQuantity(product.getQuantity() - orderItems.get(i).getQuantity());
+                productDao.updateProduct(connection, product);
+            }
 
             CreditCard creditCard = creditCardDao.getCreditCardByCardID(sale.getCreditCardID());
             creditCard.setBalance(creditCard.getBalance() - sale.getBasket().getTotalPrice());
