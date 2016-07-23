@@ -14,7 +14,6 @@ public interface OrderItemDao {
     void deleteOrderItemByItemID(int itemid);
     OrderItem getOrderItemByProductID(int id);
     void deleteOrderItemByProductID(int productid);
-    void deleteOrderItemByProducttIDAndByBasketID(int productId, int basketId);
     OrderItem getOrderItemByProductAndBasketID(int productId, int basketId);
     void updateOrderItem(OrderItem orderItem);
     int insertOrderItem(OrderItem orderItem);

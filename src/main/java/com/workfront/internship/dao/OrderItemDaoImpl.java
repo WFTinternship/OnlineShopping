@@ -180,7 +180,7 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
             close(resultSet, preparedStatement, connection);
         }
     }
-    @Override
+/*    @Override
     public void deleteOrderItemByProducttIDAndByBasketID(int productId, int basketId){
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -201,7 +201,7 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         } finally {
             close(resultSet, preparedStatement, connection);
         }
-    }
+    }*/
 
     @Override
     public void deleteOrderItemByProductID(int productid) {

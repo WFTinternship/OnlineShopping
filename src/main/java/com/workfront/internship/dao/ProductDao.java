@@ -2,6 +2,7 @@ package com.workfront.internship.dao;
 
 import com.workfront.internship.common.Product;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
 
@@ -12,6 +13,7 @@ public interface ProductDao {
 
      Product getProductByID(int productId);
      int insertProduct(Product product);
+     int insertProductWithMedias(Product product);
      void updateProduct(Product product);
      void deleteProductByID(int id);
      void deleteProductByName(String name);

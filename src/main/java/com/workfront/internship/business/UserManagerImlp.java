@@ -96,10 +96,9 @@ public class UserManagerImlp implements UserManager {
     }
 
     @Override
-    public void deleteFromCart(User user, OrderItem orderItem) throws IOException, SQLException {
+    public void deleteFromCart(OrderItem orderItem) throws IOException, SQLException {
         OrderItemDao orderItemDao = new OrderItemDaoImpl(dataSource);
-        orderItemDao.deleteOrderItemByProducttIDAndByBasketID(orderItem.getProduct().getProductID(), user.getBasket().getBasketID());
-
+        orderItemDao.deleteOrderItemByItemID(orderItem.getOrderItemID());
     }
 
     @Override
@@ -123,8 +122,8 @@ public class UserManagerImlp implements UserManager {
     }
 
     @Override
-    public void deleteAccount(User user) {
-        userDao.deleteUser(user.getUserID());
+    public void deleteAccount(int id) {
+        userDao.deleteUser(id);
 
     }
     @Override
