@@ -63,6 +63,11 @@ public class UserManagerImlp implements UserManager {
         user.setShippingAddresses(addresses);
         return addresses;
     }
+    public int addShippingAddress(Address address)throws IOException, SQLException {
+        AddressDao addressDao = new AddressDaoImpl(dataSource);
+        int index = addressDao.insertAddress(address);
+        return index;
+    }
 
     public List<Sale> getRecords(User user) throws IOException, SQLException {
         SaleDao saleDao = new SaleDaoImpl(dataSource);
@@ -121,5 +126,10 @@ public class UserManagerImlp implements UserManager {
     public void deleteAccount(User user) {
         userDao.deleteUser(user.getUserID());
 
+    }
+    @Override
+    public void makeNewSale(Sale sale) throws IOException, SQLException{
+        SaleDao saleDao = new SaleDaoImpl(dataSource);
+        saleDao.insertSale(sale);
     }
 }
