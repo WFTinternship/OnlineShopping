@@ -69,60 +69,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         }
         return lastId;
     }
-    @Override
-    public int insertUserWithShippingAddresses(User user){
-        int lastId = 0;
-        AddressDao addressDao;
-        BasketDao basketDao;
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            connection.setAutoCommit(false);
-            addressDao = new AddressDaoImpl(dataSource);
-            for(int i = 0; i< user.getShippingAddresses().size(); i++)
-            addressDao.insertAddress(connection, user.getShippingAddresses().get(i));
 
-            basketDao = new BasketDaoImpl(dataSource);
-            basketDao.insertBasket(connection, user.getBasket());
-
-            String sql = "INSERT into users(firstname, lastname, username, password, phone, email, confirmation_status, access_privilege)" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, user.getFirstname());
-            preparedStatement.setString(2, user.getLastname());
-            preparedStatement.setString(3, user.getUsername());
-            preparedStatement.setString(4, user.getPassword());
-            preparedStatement.setString(5, user.getPhone());
-            preparedStatement.setString(6, user.getEmail());
-            preparedStatement.setBoolean(7, user.getConfirmationStatus());
-            preparedStatement.setString(8, user.getAccessPrivilege());
-            preparedStatement.executeUpdate();
-            connection.commit();
-            resultSet = preparedStatement.getGeneratedKeys();
-
-            while (resultSet.next()) {
-                lastId = resultSet.getInt(1);
-                user.setUserID(lastId);
-            }
-
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-            LOGGER.error("SQL exception occured!");
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-            LOGGER.error("could not rollback");
-            throw new RuntimeException(e);
-        }finally {
-            close(resultSet, preparedStatement, connection);
-        }
-        return lastId;
-
-    }
     @Override
     public User getUserByID(int userid) {
         Connection connection = null;

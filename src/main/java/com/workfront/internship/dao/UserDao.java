@@ -10,7 +10,6 @@ import java.util.List;
  */
 public interface UserDao {
     int insertUser(User user);
-    int insertUserWithShippingAddresses(User user);
     User getUserByID(int userid);
     User getUserByUsername(String username);
     void updateUser(User user);

@@ -109,53 +109,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         return lastId;
 
     }
-    public int insertProductWithMedias(Product product) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        MediaDao mediaDao;
-        int lastId = 0;
-        try {
-            connection = dataSource.getConnection();
-            connection.setAutoCommit(false);
-            mediaDao = new MediaDaoImpl(dataSource);
-            for(int i = 0; i< product.getMedias().size(); i++)
-                mediaDao.insertMedia(connection, product.getMedias().get(i));
 
-            String sql = "INSERT into products(name, price, description, shipping_price, quantity, category_id)" +
-                    " VALUES (?, ?, ?, ?, ?, ?)";
-            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setDouble(2, product.getPrice());
-            preparedStatement.setString(3, product.getDescription());
-            preparedStatement.setDouble(4, product.getShippingPrice());
-            preparedStatement.setInt(5, product.getQuantity());
-            preparedStatement.setInt(6, product.getCategory().getCategoryID());
-            preparedStatement.executeUpdate();
-            connection.commit();
-            resultSet = preparedStatement.getGeneratedKeys();
-            while (resultSet.next()) {
-                lastId = resultSet.getInt(1);
-                product.setProductID(lastId);
-            }
-
-        } catch (SQLException |IOException e) {
-            e.printStackTrace();
-            LOGGER.error("SQL exception occurred!");
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-            LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException(e);
-        } finally {
-            close(resultSet, preparedStatement, connection);
-        }
-        return lastId;
-
-
-    }
 
     @Override
     public void updateProduct(Product product) {

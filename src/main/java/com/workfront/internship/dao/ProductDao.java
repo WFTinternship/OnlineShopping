@@ -13,7 +13,6 @@ public interface ProductDao {
 
      Product getProductByID(int productId);
      int insertProduct(Product product);
-     int insertProductWithMedias(Product product);
      void updateProduct(Product product);
      void deleteProductByID(int id);
      void deleteProductByName(String name);

@@ -12,7 +12,8 @@ import java.util.List;
 /**
  * Created by Administrator on 23.07.2016.
  */
-public class ProductManagerImpl {
+public class ProductManagerImpl implements ProductManager{
+
    private DataSource dataSource;
    private ProductDao productDao;
    private CategoryDao categoryDao;
@@ -26,10 +27,11 @@ public class ProductManagerImpl {
    }
    public int insertProduct(Product product){
        int index = 0;
-       if(!product.getMedias().isEmpty())
-           index = productDao.insertProductWithMedias(product);
-       else
+
           index = productDao.insertProduct(product);
+       if(index > 0 && !(product.getMedias().isEmpty()))
+           for(int i = 0; i <product.getMedias().size(); i++)
+               mediaDao.insertMedia(product.getMedias().get(i));
 
        return index;
    }
