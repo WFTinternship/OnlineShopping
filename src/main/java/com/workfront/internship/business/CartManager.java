@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface CartManager {
 
-    Basket getCart(User user);
+    Basket getBasket(User user);
     void addToCart(User user, Product product, int quantity);
     void deleteFromCart(OrderItem orderItem);
     void updateCart(User user, OrderItem orderItem, int quantity);

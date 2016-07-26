@@ -9,7 +9,6 @@ public interface MediaDao {
     List<Media> getMediaByProductID(int productId);
     Media getMediaByMediaID(int mediaId);
     int insertMedia(Media media);
-    int insertMedia(Connection connection, Media media);
     void updateMedia(Media media);
     void deleteMediaByID(int id);
     void deleteMediaByPath(String path);

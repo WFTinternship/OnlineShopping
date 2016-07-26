@@ -136,7 +136,30 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         }
         return users;
     }
+    @Override
+    public void updateUserStatus(int id){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
 
+            String sql = "UPDATE users SET confirmation_status = ? where user_id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setBoolean(1, true);
+            preparedStatement.setInt(2, id);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+
+    }
     @Override
     public void updateUser(User user){
         Connection connection = null;
@@ -144,9 +167,9 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            connection.setAutoCommit(false);
+           // connection.setAutoCommit(false);
 
-            AddressDao addressDao = new AddressDaoImpl(dataSource);
+           /* AddressDao addressDao = new AddressDaoImpl(dataSource);
             List<Address> oldAddresses = addressDao.getShippingAddressByUserID(user.getUserID());
             List<Address> newAddresses = user.getShippingAddresses();
             for(int i = 0; i < newAddresses.size(); i ++)
@@ -155,9 +178,8 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             for(int i = 0; i < oldAddresses.size(); i ++)
                 if(!newAddresses.contains(oldAddresses.get(i)))
                     addressDao.deleteAddressesByAddressID(connection, oldAddresses.get(i).getAddressID());
-
-            String sql = "UPDATE users SET firstname = ?, lastname = ?, username = ?, password = ?, phone = ?, email = ?," +
-                    "confirmation_status = ?, access_privilege = ? where user_id = ?";
+*/
+            String sql = "UPDATE users SET firstname = ?, lastname = ?, username = ?, password = ?, phone = ?, email = ? where user_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, user.getFirstname());
             preparedStatement.setString(2, user.getLastname());
@@ -165,11 +187,9 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             preparedStatement.setString(4, user.getPassword());
             preparedStatement.setString(5, user.getPhone());
             preparedStatement.setString(6, user.getEmail());
-            preparedStatement.setBoolean(7, user.getConfirmationStatus());
-            preparedStatement.setString(8, user.getAccessPrivilege());
-            preparedStatement.setInt(9, user.getUserID());
+            preparedStatement.setInt(7, user.getUserID());
             preparedStatement.executeUpdate();
-            connection.commit();
+           // connection.commit();
 
 
 
@@ -177,15 +197,15 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             e.printStackTrace();
             LOGGER.error("Duplicate entry!");
             throw new RuntimeException(e);
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
-            try {
+           /* try {
                 connection.rollback();
             } catch (SQLException e1) {
                 e1.printStackTrace();
                 LOGGER.error("SQL exception occurred!");
-            }
+            }*/
             throw new RuntimeException(e);
         } finally {
             close(resultSet, preparedStatement, connection);

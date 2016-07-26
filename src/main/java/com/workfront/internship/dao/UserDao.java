@@ -13,6 +13,7 @@ public interface UserDao {
     User getUserByID(int userid);
     User getUserByUsername(String username);
     void updateUser(User user);
+    void updateUserStatus(int id);
     void deleteUser(int userid);
     List<Product> getWishlist(int userid);
     void deleteWishlistByUserID(int userid);

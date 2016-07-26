@@ -32,7 +32,7 @@ public class UserManagerImlp implements UserManager {
         String hashOfPassword = "";
         int index = 0;
         if(user!=null) {
-            if (user.getFirstname() != null && user.getLastname() != null && user.getUsername() != null && user.getPassword() != null && user.getEmail() != null) {
+            if (user.getFirstname() != null && user.getLastname() != null && user.getUsername() != null && user.getPassword() != null && user.getEmail() != null && validateEmail(user.getEmail())) {
                 try {
                     hashOfPassword = getHash(user.getPassword());
                     user.setPassword(hashOfPassword);
@@ -55,14 +55,16 @@ public class UserManagerImlp implements UserManager {
         if(user!=null) {
 
             try {
-                if (user.getPassword() == getHash(password)) ;
+                if (user.getPassword() == getHash(password))
+                    return user;
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
+                throw new RuntimeException("System error");
             }
-            return user;
-        }
 
-        return null;
+        }
+         throw new RuntimeException("Invalid user");
+
     }
 
     public List<Address> getListOfShippingAddresses(User user) {
@@ -73,7 +75,18 @@ public class UserManagerImlp implements UserManager {
     }
 
     public void editProfile(User user) {
+
         userDao.updateUser(user);
+
+        List<Address> oldAddresses = addressDao.getShippingAddressByUserID(user.getUserID());
+        List<Address> newAddresses = user.getShippingAddresses();
+        for(int i = 0; i < newAddresses.size(); i ++)
+            if(!oldAddresses.contains(newAddresses.get(i)))
+                addressDao.insertAddress(newAddresses.get(i));
+        for(int i = 0; i < oldAddresses.size(); i ++)
+            if(!newAddresses.contains(oldAddresses.get(i)))
+                addressDao.deleteAddressesByAddressID(oldAddresses.get(i).getAddressID());
+
     }
 
 
@@ -93,6 +106,10 @@ public class UserManagerImlp implements UserManager {
         return stringBuffer.toString();
 
 
+    }
+    //TODO implementaion
+    private boolean validateEmail(String email){
+        return true;
     }
 
 }

@@ -118,29 +118,14 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
             close(resultSet, preparedStatement, connection);
         }
     }
+
     @Override
-    public void deleteAddressesByAddressID(int addressId) {
+    public void  deleteAddressesByAddressID(int id){
         Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
-            deleteAddressesByAddressID(connection, addressId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    @Override
-    public void  deleteAddressesByAddressID(Connection connection, int id){
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
+            connection = dataSource.getConnection();
 
             String sql = "DELETE from addresses where address_id = ?";
             preparedStatement = connection.prepareStatement(sql);
@@ -156,35 +141,16 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
             close(resultSet, preparedStatement, connection);
         }
     }
+
     @Override
-    public int insertAddress(Address address) {
+    public int insertAddress(Address address){
         int lastId = 0;
         Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
-            lastId = insertAddress(connection, address);
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-            LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                LOGGER.error("SQL exception occurred!");
-                throw new RuntimeException(e);
-            }
-        }
-        return  lastId;
-    }
-    @Override
-    public int insertAddress(Connection connection, Address address){
-        int lastId = 0;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
+            connection = dataSource.getConnection();
+
             String sql = "INSERT into addresses(shipping_address, user_id) VALUES (?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, address.getAddress());

@@ -34,7 +34,7 @@ public class CartManagerImpl implements CartManager{
         @Override
         public void addToCart(User user, Product product, int quantity) {
             if (user.getBasket() == null) {
-                Basket basket = getCart(user);
+                Basket basket = getBasket(user);
             }
 
             OrderItem orderItem = new OrderItem();
@@ -45,7 +45,7 @@ public class CartManagerImpl implements CartManager{
                 orderItemDao.updateOrderItem(orderItem);
         }
     @Override
-        public Basket getCart(User user){
+        public Basket getBasket(User user){
 
         Basket basket = basketDao.getCurrentBasket(user.getUserID());
         user.setBasket(basket);

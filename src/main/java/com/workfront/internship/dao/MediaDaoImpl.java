@@ -114,33 +114,14 @@ public class MediaDaoImpl extends GeneralDao implements MediaDao {
 
 
     }
-    @Override
-    public int insertMedia(Media media) {
-        Connection connection = null;
-        int lastId = 0;
-        try {
-            connection = dataSource.getConnection();
-            lastId = insertMedia(connection, media);
 
-        } catch ( SQLException e) {
-            e.printStackTrace();
-            LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException(e);
-        }  finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return lastId;
-    }
-    @Override
-    public int insertMedia(Connection connection, Media media){
+    public int insertMedia( Media media){
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         int lastId = 0;
         try {
+            connection = dataSource.getConnection();
             String sql = "INSERT into medias(media_path, product_id) VALUES (?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, media.getMediaPath());
