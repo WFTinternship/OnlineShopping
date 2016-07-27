@@ -153,8 +153,8 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        Product product = new Product();
-        Basket basket = new Basket();
+        Product product;
+
         int lastId = 0;
         try {
             connection = dataSource.getConnection();
@@ -163,9 +163,8 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
             OrderItemDao orderItemDao = new OrderItemDaoImpl(dataSource);
             ProductDao productDao = new ProductDaoImpl(dataSource);
             CreditCardDao creditCardDao = new CreditCardDaoImpl(dataSource);
-            basket.setUserID(sale.getUserID()).setTotalPrice(0.0).setBasketStatus("current");
 
-            basketDao.insertBasket(connection, basket);
+
 
             basketDao.updateBasket(connection, sale.getBasket());
 

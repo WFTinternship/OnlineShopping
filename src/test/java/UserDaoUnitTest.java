@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 
 import static org.mockito.Matchers.any;
@@ -39,7 +40,7 @@ public class UserDaoUnitTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void insertUser_dbError() {
+    public void insertUser_dbError() throws SQLIntegrityConstraintViolationException {
         userDao.insertUser(new User());
     }
     @Test(expected = RuntimeException.class)

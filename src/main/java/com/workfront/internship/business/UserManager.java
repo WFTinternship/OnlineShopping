@@ -3,6 +3,7 @@ package com.workfront.internship.business;
 import com.workfront.internship.common.*;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
@@ -16,6 +17,9 @@ public interface UserManager {
     User login(String username, String password);
     void editProfile(User user);
     void deleteAccount(int userId);
-    List<Address> getListOfShippingAddresses(User user)throws IOException, SQLException;
+    String getHash(String str) throws NoSuchAlgorithmException;
+    boolean validateUser(User user);
+    boolean validateEmail(String email);
+  //  List<Address> getListOfShippingAddresses(User user)throws IOException, SQLException;
 
 }

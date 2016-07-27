@@ -12,8 +12,13 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UserManagerImlp implements UserManager {
+    private static final String EMAIL_PATTERN =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     private DataSource dataSource;
     private UserDao userDao;
@@ -32,19 +37,22 @@ public class UserManagerImlp implements UserManager {
         String hashOfPassword = "";
         int index = 0;
         if(user!=null) {
-            if (user.getFirstname() != null && user.getLastname() != null && user.getUsername() != null && user.getPassword() != null && user.getEmail() != null && validateEmail(user.getEmail())) {
+            if (validateUser(user)) {
                 try {
                     hashOfPassword = getHash(user.getPassword());
                     user.setPassword(hashOfPassword);
+                    index = userDao.insertUser(user);
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
+                    throw new RuntimeException("System error");
                 }
-                    index = userDao.insertUser(user);
                 if(index > 0 && !(user.getShippingAddresses().isEmpty()))
                     for(int i = 0; i < user.getShippingAddresses().size(); i++)
                     addressDao.insertAddress(user.getShippingAddresses().get(i));
 
             }
+            else
+                throw new RuntimeException("Invalid user");
         }
         return index;
     }
@@ -67,12 +75,12 @@ public class UserManagerImlp implements UserManager {
 
     }
 
-    public List<Address> getListOfShippingAddresses(User user) {
+    /*public List<Address> getListOfShippingAddresses(User user) {
 
         List<Address> addresses = addressDao.getShippingAddressByUserID(user.getUserID());
         user.setShippingAddresses(addresses);
         return addresses;
-    }
+    }*/
 
     public void editProfile(User user) {
 
@@ -95,7 +103,7 @@ public class UserManagerImlp implements UserManager {
         userDao.deleteUser(id);
 
     }
-    private String getHash(String str) throws NoSuchAlgorithmException {
+    public String getHash(String str) throws NoSuchAlgorithmException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
         byte[] result = messageDigest.digest(str.getBytes());
         StringBuffer stringBuffer = new StringBuffer();
@@ -107,9 +115,22 @@ public class UserManagerImlp implements UserManager {
 
 
     }
-    //TODO implementaion
-    private boolean validateEmail(String email){
-        return true;
+    public boolean validateUser(User user){
+              if(user.getFirstname() != null &&
+                user.getLastname() != null &&
+                user.getUsername() != null &&
+                user.getPassword() != null &&
+                user.getEmail() != null && validateEmail(user.getEmail()))
+                  return true;
+        return false;
+    }
+
+    public boolean validateEmail(String email){
+
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+
     }
 
 }

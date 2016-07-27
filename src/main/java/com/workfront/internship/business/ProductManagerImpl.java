@@ -41,8 +41,18 @@ public class ProductManagerImpl implements ProductManager{
        return product;
    }
    public void updateProduct(Product product){
-       //TODO change the implementation of updateProduct in ProductDaoImpl
+
        productDao.updateProduct(product);
+
+       List<Media> oldMedias = mediaDao.getMediaByProductID(product.getProductID());
+       List<Media> newMedias = product.getMedias();
+       for(int i = 0; i < newMedias.size(); i ++)
+           if(!oldMedias.contains(newMedias.get(i)))
+               mediaDao.insertMedia(newMedias.get(i));
+       for(int i = 0; i < oldMedias.size(); i ++)
+           if(!newMedias.contains(oldMedias.get(i)))
+               mediaDao.deleteMediaByProductID(oldMedias.get(i).getMediaID());
+
    }
    public void deleteProductByID(int id){
 

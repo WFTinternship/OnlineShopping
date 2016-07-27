@@ -24,12 +24,8 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        BasketDao basketDao;
         try {
             connection = dataSource.getConnection();
-            connection.setAutoCommit(false);
-            basketDao = new BasketDaoImpl(dataSource);
-            basketDao.insertBasket(connection, user.getBasket());
 
             String sql = "INSERT into users(firstname, lastname, username, password, phone, email, confirmation_status, access_privilege)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -43,7 +39,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             preparedStatement.setBoolean(7, user.getConfirmationStatus());
             preparedStatement.setString(8, user.getAccessPrivilege());
             preparedStatement.executeUpdate();
-            connection.commit();
+
             resultSet = preparedStatement.getGeneratedKeys();
 
             while (resultSet.next()) {
@@ -54,14 +50,9 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         }catch(SQLIntegrityConstraintViolationException e){
                 e.printStackTrace();
             LOGGER.error("Duplicate entry!");
-            throw new RuntimeException(e);
-        }catch (SQLException  | IOException e) {
+            throw new RuntimeException("Duplicate entry!");
+        }catch (SQLException  e) {
                 e.printStackTrace();
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
             LOGGER.error("SQL exception occurred!");
                 throw new RuntimeException(e);
         } finally {
@@ -359,8 +350,6 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         User user = null;
         while (resultSet.next()) {
 
-            BasketDao basketDao = new BasketDaoImpl(dataSource);
-            SaleDao saleDao = new SaleDaoImpl(dataSource);
             AddressDao addressDao = new AddressDaoImpl(dataSource);
             user = new User();
             user.setUserID(resultSet.getInt("user_id")).
@@ -370,9 +359,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
                     setPassword(resultSet.getString("password")).
                     setPhone(resultSet.getString("phone")).
                     setEmail(resultSet.getString("email")).
-                    setBasket(basketDao.getCurrentBasket(resultSet.getInt("user_id"))).
-                    setWishList(getWishlist(resultSet.getInt("user_id"))).
-                    setRecords(saleDao.getSales(resultSet.getInt("user_id"))).
+
                     setShippingAddresses(addressDao.getShippingAddressByUserID(resultSet.getInt("user_id"))).
                     setConfirmationStatus(resultSet.getBoolean("confirmation_status")).
                     setAccessPrivilege(resultSet.getString("access_privilege"));

@@ -84,8 +84,8 @@ public class TestUserDaoImpl{
         assertEquals(true, whishlist.isEmpty());
 
     }
-    @Test(expected = SQLIntegrityConstraintViolationException.class)
-    public void insert_user_duplicate() throws SQLIntegrityConstraintViolationException{
+    @Test(expected = RuntimeException.class)
+    public void insert_user_duplicate(){
         userDao.insertUser(user);
 
     }
