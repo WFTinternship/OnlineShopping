@@ -18,4 +18,10 @@ public interface UserManager {
     void editProfile(User user);
     void deleteAccount(User user);
 
+
+    //TODO tests and correct implementations
+    List<Product> getList(User user);
+    void addToList(User user, Product product);
+    void deleteFromList(User user, Product product);
+
 }

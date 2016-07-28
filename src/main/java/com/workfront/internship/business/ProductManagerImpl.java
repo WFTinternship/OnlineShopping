@@ -16,13 +16,13 @@ public class ProductManagerImpl implements ProductManager{
 
    private DataSource dataSource;
    private ProductDao productDao;
-   private CategoryDao categoryDao;
+
    private MediaDao mediaDao;
 
    public ProductManagerImpl(DataSource dataSource)throws IOException, SQLException {
        this.dataSource = dataSource;
        productDao = new ProductDaoImpl(dataSource);
-       categoryDao = new CategoryDaoImpl(dataSource);
+
        mediaDao = new MediaDaoImpl(dataSource);
    }
    public int insertProduct(Product product){
@@ -76,77 +76,6 @@ public class ProductManagerImpl implements ProductManager{
        return products;
 
    }
-   public Category getCategoryByID(int id){
 
-       Category category = categoryDao.getCategoryByID(id);
-       return category;
 
-   }
-   public int insertCategory(Category category){
-
-       int index = categoryDao.insertCategory(category);
-       return index;
-   }
-   public void deleteCategoryByID(int id){
-
-       categoryDao.deleteCategoryByID(id);
-
-   }
-   public void updateCategory(Category category){
-
-       categoryDao.updateCategory(category);
-
-   }
-   public void deleteAllCategories(){
-
-       categoryDao.deleteAllCategories();
-
-   }
-   public List<Category> getAllCategories(){
-
-       List<Category> categories = categoryDao.getAllCategories();
-       return  categories;
-   }
-   public List<Media> getMediaByProductID(int id){
-
-       List<Media> medias = mediaDao.getMediaByProductID(id);
-       return medias;
-   }
-   public Media getMediaByMediaID(int id){
-
-       Media media = mediaDao.getMediaByMediaID(id);
-       return media;
-   }
-   public int insertMedia(Media media){
-
-       int index = mediaDao.insertMedia(media);
-       return index;
-
-   }
-   public void updateMedia(Media media){
-
-       mediaDao.updateMedia(media);
-
-   }
-   public void deleteMediaByID(int id){
-
-       mediaDao.deleteMediaByID(id);
-
-   }
-
-   public void deleteMediaByProductID(int id){
-
-       mediaDao.deleteMediaByProductID(id);
-   }
-   public List<Media> getAllMedias(){
-
-       List<Media> medias = mediaDao.getAllMedias();
-       return medias;
-
-   }
-   public void deleteAllMedias(){
-
-       mediaDao.deleteAllMedias();
-
-   }
 }

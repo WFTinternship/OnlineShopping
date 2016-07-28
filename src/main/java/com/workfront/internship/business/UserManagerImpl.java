@@ -90,6 +90,25 @@ public class UserManagerImpl implements UserManager {
 
     }
 
+
+    @Override
+    public void addToList(User user, Product product) {
+        userDao.insertIntoWishlist(user.getUserID(), product.getProductID());
+
+    }
+    @Override
+    public List<Product> getList(User user) {
+        List<Product> wishlist = userDao.getWishlist(user.getUserID());
+        user.setWishList(wishlist);
+        return wishlist;
+    }
+
+    @Override
+    public void deleteFromList(User user, Product product) {
+        userDao.deleteFromWishlistByUserIDAndProductID(user.getUserID(), product.getProductID());
+
+    }
+
     private boolean validateUser(User user) {
         if (user != null && (user.getFirstname() != null) &&
                 (user.getLastname() != null) &&
@@ -103,8 +122,7 @@ public class UserManagerImpl implements UserManager {
     private boolean validString(String string){
         if(string !=null && string != "")
             return true;
-        else
-            return false;
+        return false;
 
     }
     private boolean validateEmail(String email) {
@@ -113,5 +131,7 @@ public class UserManagerImpl implements UserManager {
         return matcher.matches();
 
     }
+
+
 
 }
