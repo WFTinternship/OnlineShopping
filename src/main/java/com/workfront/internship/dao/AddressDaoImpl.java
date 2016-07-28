@@ -13,7 +13,7 @@ import java.util.List;
 
 public class AddressDaoImpl extends GeneralDao implements AddressDao {
 
-    private static final Logger LOGGER = Logger.getLogger(AddressDao.class);
+    private static final Logger LOGGER = Logger.getLogger(AddressDaoImpl.class);
     private DataSource dataSource;
 
     public AddressDaoImpl(DataSource dataSource) throws IOException, SQLException {

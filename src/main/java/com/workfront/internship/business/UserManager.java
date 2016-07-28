@@ -16,10 +16,6 @@ public interface UserManager {
     int createAccount(User user);
     User login(String username, String password);
     void editProfile(User user);
-    void deleteAccount(int userId);
-    String getHash(String str) throws NoSuchAlgorithmException;
-    boolean validateUser(User user);
-    boolean validateEmail(String email);
-  //  List<Address> getListOfShippingAddresses(User user)throws IOException, SQLException;
+    void deleteAccount(User user);
 
 }

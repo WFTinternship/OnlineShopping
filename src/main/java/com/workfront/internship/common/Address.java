@@ -34,6 +34,19 @@ public class Address {
         this.userID = userID;
         return this;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Address address = (Address) obj;
+
+        if (getAddressID() != address.getAddressID()) return false;
+        if (getAddress() != null ? !getAddress().equals(address.getAddress()) : address.getAddress() != null) return false;
+        if (getUserID()!= address.getUserID()) return false;
+
+        return true;
+    }
 
 
 }

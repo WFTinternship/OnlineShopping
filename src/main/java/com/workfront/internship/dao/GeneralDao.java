@@ -8,7 +8,7 @@ import java.sql.SQLException;
 /**
  * Created by Workfront on 7/1/2016.
  */
-public class GeneralDao {
+abstract public class GeneralDao {
     protected void close(ResultSet resultSet, PreparedStatement preparedStatement, Connection connection) {
         if (resultSet != null)
             try {
