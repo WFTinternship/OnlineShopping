@@ -11,6 +11,6 @@ public interface CategoryManager {
     int createNewCategory(Category category);
     Category getCategoryByID(int catId);
     void updateCategory(Category category);
-    void deleteCategoryByID(int id);
+    void deleteCategory(int id);
     List<Category> getAllCategories();
 }

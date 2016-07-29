@@ -16,7 +16,7 @@ public interface UserManager {
     int createAccount(User user);
     User login(String username, String password);
     void editProfile(User user);
-    void deleteAccount(User user);
+    void deleteAccount(int id);
 
 
     //TODO tests and correct implementations

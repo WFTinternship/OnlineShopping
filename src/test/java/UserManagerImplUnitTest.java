@@ -203,18 +203,18 @@ public class UserManagerImplUnitTest {
         userManager.editProfile(user1);
     }
     @Test
-    public void deleteAccount_validUser(){
+    public void deleteAccount_validUserID(){
 
         UserDao userDao = Mockito.mock(UserDaoImpl.class);
         Whitebox.setInternalState(userManager, "userDao", userDao);
 
-        userManager.deleteAccount(user);
+        userManager.deleteAccount(user.getUserID());
         Mockito.verify(userDao).deleteUser(any(Integer.class));
     }
     @Test(expected = RuntimeException.class)
-    public void deleteAccount_notValidUser(){
+    public void deleteAccount_notValidUserID(){
         User user1 = new User();
-        userManager.deleteAccount(user1);
+        userManager.deleteAccount(user1.getUserID());
     }
 
 

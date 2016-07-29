@@ -1,6 +1,7 @@
 package com.workfront.internship.dao;
 
 import com.sun.org.apache.xpath.internal.operations.Or;
+import com.workfront.internship.common.Basket;
 import com.workfront.internship.common.OrderItem;
 import com.workfront.internship.common.Product;
 import org.apache.log4j.Logger;
@@ -234,24 +235,42 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         try {
             connection = dataSource.getConnection();
 
+            OrderItem oldOrderItem = getOrderItemByItemID(orderItem.getOrderItemID());
+
+            BasketDao basketDao = new BasketDaoImpl(dataSource);
+            int basketId = orderItem.getBasketID();
+
+            Basket basket = basketDao.getBasket(basketId);
+
+            basket.setTotalPrice(basket.getTotalPrice() + orderItem.getProduct().getPrice()*(orderItem.getQuantity()-oldOrderItem.getQuantity()));
+            basketDao.updateBasket(connection, basket);
+
             String sql = "UPDATE orderitems SET quantity = ?, basket_id = ?, product_id = ? where orderitem_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, orderItem.getQuantity());
             preparedStatement.setInt(2, orderItem.getBasketID());
             preparedStatement.setInt(3, orderItem.getProduct().getProductID());
             preparedStatement.setInt(4, orderItem.getOrderItemID());
-
             preparedStatement.executeUpdate();
+            connection.commit();
 
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e.printStackTrace();
+                LOGGER.error("SQL exception occurred!");
+
+            }
             throw new RuntimeException(e);
         } finally {
             close(resultSet, preparedStatement, connection);
         }
 
     }
+
 
     @Override
     public int insertOrderItem(OrderItem orderItem) {
@@ -262,9 +281,15 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
 
         try {
             connection = dataSource.getConnection();
-          //  connection.setAutoCommit(false);
+            connection.setAutoCommit(false);
+            BasketDao basketDao = new BasketDaoImpl(dataSource);
+            int basketId = orderItem.getBasketID();
+            Basket basket = basketDao.getBasket(basketId);
+            basket.setTotalPrice(basket.getTotalPrice() + orderItem.getProduct().getPrice()*orderItem.getQuantity()
+                    + orderItem.getProduct().getShippingPrice());
+            basketDao.updateBasket(connection, basket);
 
-          //  Product product = orderItem.getProduct();
+
           //  product.setQuantity(product.getQuantity() - orderItem.getQuantity());
 
           //  ProductDao productDao = new ProductDaoImpl(dataSource);
@@ -276,24 +301,24 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
             preparedStatement.setInt(2, orderItem.getProduct().getProductID());
             preparedStatement.setInt(3, orderItem.getQuantity());
             preparedStatement.executeUpdate();
-          //  connection.commit();
+            connection.commit();
             ResultSet resultSet1 = preparedStatement.getGeneratedKeys();
             while (resultSet1.next()) {
                 lastId = resultSet1.getInt(1);
                 orderItem.setOrderItemID(lastId);
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
 
-          /*  try {
+            try {
                 connection.rollback();
             } catch (SQLException e1) {
                 e.printStackTrace();
                 LOGGER.error("SQL exception occurred!");
 
-            }*/
+            }
             throw new RuntimeException(e);
         } finally {
             close(resultSet, preparedStatement, connection);

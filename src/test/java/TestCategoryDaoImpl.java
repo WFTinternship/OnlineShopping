@@ -34,7 +34,7 @@ public class TestCategoryDaoImpl  {
     @After
     public void tearDown() {
 
-        //categoryDao.deleteAllCategories();
+        categoryDao.deleteAllCategories();
     }
 
     @Test

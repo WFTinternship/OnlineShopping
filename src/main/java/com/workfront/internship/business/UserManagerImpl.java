@@ -24,11 +24,13 @@ public class UserManagerImpl implements UserManager {
     private DataSource dataSource;
     private UserDao userDao;
     AddressDao addressDao;
+    private EmailManager emailManager;
 
     public UserManagerImpl(DataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
         userDao = new UserDaoImpl(dataSource);
         addressDao = new AddressDaoImpl(dataSource);
+        emailManager = new EmailManager();
 
     }
 
@@ -47,7 +49,7 @@ public class UserManagerImpl implements UserManager {
                     addressDao.insertAddress(user.getShippingAddresses().get(i));
                 }
             }
-            EmailManager.sendVerificationEmail(user);
+            emailManager.sendVerificationEmail(user);
         }
 
         return id;
@@ -82,11 +84,11 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public void deleteAccount(User user) {
-        if(!validateUser(user)) {
+    public void deleteAccount(int id) {
+        if(id <= 0) {
             throw new RuntimeException("Can not delete");
         }
-        userDao.deleteUser(user.getUserID());
+        userDao.deleteUser(id);
 
     }
 
