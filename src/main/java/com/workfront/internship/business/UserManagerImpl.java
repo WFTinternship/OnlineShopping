@@ -81,6 +81,9 @@ public class UserManagerImpl implements UserManager {
         for (int i = 0; i < oldAddresses.size(); i++)
             if (!newAddresses.contains(oldAddresses.get(i)))
                 addressDao.deleteAddressesByAddressID(oldAddresses.get(i).getAddressID());
+        List<Address> addresses = addressDao.getShippingAddressByUserID(user.getUserID());
+        user = userDao.getUserByID(user.getUserID());
+        user.setShippingAddresses(addresses);
     }
 
     @Override
@@ -95,11 +98,19 @@ public class UserManagerImpl implements UserManager {
 
     @Override
     public void addToList(User user, Product product) {
+        if (user == null || product == null )
+            throw new RuntimeException("invalid entry!");
+        if (user.getWishList() == null) {
+            getList(user);
+        }
         userDao.insertIntoWishlist(user.getUserID(), product.getProductID());
+
 
     }
     @Override
     public List<Product> getList(User user) {
+        if(user == null)
+            throw new RuntimeException("invalid user");
         List<Product> wishlist = userDao.getWishlist(user.getUserID());
         user.setWishList(wishlist);
         return wishlist;
@@ -107,7 +118,10 @@ public class UserManagerImpl implements UserManager {
 
     @Override
     public void deleteFromList(User user, Product product) {
+        if(user == null || product == null)
+            throw new RuntimeException("invalid entry");
         userDao.deleteFromWishlistByUserIDAndProductID(user.getUserID(), product.getProductID());
+        user.setWishList(userDao.getWishlist(user.getUserID()));
 
     }
 

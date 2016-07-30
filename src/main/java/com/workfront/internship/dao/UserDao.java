@@ -19,6 +19,7 @@ public interface UserDao {
     void deleteWishlistByUserID(int userid);
     void deleteFromWishlistByUserIDAndProductID(int userid, int productid);
     void insertIntoWishlist(int userID, int productID);
+    boolean isInWishList(int userID, int productID);
     void deleteAllUsers();
     List<User> getAllUsers();
 

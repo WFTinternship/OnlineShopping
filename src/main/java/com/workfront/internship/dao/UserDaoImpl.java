@@ -84,6 +84,30 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         return user;
     }
     @Override
+    public boolean isInWishList(int userID, int productID){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Boolean result = false;
+        try {
+            connection = dataSource.getConnection();
+            String sql = "SELECT * FROM wishlist where user_id =? and product_id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, userID);
+            preparedStatement.setInt(2, productID);
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next())
+                result = true;
+        }catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        }  finally {
+            close(resultSet, preparedStatement, connection);
+        }
+       return result;
+    }
+    @Override
     public User getUserByUsername(String uname) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;

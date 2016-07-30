@@ -52,6 +52,20 @@ public class OrderItem {
         this.basketID = basketID;
         return this;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        OrderItem orderItem = (OrderItem) obj;
+
+        if (getOrderItemID() != orderItem.getOrderItemID()) return false;
+        if (getProduct() != null ? !getProduct().equals(orderItem.getProduct()) : orderItem.getProduct() != null) return false;
+        if (getBasketID()!= orderItem.getBasketID()) return false;
+        if (getQuantity()!= orderItem.getQuantity()) return false;
+
+        return true;
+    }
 
 
 }

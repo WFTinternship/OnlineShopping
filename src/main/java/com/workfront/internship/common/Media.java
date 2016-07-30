@@ -34,6 +34,18 @@ public class Media {
         this.productID = productID;
         return this;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
+        Media media = (Media) obj;
+
+        if (getMediaID() != media.getMediaID()) return false;
+        if (getMediaPath() != media.getMediaPath()) return false;
+        if (getProductID() != media.getProductID()) return false;
+
+        return true;
+    }
 
 }

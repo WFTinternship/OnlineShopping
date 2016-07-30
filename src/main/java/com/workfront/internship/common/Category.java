@@ -31,5 +31,17 @@ public class Category {
         return this;
     }
 
-}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
+        Category category = (Category) obj;
+
+        if (getCategoryID() != category.getCategoryID()) return false;
+        if (getName() != category.getName()) return false;
+
+
+        return true;
+    }
+}

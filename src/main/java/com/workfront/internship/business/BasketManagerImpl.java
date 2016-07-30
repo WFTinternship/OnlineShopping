@@ -8,6 +8,7 @@ import com.workfront.internship.dao.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +43,7 @@ public class BasketManagerImpl implements BasketManager {
 
     @Override
     public void addToBasket(User user, Product product, int quantity) {
-        if(user == null || product == null || quantity <= 0)
+        if (user == null || product == null || quantity <= 0)
             throw new RuntimeException("invalid entry!");
         if (user.getBasket() == null) {
             Basket basket = getCurrentBasket(user);
@@ -53,23 +54,35 @@ public class BasketManagerImpl implements BasketManager {
         OrderItem oldOrderItem = orderItemDao.getOrderItemByProductAndBasketID(product.getProductID(), user.getBasket().getBasketID());
         if (oldOrderItem == null)
             orderItemDao.insertOrderItem(newOrderItem);
-          else
+        else
             orderItemDao.updateOrderItem(newOrderItem);
 
     }
 
     @Override
-    public List<OrderItem> showItemsInBasket(Basket basket) {
-        if (basket == null)
-            throw new RuntimeException("invalid basket");
-        List<OrderItem> orderItems = orderItemDao.getOrderItemByBasketID(basket.getBasketID());
-        basket.setOrderItems(orderItems);
-        return orderItems;
+    public List<OrderItem> showItemsInBasket(User user) {
+        if (user == null)
+            throw new RuntimeException("invalid user");
+        List<OrderItem> orderItems = new ArrayList<>();
+        if (user.getBasket() == null) {
+            Basket basket = basketDao.getCurrentBasket(user.getUserID());
+            if (basket == null)
+                return orderItems;
+            else {
+                orderItems = orderItemDao.getOrderItemByBasketID(basket.getBasketID());
+                basket.setOrderItems(orderItems);
+                user.setBasket(basket);
+                return orderItems;
+            }
+        } else
+            return
+                    user.getBasket().getOrderItems();
+
     }
 
     @Override
     public Basket getCurrentBasket(User user) {
-        if(user == null)
+        if (user == null)
             throw new RuntimeException("invalid user");
         Basket basket = basketDao.getCurrentBasket(user.getUserID());
         if (basket == null) {
@@ -81,20 +94,21 @@ public class BasketManagerImpl implements BasketManager {
     }
 
     @Override
-    public void deleteFromBasket(int itemId) {
-        if(itemId <= 0)
-            throw new RuntimeException("invalid id");
+    public void deleteFromBasket(User user, int itemId) {
+        if (user == null || itemId <= 0)
+            throw new RuntimeException("invalid entry");
+        OrderItem orderItem = orderItemDao.getOrderItemByItemID(itemId);
         orderItemDao.deleteOrderItemByItemID(itemId);
+        user.getBasket().getOrderItems().remove(orderItem);
     }
 
     @Override
     public void updateBasket(OrderItem orderItem) {
-        if(orderItem ==null )
+        if (orderItem == null)
             throw new RuntimeException("invalid entry!");
         orderItemDao.updateOrderItem(orderItem);
-
+        //TODO user.setNewList
     }
-
 
 
 }

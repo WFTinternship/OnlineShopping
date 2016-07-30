@@ -8,6 +8,7 @@ import com.workfront.internship.dao.BasketDaoImpl;
 import com.workfront.internship.dao.DataSource;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 public class BasketManagerUnitTest {
 
@@ -36,6 +38,16 @@ public class BasketManagerUnitTest {
     public void tearDown() {
 
     }
+    @Test
+    public void createNewBasket(){
+        when(basketDao.insertBasket(basket)).thenReturn(10);
+        int result = basketManager.createNewBasket(basket);
+        assertEquals("basket was not created", 10, result);
+    }
+    @Test(expected = RuntimeException.class)
+    public void createNewBasket_nullEntry(){
+        basketManager.createNewBasket(null);
+    }
 
 
 
@@ -47,7 +59,7 @@ public class BasketManagerUnitTest {
 
     private Basket getRandomBasket() {
         Basket basket = new Basket();
-        basket.setTotalPrice(100).setBasketStatus("current");
+        basket.setTotalPrice(100).setBasketStatus("current").setBasketID(10);
         return basket;
     }
     private void doAssertion(Basket basket, Basket basket1){

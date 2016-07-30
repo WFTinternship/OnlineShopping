@@ -10,11 +10,11 @@ import java.util.List;
  * Created by Administrator on 23.07.2016.
  */
 public interface BasketManager {
-    List<OrderItem> showItemsInBasket(Basket basket);
+    List<OrderItem> showItemsInBasket(User user);
     int createNewBasket(Basket basket);
     Basket getCurrentBasket(User user);
     void addToBasket(User user, Product product, int quantity);
-    void deleteFromBasket(int itemId);
+    void deleteFromBasket(User user, int itemId);
     void updateBasket(OrderItem orderItem);
 
 }

@@ -104,5 +104,26 @@ public class Product {
         return this;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
+        Product product = (Product) obj;
+
+        if (getProductID() != product.getProductID()) return false;
+        if (getName() != product.getName()) return false;
+        if (getQuantity() != product.getQuantity()) return false;
+        if (getDescription() != product.getDescription()) return false;
+        if (getPrice() != product.getPrice()) return false;
+        if (getShippingPrice() != product.getShippingPrice()) return false;
+        if (getCategory() != null ? !getCategory().equals(product.getCategory()) : product.getCategory() != null) return false;
+        List<Media> medias = product.getMedias();
+        if(getMedias().size() != medias.size()) return false;
+        for(int i = 0; i< medias.size(); i++)
+            if(getMedias().get(i) != null ? getMedias().get(i).equals(medias.get(i)) : medias.get(i) != null) return false;
+
+        return true;
+
+    }
 }
