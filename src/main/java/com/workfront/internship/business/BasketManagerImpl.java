@@ -98,7 +98,7 @@ public class BasketManagerImpl implements BasketManager {
         if (user == null || itemId <= 0)
             throw new RuntimeException("invalid entry");
         OrderItem orderItem = orderItemDao.getOrderItemByItemID(itemId);
-        orderItemDao.deleteOrderItemByItemID(itemId);
+        orderItemDao.deleteOrderItemByItemID(orderItem.getOrderItemID());
         user.getBasket().getOrderItems().remove(orderItem);
     }
 
