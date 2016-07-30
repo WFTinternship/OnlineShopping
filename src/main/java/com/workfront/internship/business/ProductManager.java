@@ -9,13 +9,10 @@ import java.util.List;
 
 public interface ProductManager {
 
-    int insertProduct(Product product);
-    Product getProductByID(int productId);
+    int createNewProduct(Product product);
+    Product getProduct(int productId);
     void updateProduct(Product product);
-    void deleteProductByID(int id);
+    void deleteProduct(int id);
     List<Product> getProdactsByCategoryID(int id);
-
-
-
 
 }

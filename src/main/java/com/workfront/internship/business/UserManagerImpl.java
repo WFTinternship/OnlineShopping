@@ -82,8 +82,7 @@ public class UserManagerImpl implements UserManager {
             if (!newAddresses.contains(oldAddresses.get(i)))
                 addressDao.deleteAddressesByAddressID(oldAddresses.get(i).getAddressID());
         List<Address> addresses = addressDao.getShippingAddressByUserID(user.getUserID());
-        user = userDao.getUserByID(user.getUserID());
-        user.setShippingAddresses(addresses);
+
     }
 
     @Override

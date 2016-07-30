@@ -17,25 +17,26 @@ public class ProductManagerImpl implements ProductManager{
    private DataSource dataSource;
    private ProductDao productDao;
 
-   private MediaDao mediaDao;
+   private MediaManager mediaManager;
 
    public ProductManagerImpl(DataSource dataSource)throws IOException, SQLException {
        this.dataSource = dataSource;
        productDao = new ProductDaoImpl(dataSource);
 
-       mediaDao = new MediaDaoImpl(dataSource);
+       mediaManager = new MediaManagerImpl(dataSource);
    }
-   public int insertProduct(Product product){
+   public int createNewProduct(Product product){
+       if(!validateProduct(product))
+           throw new RuntimeException("not valid product");
        int index = 0;
-
-          index = productDao.insertProduct(product);
+       index = productDao.insertProduct(product);
        if(index > 0 && !(product.getMedias().isEmpty()))
            for(int i = 0; i <product.getMedias().size(); i++)
-               mediaDao.insertMedia(product.getMedias().get(i));
+               mediaManager.insertMedia(product.getMedias().get(i));
 
        return index;
    }
-   public Product getProductByID(int productId){
+   public Product getProduct(int productId){
 
        Product product = productDao.getProductByID(productId);
        return product;
@@ -44,30 +45,20 @@ public class ProductManagerImpl implements ProductManager{
 
        productDao.updateProduct(product);
 
-       List<Media> oldMedias = mediaDao.getMediaByProductID(product.getProductID());
+       List<Media> oldMedias = mediaManager.getMediaByProductID(product.getProductID());
        List<Media> newMedias = product.getMedias();
        for(int i = 0; i < newMedias.size(); i ++)
            if(!oldMedias.contains(newMedias.get(i)))
-               mediaDao.insertMedia(newMedias.get(i));
+               mediaManager.insertMedia(newMedias.get(i));
        for(int i = 0; i < oldMedias.size(); i ++)
            if(!newMedias.contains(oldMedias.get(i)))
-               mediaDao.deleteMediaByProductID(oldMedias.get(i).getMediaID());
+               mediaManager.deleteMediaByID(oldMedias.get(i).getMediaID());
 
    }
-   public void deleteProductByID(int id){
+   public void deleteProduct(int id){
 
        productDao.deleteProductByID(id);
 
-   }
-   public void deleteAllProducts(){
-
-       productDao.deleteAllProducts();
-
-   }
-   public List<Product> getAllProducts(){
-
-       List<Product> products = productDao.getAllProducts();
-       return products;
 
    }
    public List<Product> getProdactsByCategoryID(int id){
@@ -75,6 +66,11 @@ public class ProductManagerImpl implements ProductManager{
        List<Product> products = productDao.getProdactsByCategoryID(id);
        return products;
 
+   }
+   private boolean validateProduct(Product product){
+       if(product!=null && product.getName() != null && product.getCategory() != null)
+           return true;
+       return false;
    }
 
 
