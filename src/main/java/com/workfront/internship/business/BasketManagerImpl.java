@@ -103,11 +103,11 @@ public class BasketManagerImpl implements BasketManager {
     }
 
     @Override
-    public void updateBasket(OrderItem orderItem) {
+    public void updateBasket(User user,OrderItem orderItem) {
         if (orderItem == null)
             throw new RuntimeException("invalid entry!");
         orderItemDao.updateOrderItem(orderItem);
-        //TODO user.setNewList
+        user.getBasket().setOrderItems(orderItemDao.getOrderItemByBasketID(user.getBasket().getBasketID()));
     }
 
 

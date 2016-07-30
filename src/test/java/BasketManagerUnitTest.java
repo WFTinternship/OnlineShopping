@@ -90,8 +90,9 @@ public class BasketManagerUnitTest {
     public void addToBasket_invalid_entry(){
         basketManager.addToBasket(user, null, 5);
     }
+
     @Test
-    public void showList(){
+    public void showItemsInBasket_is_not_empty(){
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(orderItem);
         basket.setOrderItems(orderItems);
@@ -105,7 +106,7 @@ public class BasketManagerUnitTest {
     }
 
     @Test
-    public void showList_is_empty(){
+    public void showItemsInBasket_is_empty(){
         List<OrderItem> orderItems = new ArrayList<>();
 
         basket.setOrderItems(orderItems);
@@ -118,7 +119,7 @@ public class BasketManagerUnitTest {
 
     }
     @Test(expected = RuntimeException.class)
-    public void showList_invalid_user(){
+    public void showItemsInBasket_invalid_user(){
 
         user = null;
         basketManager.showItemsInBasket(user);
@@ -138,7 +139,7 @@ public class BasketManagerUnitTest {
     public void getCurrentBasket_does_not_exist(){
 
         Basket emptyBasket = new Basket();
-        basket.setBasketStatus("current").setTotalPrice(0.0).setUserID(user.getUserID()).setBasketID(5);
+        emptyBasket.setBasketStatus("current").setTotalPrice(0.0).setUserID(user.getUserID()).setBasketID(5);
         when(basketDao.getCurrentBasket(user.getUserID())).thenReturn(null);
 
         Basket basket1 = basketManager.getCurrentBasket(user);
@@ -163,9 +164,24 @@ public class BasketManagerUnitTest {
 
         Mockito.verify(orderItemDao).deleteOrderItemByItemID(orderItem.getOrderItemID());
     }
+    @Test(expected = RuntimeException.class)
+    public void deleteFromBasket_invalid_entry(){
+        basketManager.deleteFromBasket(null, 0);
+    }
+    @Test
+    public void updateBasket(){
+        basketManager.updateBasket(user, orderItem);
 
+        Mockito.verify(orderItemDao).updateOrderItem(orderItem);
+        Mockito.verify(orderItemDao).getOrderItemByBasketID(orderItem.getBasketID());
 
+    }
+    @Test(expected = RuntimeException.class)
+    public void updateBasket_invalid_entry(){
 
+        basketManager.updateBasket(null, orderItem);
+
+    }
 
     private Basket getRandomBasket() {
         Basket basket = new Basket();

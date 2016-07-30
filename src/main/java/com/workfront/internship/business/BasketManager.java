@@ -15,6 +15,6 @@ public interface BasketManager {
     Basket getCurrentBasket(User user);
     void addToBasket(User user, Product product, int quantity);
     void deleteFromBasket(User user, int itemId);
-    void updateBasket(OrderItem orderItem);
+    void updateBasket(User user, OrderItem orderItem);
 
 }
