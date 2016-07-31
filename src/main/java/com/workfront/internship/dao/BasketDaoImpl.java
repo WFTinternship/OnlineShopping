@@ -147,12 +147,11 @@ public class BasketDaoImpl extends GeneralDao implements BasketDao {
         Basket basket = null;
         while (resultSet.next()) {
             OrderItemDao orderItemDao = new OrderItemDaoImpl(dataSource);
-            List<OrderItem> orderItems = new ArrayList<OrderItem>();
             int basketId = resultSet.getInt("basket_id");
             int userId = resultSet.getInt("user_id");
             double totalPrice = resultSet.getDouble("total_price");
             String status = resultSet.getString("basket_status");
-            orderItems = orderItemDao.getOrderItemByBasketID(basketId);
+            List<OrderItem> orderItems = orderItemDao.getOrderItemByBasketID(basketId);
             basket = new Basket();
             basket = basket.setBasketID(basketId).setOrderItems(orderItems).setTotalPrice(totalPrice).setUserID(userId).setBasketStatus(status);
         }

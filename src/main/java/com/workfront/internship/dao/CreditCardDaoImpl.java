@@ -89,10 +89,22 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
     @Override
     public void updateCreditCard(CreditCard creditCard) {
         Connection connection = null;
+
+        try {
+            connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("can not get a connection!");
+        }
+        updateCreditCard(connection, creditCard);
+
+    }
+    @Override
+    public void updateCreditCard(Connection connection, CreditCard creditCard) {
+
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            connection = dataSource.getConnection();
 
             String sql = "UPDATE creditcards SET balance = ?, billing_address = ? where card_id = ?";
             preparedStatement = connection.prepareStatement(sql);

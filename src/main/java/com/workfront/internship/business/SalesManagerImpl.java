@@ -1,5 +1,6 @@
 package com.workfront.internship.business;
 
+import com.workfront.internship.common.Basket;
 import com.workfront.internship.common.Sale;
 import com.workfront.internship.common.User;
 import com.workfront.internship.dao.DataSource;
@@ -17,12 +18,14 @@ public class SalesManagerImpl implements SalesManager {
 
     private DataSource dataSource;
     private SaleDao saleDao;
+    BasketManager basketManager;
 
 
 
     public SalesManagerImpl(DataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
         saleDao = new SaleDaoImpl(dataSource);
+        basketManager = new BasketManagerImpl(dataSource);
 
     }
     @Override
@@ -33,20 +36,36 @@ public class SalesManagerImpl implements SalesManager {
     }
 
     @Override
-    public void makeNewSale(Sale sale) {
-        saleDao.insertSale(sale);
+    public int makeNewSale(Sale sale) {
+        if(!validateSale(sale))
+            throw new RuntimeException("invalid sale");
+        int result = saleDao.insertSale(sale);
+        return  result;
     }
     @Override
     public Sale getSaleBySaleID(int id){
+        if(id <= 0)
+            throw new RuntimeException("invalid id");
         Sale sale = saleDao.getSaleBySaleID(id);
         return sale;
     }
     @Override
+    public Sale getSalesDetailedInfo(Sale sale){
+        Basket basket = basketManager.getBasket(sale.getBasket().getBasketID());
+        sale.setBasket(basket);
+        return sale;
+
+    }
+    @Override
     public void deleteSaleByUserID(int userId){
+        if(userId <= 0)
+            throw new RuntimeException("invalid id");
         saleDao.deletSaleByUserID(userId);
     }
     @Override
     public void deleteSaleBySaleID(int saleId){
+        if(saleId <= 0)
+            throw new RuntimeException("invalid id");
         saleDao.deleteSaleBySaleID(saleId);
     }
 
@@ -55,8 +74,11 @@ public class SalesManagerImpl implements SalesManager {
         List<Sale> sales = saleDao.getAllSales();
         return sales;
     }
-    @Override
-    public void deleteAllSales(){
-        saleDao.deleteAllSales();
+    private boolean validateSale(Sale sale){
+        if(sale != null && sale.getAddressID() >0 && sale.getCreditCardID() >0 && sale.getDate() !=null &&
+                sale.getUserID() > 0 && sale.getBasket() != null)
+            return true;
+        return false;
     }
 }
+

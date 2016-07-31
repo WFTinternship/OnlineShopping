@@ -114,32 +114,14 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
     @Override
     public void updateProduct(Product product) {
         Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+
         try {
             connection = dataSource.getConnection();
-
-            String sql = "UPDATE products SET name = ?, price = ?, description = ?, shipping_price = ?," +
-                    " quantity = ?, category_id = ? where product_id = ?";
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setDouble(2, product.getPrice());
-            preparedStatement.setString(3, product.getDescription());
-            preparedStatement.setDouble(4, product.getShippingPrice());
-            preparedStatement.setInt(5, product.getQuantity());
-            preparedStatement.setInt(6, product.getCategory().getCategoryID());
-            preparedStatement.setInt(7, product.getProductID());
-
-            preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
-            LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException(e);
-        } finally {
-            close(resultSet, preparedStatement, connection);
+            LOGGER.error("can not get a connection");
         }
-
+        updateProduct(connection, product);
     }
 
     @Override
@@ -147,7 +129,8 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         PreparedStatement preparedStatement = null;
         try {
 
-            String sql = "UPDATE products SET name = ?, price = ?, description = ?, shipping_price = ?, quantity = ?, category_id = ? where product_id = ?";
+            String sql = "UPDATE products SET name = ?, price = ?, description = ?," +
+                    " shipping_price = ?, quantity = ?, category_id = ? where product_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, product.getName());
             preparedStatement.setDouble(2, product.getPrice());
@@ -166,6 +149,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         } finally {
             try {
                 preparedStatement.close();
+                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

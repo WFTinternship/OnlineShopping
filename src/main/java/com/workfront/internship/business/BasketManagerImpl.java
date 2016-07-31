@@ -60,7 +60,7 @@ public class BasketManagerImpl implements BasketManager {
     }
 
     @Override
-    public List<OrderItem> showItemsInBasket(User user) {
+    public List<OrderItem> showItemsInCurrentBasket(User user) {
         if (user == null)
             throw new RuntimeException("invalid user");
         List<OrderItem> orderItems = new ArrayList<>();
@@ -80,6 +80,7 @@ public class BasketManagerImpl implements BasketManager {
 
     }
 
+
     @Override
     public Basket getCurrentBasket(User user) {
         if (user == null)
@@ -92,7 +93,15 @@ public class BasketManagerImpl implements BasketManager {
         }
         return basket;
     }
+    //TODO test for this function
+    @Override
+    public Basket getBasket(int basketId){
+        if(basketId <= 0)
+            throw new RuntimeException("invalid id");
+        Basket basket = basketDao.getBasket(basketId);
+        return basket;
 
+    }
     @Override
     public void deleteFromBasket(User user, int itemId) {
         if (user == null || itemId <= 0)

@@ -12,13 +12,14 @@ import java.util.List;
  */
 public interface SalesManager {
 
-    void makeNewSale(Sale sale);
+    int makeNewSale(Sale sale);
     List<Sale> getSales(User user);
     Sale getSaleBySaleID(int id);
+    Sale getSalesDetailedInfo(Sale sale);
     void deleteSaleByUserID(int userId);
     void deleteSaleBySaleID(int saleId);
   //void updateSale(Sale sale);
     List<Sale> getAllSales();
-    void deleteAllSales();
+
 
 }

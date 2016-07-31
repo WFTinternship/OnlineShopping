@@ -72,10 +72,11 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
     }
     private Sale createSale(ResultSet resultSet)throws SQLException, IOException{
         Sale sale = null;
-        Basket basket = null;
-        BasketDao basketDao = new BasketDaoImpl(dataSource);
+        Basket basket = new Basket();
+        //BasketDao basketDao = new BasketDaoImpl(dataSource);
         while (resultSet.next()) {
-            basket = basketDao.getBasket(resultSet.getInt("basket_id"));
+           // basket = basketDao.getBasket(resultSet.getInt("basket_id"));
+            basket.setBasketID(resultSet.getInt("basket_id"));
             sale = new Sale();
             sale =  sale.setSaleID(resultSet.getInt("sale_id")).
                     setAddressID(resultSet.getInt("address_id")).
@@ -89,10 +90,11 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
     private List<Sale> createListOfSales(ResultSet resultSet) throws SQLException, IOException{
         List<Sale> sales = new ArrayList<Sale>();
         Sale sale = null;
-        Basket basket = null;
-        BasketDao basketDao = new BasketDaoImpl(dataSource);
+        Basket basket = new Basket();
+        //BasketDao basketDao = new BasketDaoImpl(dataSource);
         while (resultSet.next()) {
-            basket = basketDao.getBasket(resultSet.getInt("basket_id"));
+           // basket = basketDao.getBasket(resultSet.getInt("basket_id"));
+            basket.setBasketID(resultSet.getInt("basket_id"));
             sale = new Sale();
             sale = sale.setSaleID(resultSet.getInt("sale_id")).
                     setAddressID(resultSet.getInt("address_id")).
