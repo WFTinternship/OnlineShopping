@@ -7,7 +7,7 @@ import com.workfront.internship.common.CreditCard;
  */
 public interface CreditcardManager {
     CreditCard getCreditCardByCardID(int cardid);
-    int insertCreditCard(CreditCard creditCard);
+    int createCreditCard(CreditCard creditCard);
     void updateCreditCard(CreditCard creditCard);
     void deleteCreditCard(int id);
 }

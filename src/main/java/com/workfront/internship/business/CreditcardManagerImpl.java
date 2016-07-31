@@ -24,7 +24,7 @@ public class CreditcardManagerImpl implements CreditcardManager {
         return creditCardDao.getCreditCardByCardID(cardid);
 
     }
-    public int insertCreditCard(CreditCard creditCard){
+    public int createCreditCard(CreditCard creditCard){
         if(!validateCard(creditCard))
             throw new RuntimeException("invalid card");
         int result = creditCardDao.insertCreditCard(creditCard);
