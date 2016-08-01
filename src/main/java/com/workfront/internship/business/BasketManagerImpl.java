@@ -42,7 +42,7 @@ public class BasketManagerImpl implements BasketManager {
     }
 
     @Override
-    public void addToBasket(User user, Product product, int quantity) {
+    public int addToBasket(User user, Product product, int quantity) {
         if (user == null || product == null || quantity <= 0)
             throw new RuntimeException("invalid entry!");
         if (user.getBasket() == null) {
@@ -56,7 +56,7 @@ public class BasketManagerImpl implements BasketManager {
             orderItemDao.insertOrderItem(newOrderItem);
         else
             orderItemDao.updateOrderItem(newOrderItem);
-
+return newOrderItem.getOrderItemID();
     }
 
     @Override

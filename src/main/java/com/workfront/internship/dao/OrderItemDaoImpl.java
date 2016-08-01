@@ -111,7 +111,7 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         try {
             connection = dataSource.getConnection();
             orderItem = new OrderItem();
-            String sql = "SELECT * from orderitems where oproduct_id =? and basket_id = ?";
+            String sql = "SELECT * from orderitems where product_id =? and basket_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, productid);
             preparedStatement.setInt(2, basketId);

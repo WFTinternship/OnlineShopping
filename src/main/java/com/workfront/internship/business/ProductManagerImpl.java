@@ -30,7 +30,7 @@ public class ProductManagerImpl implements ProductManager{
            throw new RuntimeException("not valid product");
        int index = 0;
        index = productDao.insertProduct(product);
-       if(index > 0 && !(product.getMedias().isEmpty()))
+       if(index > 0 && product.getMedias() !=null && !(product.getMedias().isEmpty()))
            for(int i = 0; i <product.getMedias().size(); i++)
                mediaManager.insertMedia(product.getMedias().get(i));
 

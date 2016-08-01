@@ -39,8 +39,7 @@ public class UserManagerImplTest {
 
     @After
     public void tearDown()  {
-        //TODO implementation of deleteAllUsers in UserManager
-        // userManager.deleteAllUsers();
+        userManager.deleteAccount(user.getUserID());
 
     }
 

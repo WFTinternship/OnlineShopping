@@ -14,7 +14,7 @@ public interface BasketManager {
     int createNewBasket(Basket basket);
     Basket getCurrentBasket(User user);
     Basket getBasket(int basketId);
-    void addToBasket(User user, Product product, int quantity);
+    int addToBasket(User user, Product product, int quantity);
     void deleteFromBasket(User user, int itemId);
     void updateBasket(User user, OrderItem orderItem);
 

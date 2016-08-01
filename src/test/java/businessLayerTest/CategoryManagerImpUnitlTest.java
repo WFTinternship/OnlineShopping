@@ -33,7 +33,7 @@ public class CategoryManagerImpUnitlTest {
     @Before
     public void setUP() throws IOException, SQLException {
         dataSource = DataSource.getInstance();
-        category = getRandomCategory();
+        category = getTestCategory();
         categoryManager = new CategoryManagerImpl(dataSource);
         categoryDao = Mockito.mock(CategoryDaoImpl.class);
         Whitebox.setInternalState(categoryManager, "categoryDao", categoryDao);
@@ -102,7 +102,7 @@ public class CategoryManagerImpUnitlTest {
     }
 
 
-    private Category getRandomCategory() {
+    private Category getTestCategory() {
         Random random = new Random();
         int x = random.nextInt(100000);
         Category category = new Category();
