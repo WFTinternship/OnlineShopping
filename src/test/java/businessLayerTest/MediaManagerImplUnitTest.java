@@ -44,6 +44,10 @@ public class MediaManagerImplUnitTest {
     }
     @After
     public void tearDown() {
+        product = null;
+        media = null;
+        mediaManager = null;
+        mediaDao = null;
 
     }
     @Test

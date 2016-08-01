@@ -24,9 +24,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by Administrator on 31.07.2016.
- */
+
 public class SaleManagerImplUnitTest {
     private Sale sale;
     private SalesManager salesManager;
@@ -36,10 +34,8 @@ public class SaleManagerImplUnitTest {
 
     @Before
     public void setUP() throws IOException, SQLException {
-        // dataSource = DataSource.getInstance();
         sale = getTestSale();
         salesManager = new SalesManagerImpl(dataSource);
-        basketManager = new BasketManagerImpl(dataSource);
         saleDao = Mockito.mock(SaleDaoImpl.class);
         basketManager = Mockito.mock(BasketManagerImpl.class);
         Whitebox.setInternalState(salesManager, "saleDao", saleDao);
@@ -48,6 +44,10 @@ public class SaleManagerImplUnitTest {
     }
     @After
     public void tearDown() {
+        sale = null;
+        salesManager = null;
+        basketManager = null;
+        saleDao = null;
 
     }
     @Test

@@ -22,9 +22,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by Workfront on 7/27/2016.
- */
 public class UserManagerImplUnitTest {
     private User user;
     private Product product;
@@ -49,6 +46,11 @@ public class UserManagerImplUnitTest {
 
     @After
     public void tearDown() {
+        user = null;
+        product = null;
+        userManager = null;
+        userDao = null;
+        addressDao = null;
 
     }
 
@@ -88,8 +90,9 @@ public class UserManagerImplUnitTest {
 
         userManager.createAccount(user);
     }
+
     @Test(expected = RuntimeException.class)
-    public void login_validUsername_validPassword_returned_null_user(){
+    public void login_validUsername_validPassword_returned_null_user() {
 
         user.setPassword(HashManager.getHash(user.getPassword()));
 
@@ -99,8 +102,9 @@ public class UserManagerImplUnitTest {
 
 
     }
+
     @Test
-    public void login_validUsername_validPassword_returned_notNull_user(){
+    public void login_validUsername_validPassword_returned_notNull_user() {
 
         String notHashedPassword = user.getPassword();
 
@@ -114,13 +118,15 @@ public class UserManagerImplUnitTest {
 
 
     }
+
     @Test(expected = RuntimeException.class)
-    public void login_notValid_username_or_password(){
+    public void login_notValid_username_or_password() {
         User user1 = new User();
         userManager.login(user1.getUsername(), user1.getPassword());
     }
+
     @Test
-    public void editProfile_updateUser_and_getShippingAddressByUserID_is_called(){
+    public void editProfile_updateUser_and_getShippingAddressByUserID_is_called() {
 
         userManager.editProfile(user);
 
@@ -130,7 +136,7 @@ public class UserManagerImplUnitTest {
     }
 
     @Test
-    public void editProfile_shippingAddress_added(){
+    public void editProfile_shippingAddress_added() {
         User updatedUser = getTestUser();
         Address newAddress = new Address();
         newAddress.setAddress("newAddress");
@@ -144,8 +150,9 @@ public class UserManagerImplUnitTest {
         Mockito.verify(addressDao, Mockito.never()).deleteAddressesByAddressID(any(Integer.class));
 
     }
+
     @Test
-    public void editProfile_shippingAddress_removed(){
+    public void editProfile_shippingAddress_removed() {
         User updatedUser = getTestUser();
         Address newAddress = new Address();
         newAddress.setAddress("newAddress");
@@ -159,25 +166,29 @@ public class UserManagerImplUnitTest {
         Mockito.verify(addressDao).deleteAddressesByAddressID(any(Integer.class));
 
     }
+
     @Test(expected = RuntimeException.class)
-    public void editProfile_notValidUser(){
+    public void editProfile_notValidUser() {
         User user1 = new User();
         userManager.editProfile(user1);
     }
+
     @Test
-    public void deleteAccount_validUserID(){
+    public void deleteAccount_validUserID() {
 
         userManager.deleteAccount(user.getUserID());
 
         Mockito.verify(userDao).deleteUser(any(Integer.class));
     }
+
     @Test(expected = RuntimeException.class)
-    public void deleteAccount_notValidUserID(){
+    public void deleteAccount_notValidUserID() {
 
         userManager.deleteAccount(-1);
     }
+
     @Test
-    public void addToList(){
+    public void addToList() {
 
         Product product1 = getTestProduct();
         product1.setProductID(20);
@@ -194,13 +205,15 @@ public class UserManagerImplUnitTest {
         assertEquals(products.get(1), user.getWishList().get(1));
 
     }
+
     @Test(expected = RuntimeException.class)
-    public void addToList_notValidUser(){
+    public void addToList_notValidUser() {
 
         userManager.addToList(null, product);
     }
+
     @Test
-    public void getList(){
+    public void getList() {
         Product product1 = getTestProduct();
         product1.setProductID(20);
         List<Product> products = new ArrayList<>();
@@ -214,16 +227,19 @@ public class UserManagerImplUnitTest {
         assertEquals(products.get(0), products1.get(0));
         assertEquals(products.get(1), products1.get(1));
     }
+
     @Test(expected = RuntimeException.class)
-    public void getList_notValidUser(){
+    public void getList_notValidUser() {
         userManager.getList(null);
     }
+
     @Test
-    public void deleteFromList(){
+    public void deleteFromList() {
         userManager.deleteFromList(user, product);
         verify(userDao).deleteFromWishlistByUserIDAndProductID(user.getUserID(), product.getProductID());
         verify(userDao).getWishlist(user.getUserID());
     }
+
     private User getTestUser() {
         User user = new User();
         user.setUserID(5).setFirstname("Anahit").setLastname("galstyan").
@@ -237,7 +253,8 @@ public class UserManagerImplUnitTest {
         user.setShippingAddresses(addressess);
         return user;
     }
-    private Product getTestProduct(){
+
+    private Product getTestProduct() {
         Product product = new Product();
         Category category = new Category();
         category.setCategoryID(1).setName("hat");
@@ -249,7 +266,8 @@ public class UserManagerImplUnitTest {
 
         return product;
     }
-    private void doAssertion(User user, User user1){
+
+    private void doAssertion(User user, User user1) {
 
         assertEquals(user.getUserID(), user1.getUserID());
         assertEquals(user.getFirstname(), user1.getFirstname());

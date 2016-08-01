@@ -29,7 +29,6 @@ public class CreditCardManagerImplUnitTest {
 
     @Before
     public void setUP() throws IOException, SQLException {
-       // dataSource = DataSource.getInstance();
         creditCard = getTestCreditCard();
         creditcardManager = new CreditcardManagerImpl(dataSource);
         creditCardDao = Mockito.mock(CreditCardDao.class);
@@ -38,6 +37,9 @@ public class CreditCardManagerImplUnitTest {
     }
     @After
     public void tearDown() {
+        creditCard = null;
+        creditcardManager = null;
+        creditCardDao = null;
 
     }
     @Test

@@ -33,7 +33,6 @@ public class BasketManagerImplUnitTest {
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = DataSource.getInstance();
         product = getTestProduct();
         basket = getTestBasket();
         user = getTestUser();
@@ -48,7 +47,11 @@ public class BasketManagerImplUnitTest {
     }
     @After
     public void tearDown() {
-
+        product = null;
+        basket = null;
+        orderItem = null;
+        user = null;
+        basketManager = null;
     }
     @Test
     public void createNewBasket(){

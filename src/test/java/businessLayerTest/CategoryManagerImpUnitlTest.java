@@ -32,7 +32,6 @@ public class CategoryManagerImpUnitlTest {
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = DataSource.getInstance();
         category = getTestCategory();
         categoryManager = new CategoryManagerImpl(dataSource);
         categoryDao = Mockito.mock(CategoryDaoImpl.class);
@@ -41,6 +40,8 @@ public class CategoryManagerImpUnitlTest {
     }
     @After
     public void tearDown() {
+        category = null;
+        categoryManager = null;
 
     }
     @Test

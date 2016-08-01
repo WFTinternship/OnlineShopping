@@ -20,12 +20,8 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-/**
- * Created by Administrator on 30.07.2016.
- */
+
 public class ProductManagerUnitTest {
-
-
     private Product product;
     private ProductManager productManager;
     DataSource dataSource;
@@ -34,7 +30,6 @@ public class ProductManagerUnitTest {
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = DataSource.getInstance();
         product = getTestProduct();
         productManager = new ProductManagerImpl(dataSource);
         productDao = Mockito.mock(ProductDaoImpl.class);
@@ -45,8 +40,10 @@ public class ProductManagerUnitTest {
     }
 
     @After
-
     public void tearDown() {
+        product = null;
+        productManager = null;
+        productDao = null;
 
     }
 
