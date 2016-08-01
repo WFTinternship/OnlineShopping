@@ -30,6 +30,8 @@ public class SalesManagerImpl implements SalesManager {
     }
     @Override
     public List<Sale> getSales(User user) {
+        if(user == null)
+            throw new RuntimeException("invalid user");
         List<Sale> records = saleDao.getSales(user.getUserID());
         user.setRecords(records);
         return records;
@@ -51,6 +53,8 @@ public class SalesManagerImpl implements SalesManager {
     }
     @Override
     public Sale getSalesDetailedInfo(Sale sale){
+        if(!validateSale(sale))
+            throw new RuntimeException("invalid sale");
         Basket basket = basketManager.getBasket(sale.getBasket().getBasketID());
         sale.setBasket(basket);
         return sale;

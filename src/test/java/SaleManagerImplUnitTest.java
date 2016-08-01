@@ -9,13 +9,19 @@ import com.workfront.internship.dao.SaleDao;
 import com.workfront.internship.dao.SaleDaoImpl;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Administrator on 31.07.2016.
@@ -39,10 +45,23 @@ public class SaleManagerImplUnitTest {
     public void tearDown() {
 
     }
+    @Test
+    public void makeNewSale(){
+        when(saleDao.insertSale(sale)).thenReturn(sale.getSaleID());
+
+        int result = salesManager.makeNewSale(sale);
+
+        assertEquals("sale was not inserted", result, sale.getSaleID());
+    }
+    @Test(expected = RuntimeException.class)
+    public void makeNewSale_invalid_sale(){
+        salesManager.makeNewSale(null);
+    }
 
     private Sale getTestSale(){
         Sale sale = new Sale();
         Basket basket = new Basket();
+        Date date = new Date();
         basket.setBasketID(100);
         List<OrderItem> orderItems = new ArrayList<>();
         Product product = new Product();
@@ -56,7 +75,7 @@ public class SaleManagerImplUnitTest {
         orderItems.add(orderItem);
         orderItems.add(orderItem1);
         basket.setBasketStatus("saled").setOrderItems(orderItems);
-        sale.setBasket(basket).setUserID(1000).setSaleID(50).setAddressID(30).setCreditCard(70);
+        sale.setBasket(basket).setUserID(1000).setSaleID(50).setAddressID(30).setCreditCard(70).setDate(new Timestamp(date.getTime()));
         return sale;
     }
 }

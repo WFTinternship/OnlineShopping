@@ -99,7 +99,7 @@ public class BasketManagerUnitTest {
         when(basketDao.getCurrentBasket(user.getUserID())).thenReturn(user.getBasket());
         when(orderItemDao.getOrderItemByBasketID(basket.getBasketID())).thenReturn(orderItems);
 
-        orderItems = basketManager.showItemsInBasket(user);
+        orderItems = basketManager.showItemsInCurrentBasket(user);
 
         doAssertion(orderItem, orderItems.get(0));
 
@@ -112,7 +112,7 @@ public class BasketManagerUnitTest {
         basket.setOrderItems(orderItems);
         when(basketDao.getCurrentBasket(user.getUserID())).thenReturn(null);
 
-        orderItems = basketManager.showItemsInBasket(user);
+        orderItems = basketManager.showItemsInCurrentBasket(user);
 
         Mockito.verify(orderItemDao, Mockito.never()).getOrderItemByBasketID(any(Integer.class));
         assertEquals(true, orderItems.isEmpty());
@@ -122,7 +122,7 @@ public class BasketManagerUnitTest {
     public void showItemsInBasket_invalid_user(){
 
         user = null;
-        basketManager.showItemsInBasket(user);
+        basketManager.showItemsInCurrentBasket(user);
 
     }
     @Test
