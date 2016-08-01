@@ -53,7 +53,8 @@ public class BasketManagerImplTest {
 
     @After
     public void tearDown()  {
-        //basketManager.deleteBasket(basket.getBasketID());
+        userManager.deleteAccount(user.getUserID());
+        categoryManager.deleteCategory(category.getCategoryID());
     }
     @Test
     public void addToBasket(){
