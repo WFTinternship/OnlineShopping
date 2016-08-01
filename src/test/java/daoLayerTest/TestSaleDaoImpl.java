@@ -1,3 +1,5 @@
+package daoLayerTest;
+
 import com.workfront.internship.common.*;
 import com.workfront.internship.dao.*;
 import org.junit.After;

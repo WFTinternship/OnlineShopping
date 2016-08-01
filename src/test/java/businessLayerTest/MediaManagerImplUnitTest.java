@@ -1,3 +1,5 @@
+package businessLayerTest;
+
 import com.workfront.internship.business.MediaManager;
 import com.workfront.internship.business.MediaManagerImpl;
 import com.workfront.internship.common.Category;

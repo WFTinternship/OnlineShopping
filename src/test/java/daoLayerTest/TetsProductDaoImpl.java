@@ -1,3 +1,4 @@
+package daoLayerTest;
 
 import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Product;

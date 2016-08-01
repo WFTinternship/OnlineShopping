@@ -1,3 +1,5 @@
+package businessLayerTest;
+
 import com.workfront.internship.business.EmailManager;
 import com.workfront.internship.business.UserManager;
 import com.workfront.internship.business.UserManagerImpl;

@@ -1,4 +1,6 @@
-import com.workfront.internship.common.OrderItem;
+package daoLayerTest;
+
+import com.workfront.internship.common.Media;
 import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
@@ -16,10 +18,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
-public class OrderItemDaoUnitTest {
-
+public class MediaDaoUnitTest {
     DataSource dataSource;
-    OrderItemDao orderItemDao;
+    MediaDao mediaDao;
 
     @Before
     public void beforeTest()throws IOException, SQLException{
@@ -27,41 +28,44 @@ public class OrderItemDaoUnitTest {
 
         Connection connection = Mockito.mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
-        when(connection.prepareStatement(any(String.class))).thenThrow(SQLException.class);
         when(connection.prepareStatement(any(String.class), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenThrow(SQLException.class);
 
-        orderItemDao = new OrderItemDaoImpl(dataSource);
+        mediaDao = new MediaDaoImpl(dataSource);
     }
     @Test(expected = RuntimeException.class)
-    public void insertOrderItem_dbError() {
-        orderItemDao.insertOrderItem(new OrderItem());
+    public void insertMedia_dbError() {
+        mediaDao.insertMedia(new Media());
     }
     @Test(expected = RuntimeException.class)
-    public void getOrderItemByItemID_dbError() {
-        orderItemDao.getOrderItemByItemID(8);
+    public void getMediaByMediaID_dbError() {
+        mediaDao.getMediaByMediaID(8);
     }
     @Test(expected = RuntimeException.class)
-    public void getOrderItemByBasketID_dbError() {
-        orderItemDao.getOrderItemByBasketID(3);
+    public void getMediaByProductID_dbError() {
+        mediaDao.getMediaByProductID(3);
     }
     @Test(expected = RuntimeException.class)
-    public void getAllOrderItems_dbError() {
-        orderItemDao.getAllOrderItems();
+    public void getAllMedias_dbError() {
+        mediaDao.getAllMedias();
     }
     @Test(expected = RuntimeException.class)
-    public void updateOrderItem_dbError() {
-        orderItemDao.updateOrderItem(new OrderItem());
+    public void updateMedia_dbError() {
+        mediaDao.updateMedia(new Media());
     }
     @Test(expected = RuntimeException.class)
-    public void deleteOrderItemByItemID_dbError() {
-        orderItemDao.deleteOrderItemByItemID(3);
+    public void deleteMediaByID_dbError() {
+        mediaDao.deleteMediaByID(3);
     }
     @Test(expected = RuntimeException.class)
-    public void deleteAllOrderItems_dbError() {
-        orderItemDao.deleteAllOrderItems();
+    public void deleteMediaByPath_dbError() {
+        mediaDao.deleteMediaByPath("somePath");
     }
     @Test(expected = RuntimeException.class)
-    public void deleteOrderItemByProductID_dbError() {
-        orderItemDao.deleteOrderItemByProductID(3);
+    public void deleteMediaByProductID_dbError() {
+        mediaDao.deleteMediaByProductID(3);
+    }
+    @Test(expected = RuntimeException.class)
+    public void deleteAllMedias_dbError() {
+        mediaDao.deleteAllMedias();
     }
 }

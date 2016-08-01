@@ -1,3 +1,5 @@
+package daoLayerTest;
+
 import com.workfront.internship.common.Basket;
 import com.workfront.internship.common.User;
 import com.workfront.internship.dao.*;

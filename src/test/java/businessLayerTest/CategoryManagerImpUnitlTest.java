@@ -1,3 +1,5 @@
+package businessLayerTest;
+
 import com.workfront.internship.business.CategoryManager;
 import com.workfront.internship.business.CategoryManagerImpl;
 import com.workfront.internship.common.Category;

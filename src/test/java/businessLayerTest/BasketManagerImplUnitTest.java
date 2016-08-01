@@ -1,3 +1,5 @@
+package businessLayerTest;
+
 import com.workfront.internship.business.BasketManager;
 import com.workfront.internship.business.BasketManagerImpl;
 import com.workfront.internship.common.*;
@@ -19,7 +21,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-public class BasketManagerUnitTest {
+public class BasketManagerImplUnitTest {
     private User user;
     private Basket basket;
     private OrderItem orderItem;
@@ -32,10 +34,10 @@ public class BasketManagerUnitTest {
     @Before
     public void setUP() throws IOException, SQLException {
         dataSource = DataSource.getInstance();
-        product = getRandomProduct();
-        basket = getRandomBasket();
-        user = getRandomUser();
-        orderItem = getRandomOrderItem();
+        product = getTestProduct();
+        basket = getTestBasket();
+        user = getTestUser();
+        orderItem = getTestOrderItem();
 
         basketManager = new BasketManagerImpl(dataSource);
         basketDao = Mockito.mock(BasketDaoImpl.class);
@@ -68,6 +70,7 @@ public class BasketManagerUnitTest {
         Mockito.verify(orderItemDao).updateOrderItem(any(OrderItem.class));
 
     }
+
     @Test
     public void addToBasket_does_not_exist(){
 
@@ -89,6 +92,17 @@ public class BasketManagerUnitTest {
     @Test(expected = RuntimeException.class)
     public void addToBasket_invalid_entry(){
         basketManager.addToBasket(user, null, 5);
+
+    }
+    @Test
+    public void getBasket(){
+
+        when(basketDao.getBasket(basket.getBasketID())).thenReturn(basket);
+
+        Basket basket1 = basketManager.getBasket(basket.getBasketID());
+
+        assertEquals("could not get a basket", basket, basket1);
+
     }
 
     @Test
@@ -101,7 +115,7 @@ public class BasketManagerUnitTest {
 
         orderItems = basketManager.showItemsInCurrentBasket(user);
 
-        doAssertion(orderItem, orderItems.get(0));
+        assertEquals(orderItem, orderItems.get(0));
 
     }
 
@@ -132,21 +146,22 @@ public class BasketManagerUnitTest {
 
         Basket basket1 = basketManager.getCurrentBasket(user);
 
-        doAssertion(basket, basket1);
+        assertEquals("could not get current basket", basket, basket1);
 
     }
     @Test
     public void getCurrentBasket_does_not_exist(){
 
         Basket emptyBasket = new Basket();
-        emptyBasket.setBasketStatus("current").setTotalPrice(0.0).setUserID(user.getUserID()).setBasketID(5);
+        emptyBasket.setBasketStatus("current").setTotalPrice(0.0).setUserID(user.getUserID()).setBasketID(5).setOrderItems(new ArrayList<OrderItem>());
         when(basketDao.getCurrentBasket(user.getUserID())).thenReturn(null);
 
         Basket basket1 = basketManager.getCurrentBasket(user);
+
         basket1.setBasketID(5);
 
         Mockito.verify(basketDao).insertBasket(basket1);
-        doAssertion(emptyBasket, basket1);
+        assertEquals("could not get current basket", emptyBasket, basket1);
 
     }
     @Test(expected = RuntimeException.class)
@@ -183,22 +198,22 @@ public class BasketManagerUnitTest {
 
     }
 
-    private Basket getRandomBasket() {
+    private Basket getTestBasket() {
         Basket basket = new Basket();
-        basket.setTotalPrice(100).setBasketStatus("current").setBasketID(10);
+        basket.setTotalPrice(100).setBasketStatus("current").setBasketID(10).setOrderItems(new ArrayList<OrderItem>());
         return basket;
     }
-    private OrderItem getRandomOrderItem() {
+    private OrderItem getTestOrderItem() {
         OrderItem orderItem = new OrderItem();
         orderItem.setQuantity(10).setBasketID(basket.getBasketID()).setProduct(product).setOrderItemID(1);
         return  orderItem;
     }
-    private Product getRandomProduct(){
+    private Product getTestProduct(){
         product = new Product();
         product.setProductID(5).setName("hat");
         return product;
     }
-    private User getRandomUser() {
+    private User getTestUser() {
         User user = new User();
         user.setFirstname("Anahit").setLastname("galstyan").
                 setUsername("anigal").setPassword("anahitgal85").
@@ -207,19 +222,5 @@ public class BasketManagerUnitTest {
         user.setBasket(basket);
         return user;
     }
-    private void doAssertion(Basket basket, Basket basket1){
-        assertEquals(basket.getUserID(), basket1.getUserID());
-        assertEquals(basket.getBasketID(), basket1.getBasketID());
-        assertEquals(basket.getTotalPrice(), basket1.getTotalPrice());
-        assertEquals(basket.getBasketStatus(), basket1.getBasketStatus());
 
-    }
-    private void doAssertion(OrderItem orderItem, OrderItem orderItem1){
-
-        assertEquals(orderItem.getOrderItemID(), orderItem1.getOrderItemID());
-        assertEquals(orderItem.getQuantity(), orderItem1.getQuantity());
-        assertEquals(orderItem.getProduct().getProductID(), orderItem1.getProduct().getProductID());
-        assertEquals(orderItem.getBasketID(), orderItem1.getBasketID());
-
-    }
 }

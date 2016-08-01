@@ -1,5 +1,6 @@
+package daoLayerTest;
 
-import com.workfront.internship.common.Basket;
+import com.workfront.internship.common.Address;
 import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
@@ -7,7 +8,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,55 +17,62 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
+public class AddressDaoUnitTest {
 
-public class BasketDaoUnitTest {
     DataSource dataSource;
-    BasketDao basketDao;
 
+    AddressDao addressDao;
+
+   // @SuppressWarnings("unchecked")
     @Before
-    public void beforeTest() throws IOException, SQLException{
+    public void beforeTest() throws Exception {
 
         dataSource = Mockito.mock(DataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
+
         when(dataSource.getConnection()).thenReturn(connection);
         when(connection.prepareStatement(any(String.class))).thenThrow(SQLException.class);
         when(connection.prepareStatement(any(String.class), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenThrow(SQLException.class);
 
-        basketDao = new BasketDaoImpl(dataSource);
+        addressDao = new AddressDaoImpl(dataSource);
+    }
+
+    @After
+    public void afterTest() {
+
     }
 
     @Test(expected = RuntimeException.class)
-    public void insertBasket_dbError() {
-        basketDao.insertBasket(new Basket());
+    public void insertAddress_dbError() {
+        addressDao.insertAddress(new Address());
     }
     @Test(expected = RuntimeException.class)
-    public void getBasket_dbError() {
-        basketDao.getBasket(8);
+    public void getAddress_dbError() {
+        addressDao.getAddressByID(8);
     }
     @Test(expected = RuntimeException.class)
-    public void getCurrentBasket_dbError() {
-        basketDao.getCurrentBasket(3);
+    public void updateAddress_dbError() {
+        addressDao.updateAddress(new Address());
     }
     @Test(expected = RuntimeException.class)
-    public void getAllBaskets_dbError() {
-        basketDao.getAllBaskets();
+    public void deleteAddress_dbError() {
+        addressDao.deleteAllAddresses();
     }
     @Test(expected = RuntimeException.class)
-    public void updateBasket_dbError() {
-        basketDao.updateBasket(new Basket());
+    public void deleteAddressByAddressID_dbError() {
+        addressDao.deleteAddressesByAddressID(8);
     }
     @Test(expected = RuntimeException.class)
-    public void deleteBasketByUserID_dbError() {
-        basketDao.deleteBasketByUserId(2);
+    public void deleteAddressByUserID_dbError() {
+        addressDao.deleteAddressesByUserID(10);
     }
     @Test(expected = RuntimeException.class)
-    public void deleteBasketByBasktID_dbError() {
-        basketDao.deleteBasketByBasketID(8);
+    public void getAllAddresses_dbError() {
+        addressDao.getAllAddresses();
     }
     @Test(expected = RuntimeException.class)
-    public void deleteAllBaskets_dbError() {
-        basketDao.deleteAllBaskets();
+    public void getShippingAddresses_dbError() {
+        addressDao.getShippingAddressByUserID(8);
     }
-
 }

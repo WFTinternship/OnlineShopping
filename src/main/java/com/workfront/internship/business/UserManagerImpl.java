@@ -11,6 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,7 +82,8 @@ public class UserManagerImpl implements UserManager {
         for (int i = 0; i < oldAddresses.size(); i++)
             if (!newAddresses.contains(oldAddresses.get(i)))
                 addressDao.deleteAddressesByAddressID(oldAddresses.get(i).getAddressID());
-        List<Address> addresses = addressDao.getShippingAddressByUserID(user.getUserID());
+       // List<Address> addresses = addressDao.getShippingAddressByUserID(user.getUserID());
+
 
     }
 
@@ -93,16 +95,14 @@ public class UserManagerImpl implements UserManager {
         userDao.deleteUser(id);
 
     }
-
-
     @Override
     public void addToList(User user, Product product) {
         if (user == null || product == null )
             throw new RuntimeException("invalid entry!");
-        if (user.getWishList() == null) {
             getList(user);
-        }
+
         userDao.insertIntoWishlist(user.getUserID(), product.getProductID());
+        user.setWishList(userDao.getWishlist(user.getUserID()));
 
 
     }
@@ -110,8 +110,13 @@ public class UserManagerImpl implements UserManager {
     public List<Product> getList(User user) {
         if(user == null)
             throw new RuntimeException("invalid user");
-        List<Product> wishlist = userDao.getWishlist(user.getUserID());
-        user.setWishList(wishlist);
+        List<Product> wishlist = user.getWishList();
+        if (user.getWishList() != null)
+            return wishlist;
+        wishlist = userDao.getWishlist(user.getUserID());
+            if(wishlist.isEmpty())
+                return wishlist;
+            user.setWishList(wishlist);
         return wishlist;
     }
 

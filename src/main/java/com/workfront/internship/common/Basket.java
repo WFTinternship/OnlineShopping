@@ -61,6 +61,23 @@ public class Basket {
         this.totalPrice = totalPrice;
         return this;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Basket basket = (Basket) obj;
+
+        if (getBasketID() != basket.getBasketID()) return false;
+        if (getTotalPrice() != basket.getTotalPrice()) return false;
+        if (getBasketStatus()!= basket.getBasketStatus()) return false;
+        if (getUserID()!= basket.getUserID()) return false;
+        if(!getOrderItems().isEmpty() && getOrderItems().size() == basket.getOrderItems().size())
+        for(int i = 0; i< getOrderItems().size(); i++)
+            if (getOrderItems().get(i) != null ? !getOrderItems().get(i).equals(basket.getOrderItems().get(i)) : basket.getOrderItems().get(i) != null) return false;
+
+        return true;
+    }
 
 
 }

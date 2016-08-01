@@ -1,31 +1,31 @@
-import com.workfront.internship.common.Sale;
-import com.workfront.internship.dao.DataSource;
-import com.workfront.internship.dao.SaleDao;
-import com.workfront.internship.dao.SaleDaoImpl;
+package daoLayerTest;
+
+import com.workfront.internship.common.Basket;
+import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by Administrator on 17.07.2016.
- */
-public class SaleDaoUnitTest {
+
+public class BasketDaoUnitTest {
     DataSource dataSource;
+    BasketDao basketDao;
 
-    SaleDao saleDao;
-
-    @SuppressWarnings("unchecked")
     @Before
-    public void beforeTest() throws Exception {
+    public void beforeTest() throws IOException, SQLException{
+
         dataSource = Mockito.mock(DataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
@@ -33,40 +33,40 @@ public class SaleDaoUnitTest {
         when(connection.prepareStatement(any(String.class))).thenThrow(SQLException.class);
         when(connection.prepareStatement(any(String.class), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenThrow(SQLException.class);
 
-        saleDao = new SaleDaoImpl(dataSource);
-    }
-
-    @After
-    public void afterTest() {
-
+        basketDao = new BasketDaoImpl(dataSource);
     }
 
     @Test(expected = RuntimeException.class)
-    public void insertSale_dbError() {
-        saleDao.insertSale(new Sale());
+    public void insertBasket_dbError() {
+        basketDao.insertBasket(new Basket());
     }
     @Test(expected = RuntimeException.class)
-    public void getSaleBySaleID_dbError() {
-        saleDao.getSaleBySaleID(10);
+    public void getBasket_dbError() {
+        basketDao.getBasket(8);
     }
     @Test(expected = RuntimeException.class)
-    public void getSales_dbError() {
-        saleDao.getSales(10);
+    public void getCurrentBasket_dbError() {
+        basketDao.getCurrentBasket(3);
     }
     @Test(expected = RuntimeException.class)
-    public void updateSale_dbError() {
-        saleDao.updateSale(new Sale());
+    public void getAllBaskets_dbError() {
+        basketDao.getAllBaskets();
     }
     @Test(expected = RuntimeException.class)
-    public void deleteSaleBySaleID_dbError() {
-        saleDao.deleteSaleBySaleID(5);
+    public void updateBasket_dbError() {
+        basketDao.updateBasket(new Basket());
     }
     @Test(expected = RuntimeException.class)
-    public void deleteSaleByUserID_dbError() {
-        saleDao.deletSaleByUserID(5);
+    public void deleteBasketByUserID_dbError() {
+        basketDao.deleteBasketByUserId(2);
     }
     @Test(expected = RuntimeException.class)
-    public void getAllSales_dbError() {
-        saleDao.getAllSales();
+    public void deleteBasketByBasktID_dbError() {
+        basketDao.deleteBasketByBasketID(8);
     }
+    @Test(expected = RuntimeException.class)
+    public void deleteAllBaskets_dbError() {
+        basketDao.deleteAllBaskets();
+    }
+
 }

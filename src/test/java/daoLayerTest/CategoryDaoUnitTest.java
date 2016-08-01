@@ -1,32 +1,30 @@
-import com.workfront.internship.common.Product;
-import com.workfront.internship.dao.DataSource;
-import com.workfront.internship.dao.ProductDao;
-import com.workfront.internship.dao.ProductDaoImpl;
+package daoLayerTest;
+
+import com.workfront.internship.common.Category;
+import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
-
-/**
- * Created by Administrator on 17.07.2016.
- */
-public class ProductDaoUnitTest {
+public class CategoryDaoUnitTest {
     DataSource dataSource;
+    CategoryDao categoryDao;
 
-    ProductDao productDao;
-
-    @SuppressWarnings("unchecked")
     @Before
-    public void beforeTest() throws Exception {
+    public void beforeTest() throws IOException, SQLException{
+
         dataSource = Mockito.mock(DataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
@@ -34,36 +32,36 @@ public class ProductDaoUnitTest {
         when(connection.prepareStatement(any(String.class))).thenThrow(SQLException.class);
         when(connection.prepareStatement(any(String.class), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenThrow(SQLException.class);
 
-        productDao = new ProductDaoImpl(dataSource);
+
+        categoryDao = new CategoryDaoImpl(dataSource);
+    }
+    @Test(expected = RuntimeException.class)
+    public void insertCategory_dbError() {
+        categoryDao.insertCategory(new Category());
     }
 
-    @After
-    public void afterTest() {
-
+    @Test(expected = RuntimeException.class)
+    public void getCategory_dbError() {
+        categoryDao.getCategoryByID(8);
     }
 
     @Test(expected = RuntimeException.class)
-    public void insertProduct_dbError() {
-        productDao.insertProduct(new Product());
+    public void getAllCategories_dbError() {
+        categoryDao.getAllCategories();
     }
+
     @Test(expected = RuntimeException.class)
-    public void getProduct_dbError() {
-        productDao.getProductByID(10);
+    public void updatCategory_dbError() {
+        categoryDao.updateCategory(new Category());
     }
+
     @Test(expected = RuntimeException.class)
-    public void updateProduct_dbError() {
-        productDao.updateProduct(new Product());
+    public void deleteBasketByUserID_dbError() {
+        categoryDao.deleteCategoryByID(2);
     }
+
     @Test(expected = RuntimeException.class)
-    public void deleteProduct_dbError() {
-        productDao.deleteAllProducts();
-    }
-    @Test(expected = RuntimeException.class)
-    public void deleteProductByID_dbError() {
-        productDao.deleteProductByID(10);
-    }
-    @Test(expected = RuntimeException.class)
-    public void getAllProducts_dbError() {
-        productDao.getAllProducts();
+    public void deleteAllCategories_dbError() {
+        categoryDao.deleteAllCategories();
     }
 }

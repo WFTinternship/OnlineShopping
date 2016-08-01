@@ -1,8 +1,9 @@
+package businessLayerTest;
+
 import com.workfront.internship.business.HashManager;
 import com.workfront.internship.business.UserManager;
 import com.workfront.internship.business.UserManagerImpl;
-import com.workfront.internship.common.Address;
-import com.workfront.internship.common.User;
+import com.workfront.internship.common.*;
 import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -25,14 +27,22 @@ import static org.mockito.Mockito.when;
  */
 public class UserManagerImplUnitTest {
     private User user;
+    private Product product;
+    private UserDao userDao;
+    private AddressDao addressDao;
     private UserManager userManager;
     DataSource dataSource;
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = DataSource.getInstance();
-        user = getRandomUser();
+
+        user = getTestUser();
+        product = getTestProduct();
         userManager = new UserManagerImpl(dataSource);
+        userDao = Mockito.mock(UserDaoImpl.class);
+        addressDao = Mockito.mock(AddressDaoImpl.class);
+        Whitebox.setInternalState(userManager, "userDao", userDao);
+        Whitebox.setInternalState(userManager, "addressDao", addressDao);
 
     }
 
@@ -47,9 +57,6 @@ public class UserManagerImplUnitTest {
 
         String expectedPassword = HashManager.getHash(user.getPassword());
 
-        UserDao userDao = Mockito.mock(UserDaoImpl.class);
-        Whitebox.setInternalState(userManager, "userDao", userDao);
-
         userManager.createAccount(user);
 
         String actualPassword = user.getPassword();
@@ -58,16 +65,7 @@ public class UserManagerImplUnitTest {
 
     @Test
     public void createAccount_validUser_notInserted() {
-
-
-        UserDao userDao = Mockito.mock(UserDaoImpl.class);
-        AddressDao addressDao = Mockito.mock(AddressDaoImpl.class);
-
-        Whitebox.setInternalState(userManager, "userDao", userDao);
-
-
         userManager.createAccount(user);
-
 
         Mockito.verify(userDao).insertUser(user);
         Mockito.verify(addressDao, Mockito.never()).insertAddress(any(Address.class));
@@ -76,16 +74,9 @@ public class UserManagerImplUnitTest {
 
     @Test
     public void createAccount_validUser_Inserted() {
-
-
-        UserDao userDao = Mockito.mock(UserDaoImpl.class);
-        AddressDao addressDao = Mockito.mock(AddressDaoImpl.class);
-
-        Whitebox.setInternalState(userManager, "userDao", userDao);
-        Whitebox.setInternalState(userManager, "addressDao", addressDao);
         when(userDao.insertUser(user)).thenReturn(10);
-        userManager.createAccount(user);
 
+        userManager.createAccount(user);
 
         Mockito.verify(addressDao).insertAddress(any(Address.class));
 
@@ -93,7 +84,6 @@ public class UserManagerImplUnitTest {
 
     @Test(expected = RuntimeException.class)
     public void createAccount_invalidUser() {
-
         user.setEmail("invalidEmail");
 
         userManager.createAccount(user);
@@ -102,11 +92,6 @@ public class UserManagerImplUnitTest {
     public void login_validUsername_validPassword_returned_null_user(){
 
         user.setPassword(HashManager.getHash(user.getPassword()));
-        UserDao userDao = Mockito.mock(UserDaoImpl.class);
-
-
-        Whitebox.setInternalState(userManager, "userDao", userDao);
-
 
         userManager.login(user.getUsername(), user.getPassword());
 
@@ -116,14 +101,11 @@ public class UserManagerImplUnitTest {
     }
     @Test
     public void login_validUsername_validPassword_returned_notNull_user(){
+
         String notHashedPassword = user.getPassword();
+
         user.setPassword(HashManager.getHash(user.getPassword()));
-        System.out.println("pasword   " + user.getPassword());
-        System.out.println("pasword   " + notHashedPassword);
-        UserDao userDao = Mockito.mock(UserDaoImpl.class);
 
-
-        Whitebox.setInternalState(userManager, "userDao", userDao);
         when(userDao.getUserByUsername(any(String.class))).thenReturn(user);
 
         User user1 = userManager.login(user.getUsername(), notHashedPassword);
@@ -140,15 +122,7 @@ public class UserManagerImplUnitTest {
     @Test
     public void editProfile_updateUser_and_getShippingAddressByUserID_is_called(){
 
-        UserDao userDao = Mockito.mock(UserDaoImpl.class);
-        AddressDao addressDao = Mockito.mock(AddressDaoImpl.class);
-
-        Whitebox.setInternalState(userManager, "userDao", userDao);
-        Whitebox.setInternalState(userManager, "addressDao", addressDao);
-
-
         userManager.editProfile(user);
-
 
         Mockito.verify(userDao).updateUser(user);
         Mockito.verify(addressDao).getShippingAddressByUserID(user.getUserID());
@@ -157,20 +131,14 @@ public class UserManagerImplUnitTest {
 
     @Test
     public void editProfile_shippingAddress_added(){
-        User updatedUser = getRandomUser();
+        User updatedUser = getTestUser();
         Address newAddress = new Address();
         newAddress.setAddress("newAddress");
         updatedUser.getShippingAddresses().add(newAddress);
 
-        UserDao userDao = Mockito.mock(UserDaoImpl.class);
-        AddressDao addressDao = Mockito.mock(AddressDaoImpl.class);
-
-        Whitebox.setInternalState(userManager, "userDao", userDao);
-        Whitebox.setInternalState(userManager, "addressDao", addressDao);
         when(addressDao.getShippingAddressByUserID(user.getUserID())).thenReturn(user.getShippingAddresses());
 
         userManager.editProfile(updatedUser);
-
 
         Mockito.verify(addressDao).insertAddress(any(Address.class));
         Mockito.verify(addressDao, Mockito.never()).deleteAddressesByAddressID(any(Integer.class));
@@ -178,20 +146,14 @@ public class UserManagerImplUnitTest {
     }
     @Test
     public void editProfile_shippingAddress_removed(){
-        User updatedUser = getRandomUser();
+        User updatedUser = getTestUser();
         Address newAddress = new Address();
         newAddress.setAddress("newAddress");
         user.getShippingAddresses().add(newAddress);
 
-        UserDao userDao = Mockito.mock(UserDaoImpl.class);
-        AddressDao addressDao = Mockito.mock(AddressDaoImpl.class);
-
-        Whitebox.setInternalState(userManager, "userDao", userDao);
-        Whitebox.setInternalState(userManager, "addressDao", addressDao);
         when(addressDao.getShippingAddressByUserID(user.getUserID())).thenReturn(user.getShippingAddresses());
 
         userManager.editProfile(updatedUser);
-
 
         Mockito.verify(addressDao, Mockito.never()).insertAddress(any(Address.class));
         Mockito.verify(addressDao).deleteAddressesByAddressID(any(Integer.class));
@@ -205,25 +167,66 @@ public class UserManagerImplUnitTest {
     @Test
     public void deleteAccount_validUserID(){
 
-        UserDao userDao = Mockito.mock(UserDaoImpl.class);
-        Whitebox.setInternalState(userManager, "userDao", userDao);
-
         userManager.deleteAccount(user.getUserID());
+
         Mockito.verify(userDao).deleteUser(any(Integer.class));
     }
     @Test(expected = RuntimeException.class)
     public void deleteAccount_notValidUserID(){
-        User user1 = new User();
-        userManager.deleteAccount(user1.getUserID());
+
+        userManager.deleteAccount(-1);
     }
+    @Test
+    public void addToList(){
 
+        Product product1 = getTestProduct();
+        product1.setProductID(20);
+        List<Product> products = new ArrayList<>();
+        products.add(product);
+        products.add(product1);
 
+        when(userDao.getWishlist(user.getUserID())).thenReturn(products);
+        userManager.addToList(user, product);
 
+        Mockito.verify(userDao).insertIntoWishlist(user.getUserID(), product.getProductID());
 
+        assertEquals(products.get(0), user.getWishList().get(0));
+        assertEquals(products.get(1), user.getWishList().get(1));
 
-    private User getRandomUser() {
+    }
+    @Test(expected = RuntimeException.class)
+    public void addToList_notValidUser(){
+
+        userManager.addToList(null, product);
+    }
+    @Test
+    public void getList(){
+        Product product1 = getTestProduct();
+        product1.setProductID(20);
+        List<Product> products = new ArrayList<>();
+        products.add(product);
+        products.add(product1);
+
+        when(userDao.getWishlist(user.getUserID())).thenReturn(products);
+
+        List<Product> products1 = userManager.getList(user);
+
+        assertEquals(products.get(0), products1.get(0));
+        assertEquals(products.get(1), products1.get(1));
+    }
+    @Test(expected = RuntimeException.class)
+    public void getList_notValidUser(){
+        userManager.getList(null);
+    }
+    @Test
+    public void deleteFromList(){
+        userManager.deleteFromList(user, product);
+        verify(userDao).deleteFromWishlistByUserIDAndProductID(user.getUserID(), product.getProductID());
+        verify(userDao).getWishlist(user.getUserID());
+    }
+    private User getTestUser() {
         User user = new User();
-        user.setFirstname("Anahit").setLastname("galstyan").
+        user.setUserID(5).setFirstname("Anahit").setLastname("galstyan").
                 setUsername("anigal").setPassword("anahitgal85").
                 setEmail("galstyan@gmail.com").setConfirmationStatus(true).
                 setAccessPrivilege("user");
@@ -233,6 +236,18 @@ public class UserManagerImplUnitTest {
         addressess.add(address);
         user.setShippingAddresses(addressess);
         return user;
+    }
+    private Product getTestProduct(){
+        Product product = new Product();
+        Category category = new Category();
+        category.setCategoryID(1).setName("hat");
+        product.setProductID(10).
+                setName("baby hat").
+                setPrice(50).setDescription("color:white").
+                setShippingPrice(1).setQuantity(50).
+                setCategory(category);
+
+        return product;
     }
     private void doAssertion(User user, User user1){
 

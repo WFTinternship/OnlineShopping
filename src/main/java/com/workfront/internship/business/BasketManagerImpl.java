@@ -88,7 +88,7 @@ public class BasketManagerImpl implements BasketManager {
         Basket basket = basketDao.getCurrentBasket(user.getUserID());
         if (basket == null) {
             basket = new Basket();
-            basket.setUserID(user.getUserID()).setTotalPrice(0.0).setBasketStatus("current");
+            basket.setUserID(user.getUserID()).setTotalPrice(0.0).setBasketStatus("current").setOrderItems(new ArrayList<OrderItem>());
             basketDao.insertBasket(basket);
         }
         return basket;
