@@ -43,7 +43,6 @@ public class UserManagerImplUnitTest {
 
     }
 
-
     @After
     public void tearDown() {
         user = null;
@@ -51,7 +50,6 @@ public class UserManagerImplUnitTest {
         userManager = null;
         userDao = null;
         addressDao = null;
-
     }
 
     @Test
@@ -211,6 +209,11 @@ public class UserManagerImplUnitTest {
 
         userManager.addToList(null, product);
     }
+    @Test(expected = RuntimeException.class)
+    public void deleteFromList_invalid_entry() {
+
+        userManager.deleteFromList(null, product);
+    }
 
     @Test
     public void getList() {
@@ -268,7 +271,6 @@ public class UserManagerImplUnitTest {
     }
 
     private void doAssertion(User user, User user1) {
-
         assertEquals(user.getUserID(), user1.getUserID());
         assertEquals(user.getFirstname(), user1.getFirstname());
         assertEquals(user.getLastname(), user1.getLastname());

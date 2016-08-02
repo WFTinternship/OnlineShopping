@@ -44,7 +44,7 @@ public class UserManagerImpl implements UserManager {
         user.setPassword(hashOfPassword);
         int id = userDao.insertUser(user);
         if (id > 0) {
-            if (user.getShippingAddresses()!=null && !user.getShippingAddresses().isEmpty()) {
+            if (user.getShippingAddresses() != null && !user.getShippingAddresses().isEmpty()) {
                 for (int i = 0; i < user.getShippingAddresses().size(); i++) {
                     user.getShippingAddresses().get(i).setUserID(id);
                     addressDao.insertAddress(user.getShippingAddresses().get(i));
@@ -60,16 +60,17 @@ public class UserManagerImpl implements UserManager {
         if (!validString(username) || !validString(password)) {
             throw new RuntimeException("Invalid username or password");
         }
-            User user = userDao.getUserByUsername(username);
-            if (user != null && user.getPassword().equals(HashManager.getHash(password))) {
-                return user;
-            } else {
-                System.out.println(user.getPassword() +  "    " + HashManager.getHash(password));
-                throw new RuntimeException("Invalid user");
-            }
+        User user = userDao.getUserByUsername(username);
+        if (user != null && user.getPassword().equals(HashManager.getHash(password))) {
+            return user;
+        } else {
+            System.out.println(user.getPassword() + "    " + HashManager.getHash(password));
+            throw new RuntimeException("Invalid user");
+        }
     }
+
     public void editProfile(User user) {
-        if(!validateUser(user)) {
+        if (!validateUser(user)) {
             throw new RuntimeException("Can not update");
 
         }
@@ -82,47 +83,47 @@ public class UserManagerImpl implements UserManager {
         for (int i = 0; i < oldAddresses.size(); i++)
             if (!newAddresses.contains(oldAddresses.get(i)))
                 addressDao.deleteAddressesByAddressID(oldAddresses.get(i).getAddressID());
-       // List<Address> addresses = addressDao.getShippingAddressByUserID(user.getUserID());
-
 
     }
 
     @Override
     public void deleteAccount(int id) {
-        if(id <= 0) {
+        if (id <= 0) {
             throw new RuntimeException("Can not delete");
         }
         userDao.deleteUser(id);
 
     }
+
     @Override
     public void addToList(User user, Product product) {
-        if (user == null || product == null )
+        if (user == null || product == null)
             throw new RuntimeException("invalid entry!");
-            getList(user);
+        getList(user);
 
         userDao.insertIntoWishlist(user.getUserID(), product.getProductID());
         user.setWishList(userDao.getWishlist(user.getUserID()));
 
 
     }
+
     @Override
     public List<Product> getList(User user) {
-        if(user == null)
+        if (user == null)
             throw new RuntimeException("invalid user");
         List<Product> wishlist = user.getWishList();
         if (user.getWishList() != null)
             return wishlist;
         wishlist = userDao.getWishlist(user.getUserID());
-            if(wishlist.isEmpty())
-                return wishlist;
-            user.setWishList(wishlist);
+        if (wishlist.isEmpty())
+            return wishlist;
+        user.setWishList(wishlist);
         return wishlist;
     }
 
     @Override
     public void deleteFromList(User user, Product product) {
-        if(user == null || product == null)
+        if (user == null || product == null)
             throw new RuntimeException("invalid entry");
         userDao.deleteFromWishlistByUserIDAndProductID(user.getUserID(), product.getProductID());
         user.setWishList(userDao.getWishlist(user.getUserID()));
@@ -139,19 +140,20 @@ public class UserManagerImpl implements UserManager {
             return true;
         return false;
     }
-    private boolean validString(String string){
-        if(string !=null && string != "")
+
+    private boolean validString(String string) {
+        if (string != null && string != "")
             return true;
         return false;
 
     }
+
     private boolean validateEmail(String email) {
 
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
 
     }
-
 
 
 }

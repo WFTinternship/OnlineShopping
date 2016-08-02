@@ -20,9 +20,7 @@ import java.util.List;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by Workfront on 7/29/2016.
- */
+
 public class UserManagerImplTest {
     private User user;
     private UserManager userManager;
@@ -31,16 +29,14 @@ public class UserManagerImplTest {
     @Before
     public void setUP() throws IOException, SQLException {
         dataSource = DataSource.getInstance();
-        user = getRandomUser();
+        user = getTestUser();
         userManager = new UserManagerImpl(dataSource);
 
     }
 
-
     @After
     public void tearDown()  {
         userManager.deleteAccount(user.getUserID());
-
     }
 
     @Test
@@ -55,7 +51,7 @@ public class UserManagerImplTest {
         assertNotNull(actualUser);
     }
 
-    private User getRandomUser() {
+    private User getTestUser() {
         User user = new User();
         user.setFirstname("Anahit").setLastname("galstyan").
                 setUsername("anigal").setPassword("anahitgal85").
