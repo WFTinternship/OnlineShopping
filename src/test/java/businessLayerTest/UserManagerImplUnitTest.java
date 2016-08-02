@@ -94,6 +94,7 @@ public class UserManagerImplUnitTest {
 
         user.setPassword(HashManager.getHash(user.getPassword()));
 
+        // testing method
         userManager.login(user.getUsername(), user.getPassword());
 
         Mockito.verify(userDao).getUserByUsername(user.getUsername());

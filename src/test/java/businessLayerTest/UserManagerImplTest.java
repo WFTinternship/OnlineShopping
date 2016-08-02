@@ -50,7 +50,6 @@ public class UserManagerImplTest {
         User actualUser = userManager.login(user.getUsername(), password);
         assertNotNull(actualUser);
     }
-
     private User getTestUser() {
         User user = new User();
         user.setFirstname("Anahit").setLastname("galstyan").

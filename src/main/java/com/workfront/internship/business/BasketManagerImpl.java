@@ -11,9 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Workfront on 7/25/2016.
- */
 public class BasketManagerImpl implements BasketManager {
 
     private DataSource dataSource;
