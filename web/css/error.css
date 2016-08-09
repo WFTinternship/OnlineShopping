@@ -1,0 +1,40 @@
+.wrapper{
+		background-color:#F5F5F5;
+		padding: 100px;
+	}
+
+.wrapper h1{
+	font-size: 100px;
+	color: #D6E240;
+	margin-left: 100px;
+}
+.wrapper p{
+	font-size: 18px;
+	margin-left: 100px;
+}
+.wrapper a{
+	
+	font-family: Arial;
+	font-size: 13px;
+	margin-left: 100px;
+
+}
+
+.wrapper a{
+	color: #DD127B;
+}	
+.wrapper a:hover {
+    color: #D6E240;
+    background-color: transparent;
+    text-decoration: underline;
+    }
+.wrapper a:active {
+    color: black;
+    background-color: transparent;
+    text-decoration: underline;
+}
+.wrapper img{
+	float:right;
+	padding-right: 550px;
+	padding-top: 50px;
+}

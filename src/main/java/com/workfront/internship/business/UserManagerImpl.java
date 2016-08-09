@@ -61,7 +61,7 @@ public class UserManagerImpl implements UserManager {
             throw new RuntimeException("Invalid username or password");
         }
         User user = userDao.getUserByUsername(username);
-        if (user != null && user.getPassword().equals(HashManager.getHash(password))) {
+        if (user != null && user.getPassword().equals(password)) {
             return user;
         } else {
             System.out.println(user.getPassword() + "    " + HashManager.getHash(password));
