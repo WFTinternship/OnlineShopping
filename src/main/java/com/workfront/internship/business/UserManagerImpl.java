@@ -42,6 +42,7 @@ public class UserManagerImpl implements UserManager {
         }
         String hashOfPassword = HashManager.getHash(user.getPassword());
         user.setPassword(hashOfPassword);
+        System.out.println(user.getFirstname() + "  "  + user.getLastname());
         int id = userDao.insertUser(user);
         if (id > 0) {
             if (user.getShippingAddresses() != null && !user.getShippingAddresses().isEmpty()) {
@@ -61,7 +62,7 @@ public class UserManagerImpl implements UserManager {
             throw new RuntimeException("Invalid username or password");
         }
         User user = userDao.getUserByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
+        if (user != null && user.getPassword().equals(HashManager.getHash(password))) {
             return user;
         } else {
             System.out.println(user.getPassword() + "    " + HashManager.getHash(password));

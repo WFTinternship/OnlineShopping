@@ -1,11 +1,10 @@
-<%--
-<%@ page import="com.workfront.internship.common.User" %>&lt;%&ndash;
+<%@ page import="com.workfront.internship.common.User" %><%--
   Created by IntelliJ IDEA.
   User: Workfront
-  Date: 8/9/2016
-  Time: 4:25 PM
+  Date: 8/10/2016
+  Time: 2:15 PM
   To change this template use File | Settings | File Templates.
-&ndash;%&gt;
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
@@ -15,8 +14,8 @@
     <title>Search Box</title>
 
     <!-- CSS styles for standard search box -->
-    <link rel="stylesheet" type="text/css" href="/css/reset.css">
-    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <link rel="stylesheet" type="text/css" href="./css/reset.css">
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
 
 </head>
 <body>
@@ -30,18 +29,33 @@
             <option value="shoes">Shoes</option>
             <option value="girl dress">Girl dress</option>
             <option value="boy shirt">Boy shirt</option>
-        </select><input type="text" class="textinput" name="q" size="60" maxlength="120"><input type="submit" value="search" class="button">
+        </select><input type="text" class="textinput" name="productName" size="60" maxlength="120"><input type="submit" value="search" class="button">
 
     </form>
 
 
-    <div class="dropdown">
-        <span>&nbsp;
+
 <%
     User user = (User)request.getSession().getAttribute("user");
-    out.print("Hello," + " " + user.getFirstname());
+    if(user==null){
 
-%> </span><br>
+%>
+
+    <div class="signinRegister" >
+        <a href="/signin.jsp"  class="register" >Sign in</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/registration.jsp" class="register">Create account</a></div>
+    <div class="clear"></div>
+<%}
+%>
+    <div class="dropdown">
+        <span>&nbsp;
+    <%
+
+        if(user!=null){
+            out.print("Hello," + " " + user.getFirstname());
+
+    %>
+    </span><br>
         <button class="dropbtn">Your account</button>
         <div class="dropdown-content">
             <a href="#">edit account</a>
@@ -49,11 +63,13 @@
             <a href="#">your wish list</a>
         </div>
     </div>
-    <INPUT TYPE="image" SRC="/image/cart.PNG" ALT="SUBMIT" class="cart">
+    <a href="./cart.jsp" class="cart">
+        <img src="/image/cart.PNG" alt="cart image">
+    </a>
     <div class="clear"></div>
-
+    <%}
+    %>
+</div>
 </body>
 </html>
 
-
---%>
