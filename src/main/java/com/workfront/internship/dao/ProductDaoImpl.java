@@ -49,6 +49,27 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         }
         return product;
     }
+    public List<Product> getLimitedNumberOfProducts(){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Product> products = new ArrayList<>();
+        try {
+            connection = dataSource.getConnection();
+            String sql = "SELECT * FROM products LIMIT 6";
+            preparedStatement = connection.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+            products = createProductList(resultSet);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return products;
+
+    }
 
     private Product createProduct(ResultSet resultSet) throws SQLException, IOException {
         Product product = null;

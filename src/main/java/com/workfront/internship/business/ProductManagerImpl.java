@@ -67,11 +67,17 @@ public class ProductManagerImpl implements ProductManager{
        return products;
 
    }
+    public List<Product> getLimitedNumberOfProducts(){
+        List<Product> products = productDao.getLimitedNumberOfProducts();
+        return products;
+
+    }
    private boolean validateProduct(Product product){
        if(product!=null && product.getName() != null && product.getCategory() != null)
            return true;
        return false;
    }
+
 
 
 }

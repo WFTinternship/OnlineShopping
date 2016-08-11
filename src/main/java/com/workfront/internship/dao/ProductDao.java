@@ -20,5 +20,6 @@ public interface ProductDao {
      void deleteAllProducts();
      List<Product> getAllProducts();
      List<Product> getProdactsByCategoryID(int id);
+     List<Product> getLimitedNumberOfProducts();
 
 }
