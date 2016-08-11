@@ -79,11 +79,14 @@
     <%
 
         if(user!=null){
-            out.print("Hello," + " " + user.getFirstname());
+
 
     %>
+    <a href="./cart.jsp" class="cart">
+        <img src="/image/cart.PNG" alt="cart image">
+    </a>
     <div class="dropdown">
-
+        <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
         <button class="dropbtn">Your account</button>
         <div class="dropdown-content">
             <a href="#">edit account</a>
@@ -91,9 +94,7 @@
             <a href="#">your wish list</a>
         </div>
     </div>
-    <a href="./cart.jsp" class="cart">
-        <img src="/image/cart.PNG" alt="cart image">
-    </a>
+
     <div class="clear"></div>
 
 

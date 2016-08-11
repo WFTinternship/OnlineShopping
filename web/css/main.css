@@ -1,7 +1,7 @@
 
 .wrapper{
 	background-color:#F5F5F5;
-	height: 200px;
+	/*height: 200px;*/
 }
 .wrapper1{
 	height:85%;
@@ -44,6 +44,7 @@
 
 	margin-right: 120px;
 	float:right;
+	margin-top: 30px;
 }
 .textinput{
 	margin: 0px;
@@ -123,9 +124,10 @@
 .dropdown {
 	position: relative;
 	display: inline-block;
-
 	margin-left: 100px;
-	float:left;
+	float: right;
+	margin-right: 40px;
+	margin-top: 30px;
 }
 .dropdown span{
 	font-size: 14px;
@@ -162,6 +164,10 @@
 	width: 95px;
 
 }
+
+.cart img {
+	height: 53px;
+}
 .image{
 	float: left;
 }
@@ -175,10 +181,15 @@
 	margin-left: 50%;
 }
 .category{
-
+	margin-top: 30px;
 	margin-left: 300px;
 	display: inline-block;
 
+}
+
+.greeting {
+	position: absolute;
+	top: -15px;
 }
 .categoryName {
 	color:  #DD127B;
