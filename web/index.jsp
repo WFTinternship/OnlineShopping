@@ -31,34 +31,51 @@
 <div class="image"><img src="/image/logo3.PNG" width="140px;" alt="logo"></div>
 <div class="wrapper">
 <div class="wrapper1">
+    <%
+        DataSource dataSource=DataSource.getInstance();
+        CategoryManager categoryManager = new CategoryManagerImpl(dataSource);
+        List<Category> categories = categoryManager.getAllCategories();
+
+
+    %>
     <form  method="get" action="http://www.google.com"><br><br><br><br>
         <select name="category">
             <option value="all" selected>All</option>
-            <option value="hat">Hat</option>
-            <option value="shoes">Shoes</option>
-            <option value="girl dress">Girl dress</option>
-            <option value="boy shirt">Boy shirt</option>
+            <option value="cat1"><%=categories.get(0).getName()%></option>
+            <option value="cat2"><%=categories.get(1).getName()%></option>
+            <option value="cat3"><%=categories.get(2).getName()%></option>
+
         </select><input type="text" class="textinput" name="productName" size="60" maxlength="120"><input type="submit" value="search" class="button">
 
     </form><br>
 </div>
     <div class="some">
 <div class="category">
-    <%
-        DataSource dataSource=DataSource.getInstance();
-        CategoryManager categoryManager = new CategoryManagerImpl(dataSource);
-        List<Category> categories = categoryManager.getAllCategories();
-        for(int i=0; i<categories.size(); i++){
-            System.out.println(categories.get(0).getName());
-    %>
-
-        <a href="./cart.jsp" class="categoryName" alt="category"><%=categories.get(0).getName()%></a>
 
 
-    <%}
-    %>
+
+
+       <div class="dropdown">
+           <button class="dropbtn">BABY GIRL</button>
+           <div class="dropdown-content">
+
+               <a href="#"><%=categories.get(0).getName()%></a>
+               <a href="#"><%=categories.get(1).getName()%></a>
+               <a href="#"><%=categories.get(2).getName()%></a>
+
+           </div>
+       </div>
+    <div class="dropdown">
+        <button class="dropbtn">BABY BOY</button>
+        <div class="dropdown-content">
+
+            <a href="#"><%=categories.get(0).getName()%></a>
+            <a href="#"><%=categories.get(1).getName()%></a>
+            <a href="#"><%=categories.get(2).getName()%></a>
+
+        </div>
+    </div>
 </div>
-
 
 <%
     User user = (User)request.getSession().getAttribute("user");
@@ -67,8 +84,8 @@
 %>
 
     <div class="signinRegister" >
-        <a href="/signin.jsp"  class="register" >Sign in</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="/registration.jsp" class="register">Create account</a>
+        <a href="/signin.jsp"  class="register" id="login_button" >SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/registration.jsp" class="register" id="registration_button">CREATE ACCOUNT</a>
     </div>
 
     <div class="clear"></div>
@@ -82,16 +99,18 @@
 
 
     %>
+
     <a href="./cart.jsp" class="cart">
-        <img src="/image/cart.PNG" alt="cart image">
+        <img src="/image/cart.PNG" class="cart" alt="cart image">
     </a>
     <div class="dropdown">
         <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
-        <button class="dropbtn">Your account</button>
+        <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
         <div class="dropdown-content">
             <a href="#">edit account</a>
             <a href="#">your orders</a>
             <a href="#">your wish list</a>
+            <a href="/index.jsp?user=null" id="logout_button">logout</a>
         </div>
     </div>
 
@@ -118,10 +137,24 @@
 
     %>
     <div class="image">
-        <a href="./cart.jsp" >
-            <img src="<%=medias.get(0).getMediaPath()%>" class="productImage" alt="cart image">
+        <a href="./cart.jsp" id="productHref">
+            <img src="<%=medias.get(0).getMediaPath()%>" id="productImage" alt="cart image">
+
 
         </a>
+
+       <%-- <script>var img1 = document.getElementById("productImage");</script>
+        <img src="<%=medias.get(1).getMediaPath()%>" id="productImage2" alt="cart image">
+        <script>   img2 = document.getElementById("productImage2");
+
+            img1.onmouseover = function(){
+                img2.style.display = "block";
+            }
+
+            img1.onmouseout = function(){
+                img2.style.display = "none";
+            }
+        </script>--%>
         <p><%=products.get(i).getName()%></p>
         <p>$<%=products.get(i).getPrice()%></p>
     </div>

@@ -124,11 +124,11 @@
 .dropdown {
 	position: relative;
 	display: inline-block;
-	margin-left: 100px;
+
 	float: right;
 	margin-right: 40px;
-	margin-top: 30px;
 }
+
 .dropdown span{
 	font-size: 14px;
 	color: #686A6B;
@@ -157,10 +157,19 @@
 .dropdown:hover .dropbtn {
 
 }
+.category .dropdown{
+	position: relative;
+	display: inline-block;
+
+	float: right;
+	margin-right: 40px;
+
+	margin-bottom: 10px;
+}
 .cart{
 	float:right;
 
-	margin-right: 60px;
+	margin-right: 30px;
 	width: 95px;
 
 }
@@ -170,8 +179,15 @@
 }
 .image{
 	float: left;
+
 }
-.productImage {
+
+#productImage {
+	margin-right: 5%;
+	margin-left: 35%;
+	width: 50%;
+}
+#productImage2 {
 	margin-right: 5%;
 	margin-left: 35%;
 	width: 50%;
@@ -202,4 +218,8 @@
 	background-color: transparent;
 	text-decoration: underline;
 
+}
+
+.some > .dropdown {
+	margin-top: 30px;
 }

@@ -18,14 +18,19 @@
 <body  class="registration">
 <div class="image"><img src="/image/logo3.PNG" width="140px;" alt="logo"></div>
 
-<form method="post" action="/signin">
+<form method="post" action="/signin" id="signinPage">
     <p style="font-size:30px;">Sign In</p><br>
+    <%  String string = (String)request.getAttribute("errorString");
+        if(string!=null){%>
+    <p style="font-size:12px; color:red"><%=request.getAttribute("errorString")%></p><br>
+    <%}
+%>
     Username
-    <input type="text" name="username"><br><br>
+    <input type="text" name="username" required><br><br>
     Password<br>
     <input type="password" pattern=".{6,}" name="password"><br><br>
     <button style="border-top-left-radius: 5px 5px;
-		border-bottom-left-radius: 5px 5px; width: 255px; height: 35px" class="button">Sign in</button><br><br>
+		border-bottom-left-radius: 5px 5px; width: 255px; height: 35px" class="button" id="signinButton">Sign in</button><br><br>
     <p>Not a customer?<p>
     <a href="./registration.html" style="font-size: 12px;" class="register">Start here</a>
 </form>

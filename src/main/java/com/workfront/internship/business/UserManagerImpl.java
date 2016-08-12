@@ -40,10 +40,17 @@ public class UserManagerImpl implements UserManager {
             throw new RuntimeException("Invalid user");
 
         }
+        int id=0;
         String hashOfPassword = HashManager.getHash(user.getPassword());
         user.setPassword(hashOfPassword);
         System.out.println(user.getFirstname() + "  "  + user.getLastname());
-        int id = userDao.insertUser(user);
+        try {
+            id= userDao.insertUser(user);
+        }catch (RuntimeException e){
+            if(e.getMessage().equals("Duplicate entry!"))
+                return 0;
+        }
+
         if (id > 0) {
             if (user.getShippingAddresses() != null && !user.getShippingAddresses().isEmpty()) {
                 for (int i = 0; i < user.getShippingAddresses().size(); i++) {
@@ -65,8 +72,7 @@ public class UserManagerImpl implements UserManager {
         if (user != null && user.getPassword().equals(HashManager.getHash(password))) {
             return user;
         } else {
-            System.out.println(user.getPassword() + "    " + HashManager.getHash(password));
-            throw new RuntimeException("Invalid user");
+            return null;
         }
     }
 

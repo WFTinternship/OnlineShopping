@@ -28,6 +28,7 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String errorString=null;
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
         String email = request.getParameter("email");
@@ -37,9 +38,33 @@ public class RegistrationServlet extends HttpServlet {
         User user = new User();
         user.setFirstname(firstname).setLastname(lastname).setUsername(username).setEmail(email).setPassword(password).setAccessPrivilege("user").setConfirmationStatus(true);
         int id = userManager.createAccount(user);
+        if (id == 0) {
 
-        request.setAttribute("user", user);
-        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/userPage.jsp");
-        dispatcher.forward(request, response);
+            errorString = "User with that username already exists";
+
+
+            // If error, forward to /registration.jsp
+
+            /*user = new User();
+            user.setUsername(username);
+            user.setPassword(password);*/
+
+
+            // Store information in request attribute, before forward.
+            request.setAttribute("errorString", errorString);
+           // request.setAttribute("user", user);
+
+
+            // Forward to/signin.jsp
+            RequestDispatcher dispatcher //
+                    = this.getServletContext().getRequestDispatcher("/registration.jsp");
+
+            dispatcher.forward(request, response);
+        } else {
+
+            request.getSession().setAttribute("user", user);
+            RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/index.jsp");
+            dispatcher.forward(request, response);
+        }
     }
 }
