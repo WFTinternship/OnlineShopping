@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
 <body class="registration">
-<div class="image"><img src="/image/logo3.PNG" width="140px;" alt="logo"></div>
+<div class="logo"><img src="/image/logo3.PNG" width="140px;" alt="logo"></div>
 <form method="post" action="/registration" id="registrationPage">
     <p style="font-size:30px;">Create account</p><br>
     <%  String string = (String)request.getAttribute("errorString");
@@ -40,7 +40,7 @@
     <button style="border-top-left-radius: 5px 5px;
 		border-bottom-left-radius: 5px 5px; width: 255px; height: 35px" class="button" id="createAccountButton">Create account</button><br><br>
     <p>Already have an account?<p>
-    <a href="./signin.html" style="font-size: 12px;" class="register">Sign in</a>
+    <a href="/signin.jsp" style="font-size: 12px;" class="register">Sign in</a>
 </form>
 <div class="clear"></div>
 </body>

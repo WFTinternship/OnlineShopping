@@ -16,7 +16,7 @@
 </head>
 
 <body  class="registration">
-<div class="image"><img src="/image/logo3.PNG" width="140px;" alt="logo"></div>
+<div class="logo"><img src="/image/logo3.PNG" width="140px;" alt="logo"></div>
 
 <form method="post" action="/signin" id="signinPage">
     <p style="font-size:30px;">Sign In</p><br>
@@ -32,7 +32,7 @@
     <button style="border-top-left-radius: 5px 5px;
 		border-bottom-left-radius: 5px 5px; width: 255px; height: 35px" class="button" id="signinButton">Sign in</button><br><br>
     <p>Not a customer?<p>
-    <a href="./registration.html" style="font-size: 12px;" class="register">Start here</a>
+    <a href="/registration.jsp" style="font-size: 12px;" class="register">Start here</a>
 </form>
 <div class="clear"></div>
 

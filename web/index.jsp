@@ -28,7 +28,7 @@
 </head>
 <body>
 <!-- HTML for SEARCH BAR -->
-<div class="image"><img src="/image/logo3.PNG" width="140px;" alt="logo"></div>
+<div class="logo"><img src="/image/logo3.PNG" width="140px;" alt="logo"></div>
 <div class="wrapper">
 <div class="wrapper1">
     <%
@@ -84,11 +84,13 @@
 %>
 
     <div class="signinRegister" >
-        <a href="/signin.jsp"  class="register" id="login_button" >SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="./signin.jsp"  class="register" id="login_button" >SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="/registration.jsp" class="register" id="registration_button">CREATE ACCOUNT</a>
     </div>
 
     <div class="clear"></div>
+    </div>
+</div>
 
 <%}
 %>
@@ -118,27 +120,40 @@
 
 
     </div>
+</div>
     <%}
     %>
 
+
+
+
 <div>
+    <img src="./image/pic4.jpg"  alt="image1" class="backimg1">
+
+
+    <img src="./image/pic1.jpg"  alt="image2" class="backimg2">
+</div>
     <%
 
         ProductManager productManager = new ProductManagerImpl(dataSource);
         MediaManager mediaManager = new MediaManagerImpl(dataSource);
         List<Media> medias;
+        int productId = 0;
             List<Product> products = productManager.getLimitedNumberOfProducts();
         for(int i=0; i<products.size(); i++){
-
-            medias = products.get(i).setMedias(mediaManager.getMediaByProductID(products.get(i).getProductID())).getMedias();
+            productId = products.get(i).getProductID();
+            medias = products.get(i).setMedias(mediaManager.getMediaByProductID(productId)).getMedias();
             String path0 = medias.get(0).getMediaPath();
        // String path1 = medias.get(1).getMediaPath();
         System.out.println(path0);
 
     %>
+
     <div class="image">
-        <a href="./cart.jsp" id="productHref">
-            <img src="<%=medias.get(0).getMediaPath()%>" id="productImage" alt="cart image">
+        <a href="/productPage?id=<%=productId %>" id="productHref">
+            <img src="/image/index.png"  alt="index"  class="index" style="width:80px;">
+            <img src="<%=medias.get(0).getMediaPath()%>" class="img1" alt="cart image">
+            <img src="<%=medias.get(1).getMediaPath()%>" class=img2 alt="cart image">
 
 
         </a>
@@ -161,8 +176,7 @@
 
     <%}
     %>
-</div>
-</div>
+
 </body>
 </html>
 

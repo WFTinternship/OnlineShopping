@@ -5,6 +5,8 @@ import com.workfront.internship.business.ProductManagerImpl;
 import com.workfront.internship.common.Product;
 
 import com.workfront.internship.dao.DataSource;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +18,7 @@ import java.sql.SQLException;
  * Created by Anna Asmangulyan on 8/10/2016.
  */
 public class ProductServlet extends HttpServlet {
-  /*  private DataSource dataSource;
+   private DataSource dataSource;
     private ProductManager productManager;
 
     public ProductServlet() throws IOException, SQLException {
@@ -25,14 +27,15 @@ public class ProductServlet extends HttpServlet {
         productManager = new ProductManagerImpl(dataSource);
     }
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String productName = request.getParameter("productName");
+        int productId=Integer.parseInt(request.getParameter("id"));
+        System.out.println("productid issssssss" + productId);
 
-        Product product = productManager.login(username,password);
+        Product product = productManager.getProduct(productId);
 
-        request.getSession().setAttribute("user", user);
-        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/index.jsp");
+        request.setAttribute("product", product);
+        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/productPage.jsp");
         dispatcher.forward(request, response);
-    }*/
+    }
 }
