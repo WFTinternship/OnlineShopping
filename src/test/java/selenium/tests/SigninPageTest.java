@@ -14,15 +14,16 @@ import static org.junit.Assert.assertNotNull;
 public class SigninPageTest {
     private static SigninPage signinPage;
     private static HomePage homePage;
+
     @BeforeClass
-    public static void setUp(){
+    public static void setUp() {
         signinPage = new SigninPage();
         homePage = new HomePage();
         signinPage.init();
     }
 
     @AfterClass
-    public static void tearDown(){
+    public static void tearDown() {
         signinPage.getWebDriver().close();
     }
 
@@ -33,7 +34,18 @@ public class SigninPageTest {
         signinPage.typePassword("sonasona");
         signinPage.clickSignin();
 
-       // assertFalse("login page is not closed", homePage.getLoginPopup().isDisplayed());
+        // assertFalse("login page is not closed", homePage.getLoginPopup().isDisplayed());
         assertNotNull("loguot button is not displayed", homePage.getCart());
+    }
+
+    @Test
+    public void login_fail() throws InterruptedException {
+        homePage.clickLogin();
+        signinPage.typeUsername("asasdadadasd");
+        signinPage.typePassword("asfawefwaefawd");
+        signinPage.clickSignin();
+
+        // assertFalse("login page is not closed", homePage.getLoginPopup().isDisplayed());
+        assertNotNull("login was done", signinPage.getSigninButton());
     }
 }

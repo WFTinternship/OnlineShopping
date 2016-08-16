@@ -25,16 +25,17 @@ public class RegistrationServlet extends HttpServlet {
         dataSource = DataSource.getInstance();
         userManager = new UserManagerImpl(dataSource);
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String errorString=null;
+        String errorString = null;
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
         String email = request.getParameter("email");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String repassword = request.getParameter("repeat password");
+        String repassword = request.getParameter("repeatpassword");
         User user = new User();
         user.setFirstname(firstname).setLastname(lastname).setUsername(username).setEmail(email).setPassword(password).setAccessPrivilege("user").setConfirmationStatus(true);
         int id = userManager.createAccount(user);
@@ -52,7 +53,7 @@ public class RegistrationServlet extends HttpServlet {
 
             // Store information in request attribute, before forward.
             request.setAttribute("errorString", errorString);
-           // request.setAttribute("user", user);
+            // request.setAttribute("user", user);
 
 
             // Forward to/signin.jsp

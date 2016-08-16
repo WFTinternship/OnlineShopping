@@ -1,22 +1,17 @@
-<%@ page import="com.workfront.internship.common.User" %>
 <%@ page import="com.workfront.internship.dao.DataSource" %>
+<%@ page import="com.workfront.internship.common.Category" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.workfront.internship.common.Product" %>
-<%@ page import="com.workfront.internship.dao.MediaDao" %>
-<%@ page import="com.workfront.internship.common.Media" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.workfront.internship.common.User" %>
 <%@ page import="com.workfront.internship.business.*" %>
-<%@ page import="com.workfront.internship.common.Category" %><%--
+<%@ page import="com.workfront.internship.common.Media" %>
+<%@ page import="com.workfront.internship.common.Product" %><%--
   Created by IntelliJ IDEA.
   User: Workfront
-  Date: 8/10/2016
-  Time: 2:15 PM
+  Date: 8/16/2016
+  Time: 12:24 PM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-
-<!DOCTYPE html>
 <html>
 <head>
     <title>Search Box</title>
@@ -24,6 +19,13 @@
     <!-- CSS styles for standard search box -->
     <link rel="stylesheet" type="text/css" href="./css/reset.css">
     <link rel="stylesheet" type="text/css" href="./css/main.css">
+    <script src="/jquery-1.12.1.min.js"></script>
+
+    <script src="/jquery.elevatezoom.js"></script>
+    <script src="/jquery.elevateZoom-3.0.8.min.js"></script>
+    <script src="/jquery-1.8.3.min.js"></script>
+
+    <script src="/jzoom.min.js"></script>
 
 </head>
 <body>
@@ -68,12 +70,12 @@
 
 
             <div class="dropdown">
-                <button class="dropbtn" id="dropdown1"><%=cat1%>
+                <button class="dropbtn"><%=cat1%>
                 </button>
 
                 <% List<Category> subCategories1 = categoryManager.getCategoriesByParentID(mainCategories.get(0).getCategoryID());%>
 
-                <div class="dropdown-content" id="dropdown-content1">
+                <div class="dropdown-content">
 
 
                     <a href="/productsPage?id=<%=subCategories1.get(0).getCategoryID()%>"><%=subCategories1.get(0).getName()%>
@@ -208,10 +210,10 @@
     ProductManager productManager = new ProductManagerImpl(dataSource);
     MediaManager mediaManager = new MediaManagerImpl(dataSource);
     List<Media> medias;
-    int productId = 0;
-    List<Product> products = productManager.getLimitedNumberOfProducts();
+    int categoryId = Integer.parseInt(request.getParameter("id"));
+    List<Product> products = productManager.getProdactsByCategoryID(categoryId);
     for (int i = 0; i < products.size(); i++) {
-        productId = products.get(i).getProductID();
+        int productId = products.get(i).getProductID();
         medias = products.get(i).setMedias(mediaManager.getMediaByProductID(productId)).getMedias();
         String path0 = medias.get(0).getMediaPath();
         // String path1 = medias.get(1).getMediaPath();
@@ -250,6 +252,6 @@
     }
 %>
 
+
 </body>
 </html>
-

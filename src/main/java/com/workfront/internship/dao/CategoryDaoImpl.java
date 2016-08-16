@@ -166,15 +166,39 @@ public class CategoryDaoImpl extends GeneralDao implements CategoryDao {
         }
         return categories;
     }
+    //TODO testing
+    public List<Category> getCategoriesByParentID(int id){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Category> categories = new ArrayList<Category>();
+        try {
+            connection = dataSource.getConnection();
+            String sql = "SELECT * FROM categories where parent_id=?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+            categories = createCategoryList(resultSet);
+        }catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw  new RuntimeException(e);
+        }  finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return categories;
+    }
+
     private List<Category> createCategoryList(ResultSet resultSet) throws SQLException {
         List<Category> categories = new ArrayList<Category>();
         Category category = null;
         while (resultSet.next()) {
             category = new Category();
-            category.setCategoryID(resultSet.getInt("category_id")).setName(resultSet.getString("category_name"));
+            category.setCategoryID(resultSet.getInt("category_id")).setName(resultSet.getString("category_name")).setParentID(resultSet.getInt("parent_id"));
             categories.add(category);
         }
 
         return categories;
     }
+
 }

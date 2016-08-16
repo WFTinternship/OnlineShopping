@@ -3,9 +3,7 @@
 	background-color:#F5F5F5;
 	/*height: 200px;*/
 }
-.wrapper1{
-	height:85%;
-}
+
 .wrapper form{
 
 
@@ -126,6 +124,7 @@
 	border: none;
 	cursor: pointer;
 	text-decoration: none;
+	padding-right: 15px;
 }
 .dropbtn:hover {
 
@@ -355,5 +354,52 @@ display: none;
 }
 #gallery_01 img{border:2px solid white;}
 
-/*Change the colour*/
+
 .active img{border:2px solid #333 !important;}
+
+#message{
+	display: none;
+}
+
+
+
+.errorWrapper{
+		background-color:#F5F5F5;
+		padding: 100px;
+	}
+
+.errorWrapper h1{
+	font-size: 100px;
+	color: #D6E240;
+	margin-left: 100px;
+}
+.errorWrapper p{
+	font-size: 18px;
+	margin-left: 100px;
+}
+.errorWrapper a{
+
+	font-family: Arial;
+	font-size: 13px;
+	margin-left: 100px;
+
+}
+
+.errorWrapper a{
+	color: #DD127B;
+}
+.errorWrapper a:hover {
+    color: #D6E240;
+    background-color: transparent;
+    text-decoration: underline;
+    }
+.wrapper a:active {
+    color: black;
+    background-color: transparent;
+    text-decoration: underline;
+}
+.errorWrapper img{
+	float:right;
+	padding-right: 550px;
+	padding-top: 20px;
+}

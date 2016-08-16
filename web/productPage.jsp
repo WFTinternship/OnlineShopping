@@ -16,7 +16,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,59 +39,129 @@
 <div class="wrapper">
     <div class="wrapper1">
         <%
-            DataSource dataSource=DataSource.getInstance();
+            DataSource dataSource = DataSource.getInstance();
             CategoryManager categoryManager = new CategoryManagerImpl(dataSource);
-            List<Category> categories = categoryManager.getAllCategories();
+            List<Category> mainCategories = categoryManager.getCategoriesByParentID(0);
+            String cat1 = mainCategories.get(0).getName();
+            String cat2 = mainCategories.get(1).getName();
+            String cat3 = mainCategories.get(2).getName();
+            String cat4 = mainCategories.get(3).getName();
+            String cat5 = mainCategories.get(4).getName();
 
 
         %>
-        <form  method="get" action="http://www.google.com"><br><br><br><br>
+        <form method="get" action="http://www.google.com"><br><br><br><br>
             <select name="category">
                 <option value="all" selected>All</option>
-                <option value="cat1"><%=categories.get(0).getName()%></option>
-                <option value="cat2"><%=categories.get(1).getName()%></option>
-                <option value="cat3"><%=categories.get(2).getName()%></option>
+                <option value="cat1"><%=cat1%>
+                </option>
+                <option value="cat2"><%=cat2%>
+                </option>
+                <option value="cat3"><%=cat3%>
+                </option>
+                <option value="cat4"><%=cat4%>
+                </option>
+                <option value="cat5"><%=cat5%>
+                </option>
 
-            </select><input type="text" class="textinput" name="productName" size="60" maxlength="120"><input type="submit" value="search" class="button">
+            </select><input type="text" class="textinput" name="productName" size="60" maxlength="120"><input
+                    type="submit" value="search" class="button">
 
-        </form><br>
+        </form>
+        <br>
     </div>
     <div class="some">
         <div class="category">
 
 
-
-
             <div class="dropdown">
-                <button class="dropbtn">BABY GIRL</button>
+                <button class="dropbtn"><%=cat1%>
+                </button>
+
+                <% List<Category> subCategories1 = categoryManager.getCategoriesByParentID(mainCategories.get(0).getCategoryID());%>
+
                 <div class="dropdown-content">
 
-                    <a href="#"><%=categories.get(0).getName()%></a>
-                    <a href="#"><%=categories.get(1).getName()%></a>
-                    <a href="#"><%=categories.get(2).getName()%></a>
+
+                    <a href="/productsPage?id=<%=subCategories1.get(0).getCategoryID()%>"><%=subCategories1.get(0).getName()%>
+                    </a>
+                    <a href="/productsPage?id=<%=subCategories1.get(1).getCategoryID()%>"><%=subCategories1.get(1).getName()%>
+                    </a>
+
 
                 </div>
             </div>
             <div class="dropdown">
-                <button class="dropbtn">BABY BOY</button>
+                <button class="dropbtn"><%=cat2%>
+                </button>
+                <% List<Category> subCategories2 = categoryManager.getCategoriesByParentID(mainCategories.get(1).getCategoryID());%>
                 <div class="dropdown-content">
 
-                    <a href="#"><%=categories.get(0).getName()%></a>
-                    <a href="#"><%=categories.get(1).getName()%></a>
-                    <a href="#"><%=categories.get(2).getName()%></a>
+
+                    <a href="/productsPage?id=<%=subCategories2.get(0).getCategoryID()%>"><%=subCategories2.get(0).getName()%>
+                    </a>
+                    <a href="/productsPage?id=<%=subCategories2.get(1).getCategoryID()%>"><%=subCategories2.get(1).getName()%>
+                    </a>
+
+
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn"><%=cat3%>
+                </button>
+                <% List<Category> subCategories3 = categoryManager.getCategoriesByParentID(mainCategories.get(2).getCategoryID());%>
+                <div class="dropdown-content">
+
+                    <%--
+                                        <a href="/productsPage?id=<%=subCategories2.get(0).getCategoryID()%>"><%=subCategories2.get(0).getName()%>
+                                        </a>
+                                        <a href="/productsPage?id=<%=subCategories2.get(1).getCategoryID()%>"><%=subCategories2.get(1).getName()%>
+                                        </a>
+                                        <a href="/productsPage?id=<%=subCategories2.get(2).getCategoryID()%>"><%=subCategories2.get(2).getName()%>
+                                        </a>--%>
+
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn"><%=cat4%>
+                </button>
+                <% List<Category> subCategories4 = categoryManager.getCategoriesByParentID(mainCategories.get(3).getCategoryID());%>
+                <div class="dropdown-content">
+
+
+                    <a href="/productsPage?id=<%=subCategories4.get(0).getCategoryID()%>"><%=subCategories4.get(0).getName()%>
+                    </a>
+                    <a href="/productsPage?id=<%=subCategories4.get(1).getCategoryID()%>"><%=subCategories4.get(1).getName()%>
+                    </a>
+
+
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn"><%=cat5%>
+                </button>
+                <% List<Category> subCategories5 = categoryManager.getCategoriesByParentID(mainCategories.get(4).getCategoryID());%>
+                <div class="dropdown-content">
+
+
+                    <a href="/productsPage?id=<%=subCategories5.get(0).getCategoryID()%>"><%=subCategories5.get(0).getName()%>
+                    </a>
+                    <a href="/productsPage?id=<%=subCategories5.get(1).getCategoryID()%>"><%=subCategories5.get(1).getName()%>
+                    </a>
+
 
                 </div>
             </div>
         </div>
 
         <%
-            User user = (User)request.getSession().getAttribute("user");
-            if(user==null){
+            User user = (User) request.getSession().getAttribute("user");
+            if (user == null) {
 
         %>
 
-        <div class="signinRegister" >
-            <a href="/signin.jsp"  class="register" id="login_button" >SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="signinRegister">
+            <a href="./signin.jsp" class="register" id="login_button">SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="/registration.jsp" class="register" id="registration_button">CREATE ACCOUNT</a>
         </div>
 
@@ -100,12 +169,13 @@
     </div>
 </div>
 
-<%}
+<%
+    }
 %>
 
 <%
 
-    if(user!=null){
+    if (user != null) {
 
 
 %>
@@ -129,108 +199,108 @@
 
 </div>
 </div>
-<%}
+<%
+    }
 %>
 
 
-
-
 <div>
-    <img src="./image/pic4.jpg"  alt="image1" class="backimg1">
+    <img src="./image/pic4.jpg" alt="image1" class="backimg1">
 
 
-    <img src="./image/pic1.jpg"  alt="image2" class="backimg2">
+    <img src="./image/pic1.jpg" alt="image2" class="backimg2">
 </div>
-<div class = "product">
+<div class="product">
     <%
 
-        Product product = (Product)request.getAttribute("product");
+        Product product = (Product) request.getAttribute("product");
         System.out.println(product.getMedias().get(1).getMediaPath());
     %>
-   <%-- <img id="zoom_09" src="./image/girldress11.jpg" data-zoom-image="./image/girldress11_big.jpg"/>
+    <%-- <img id="zoom_09" src="./image/girldress11.jpg" data-zoom-image="./image/girldress11_big.jpg"/>
 
-    <select id="select">
-        <option value="1">Front</option>
-        <option value="2">Back</option>
+     <select id="select">
+         <option value="1">Front</option>
+         <option value="2">Back</option>
 
-    </select>--%>
-   <%-- <img id="img_01" src="./image/girldress11.jpg" data-zoom-image="./image/girldress11_big.jpg"/>
+     </select>--%>
+    <%-- <img id="img_01" src="./image/girldress11.jpg" data-zoom-image="./image/girldress11_big.jpg"/>
 
-    <div id="gal1">
+     <div id="gal1">
 
-        <a href="#" data-image="./image/girldress11.jpg" data-zoom-image="./image/girldress11_big.jpg">
-            <img  src="./image/index.png" />
-        </a>
+         <a href="#" data-image="./image/girldress11.jpg" data-zoom-image="./image/girldress11_big.jpg">
+             <img  src="./image/index.png" />
+         </a>
 
-        <a href="#" data-image="/image/girldress12.jpg" data-zoom-image="/image/girldress12_big.jpg">
-            <img  src="./image/index.png" />
-        </a>
---%>
+         <a href="#" data-image="/image/girldress12.jpg" data-zoom-image="/image/girldress12_big.jpg">
+             <img  src="./image/index.png" />
+         </a>
+ --%>
+
+
+</div>
+<div class="bigproductImage">
+    <div class="jzoom" id="bigimg2">
+
+
+        <img src="<%=product.getMedias().get(1).getMediaPath()%>" alt="cart image">
 
 
     </div>
-    <div class="bigproductImage">
-        <div class="jzoom" id="bigimg2">
+    <div class="jzoom" id="bigimg1">
 
+        <img src="<%=product.getMedias().get(0).getMediaPath()%>" alt="cart image">
 
-            <img src="<%=product.getMedias().get(1).getMediaPath()%>"  alt="cart image"  >
-
-
-        </div>
-        <div class="jzoom" id="bigimg1">
-
-            <img src="<%=product.getMedias().get(0).getMediaPath()%>"  alt="cart image">
-
-
-
-        </div>
-
-     <!--   <div  >
-
-            <img src="/image/girldress12.jpg"  alt="cart image"  id="bigimg2">
-
-        </div> -->
 
     </div>
-    <div class="productdesc">
-        <h1 class="productName">2-Piece dress & Cardigan Set</h1>
-        <p class="price">Price: $20</p>
-        <p class="size">Size:&nbsp; &nbsp; &nbsp; <a href="#">NB</a>
-            <a href="#">3M</a>
-            <a href="#">6M</a>
-            <a href="#">9M</a>
-            <a href="#">12M</a>
-            <a href="#">18M</a>
-            <a href="#">24M</a>
-        </p>
 
-        <p class="quantity">Quantity: <select>
-            <option value='1'>1</option>
-            <option value='2'>2</option>
-            <option value='3'>3</option>
-            <option value='4'>4</option>
-            <option value='5'>5</option>
-        </select>    </p>
-    </div>
-    <div class="clear"></div>
+    <!--   <div  >
+
+           <img src="/image/girldress12.jpg"  alt="cart image"  id="bigimg2">
+
+       </div> -->
+
+</div>
+<div class="productdesc">
+    <h1 class="productName">2-Piece dress & Cardigan Set</h1>
+    <p class="price">Price: $20</p>
+    <p class="size">Size:&nbsp; &nbsp; &nbsp; <a href="#">NB</a>
+        <a href="#">3M</a>
+        <a href="#">6M</a>
+        <a href="#">9M</a>
+        <a href="#">12M</a>
+        <a href="#">18M</a>
+        <a href="#">24M</a>
+    </p>
+
+    <p class="quantity">Quantity: <select>
+        <option value='1'>1</option>
+        <option value='2'>2</option>
+        <option value='3'>3</option>
+        <option value='4'>4</option>
+        <option value='5'>5</option>
+    </select></p>
+</div>
+<div class="clear"></div>
 </div>
 
 
 <div class="productButtons">
-    <button  id="littleImage1" onclick="myFunction1()"> <img src="<%=product.getMedias().get(0).getMediaPath()%>"  style="height:90px" id="aaa"></button>
+    <button id="littleImage1" onclick="myFunction1()"><img src="<%=product.getMedias().get(0).getMediaPath()%>"
+                                                           style="height:90px" id="aaa"></button>
 
-    <button  id="littleImage2" onclick="myFunction2()"> <img src="<%=product.getMedias().get(1).getMediaPath()%>" style="height:90px" id="bbb"></button>
-  <script>function myFunction2(){
-       document.getElementById("bigimg1").style.display="none";
+    <button id="littleImage2" onclick="myFunction2()"><img src="<%=product.getMedias().get(1).getMediaPath()%>"
+                                                           style="height:90px" id="bbb"></button>
+    <script>function myFunction2() {
+        document.getElementById("bigimg1").style.display = "none";
 
-      document.getElementById("bigimg2").style.display="block";
-       // document.getElementById("bigimg").src = "/image/girldress12.jpg";
+        document.getElementById("bigimg2").style.display = "block";
+        // document.getElementById("bigimg").src = "/image/girldress12.jpg";
     }
 
-    function myFunction1(){
+    function myFunction1() {
 
-        document.getElementById("bigimg1").style.display="block";
-       document.getElementById("bigimg2").style.display="none";
+        document.getElementById("bigimg1").style.display = "block";
+        document.getElementById("bigimg2").style.display = "none";
         //document.getElementById("bigimg").src = "/image/girldress11.jpg";
     }
 
@@ -239,7 +309,7 @@
 
         $('.jzoom').jzoom();
 
-            // width / height of the magnifying glass
+        // width / height of the magnifying glass
 
     </script>
 </div>

@@ -13,4 +13,5 @@ public interface CategoryManager {
     void updateCategory(Category category);
     void deleteCategory(int id);
     List<Category> getAllCategories();
+    List<Category> getCategoriesByParentID(int id);
 }

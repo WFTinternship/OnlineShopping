@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 /**
  * Created by Anna Asmangulyan on 8/12/2016.
  */
-public class SigninPage extends AbstractPage{
+public class SigninPage extends AbstractPage {
     public void typeUsername(String username) throws InterruptedException {
         WebElement usernameField = getWebDriver().findElement(By.name("username"));
         Thread.sleep(1000);
@@ -22,5 +22,10 @@ public class SigninPage extends AbstractPage{
         WebElement signinButton = getWebDriver().findElement(By.id("signinButton"));
         signinButton.click();
 
+    }
+
+    public WebElement getSigninButton() {
+        WebElement signinButton = getWebDriver().findElement(By.id("signinButton"));
+        return signinButton;
     }
 }

@@ -12,6 +12,17 @@ public class Category {
     private int categoryID;
     private String name;
 
+    public int getParentID() {
+        return parentID;
+    }
+
+    public Category setParentID(int parentID) {
+        this.parentID = parentID;
+        return this;
+    }
+
+    private int parentID;
+
     public int getCategoryID() {
         return categoryID;
     }

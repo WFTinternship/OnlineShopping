@@ -25,23 +25,23 @@ public class LoginServlet extends HttpServlet {
         dataSource = DataSource.getInstance();
         userManager = new UserManagerImpl(dataSource);
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Boolean hasError=false;
-        String errorString=null;
+        Boolean hasError = false;
+        String errorString = null;
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         User user = new User();
 
-        user = userManager.login(username,password);
-            if (user == null) {
+        user = userManager.login(username, password);
+        if (user == null) {
 
-                    errorString = "Username or password invalid";
+            errorString = "Username or password invalid";
 
 
-
-        // If error, forward to /signin.jsp
+            // If error, forward to /signin.jsp
 
             user = new User();
             user.setUsername(username);
@@ -58,11 +58,10 @@ public class LoginServlet extends HttpServlet {
                     = this.getServletContext().getRequestDispatcher("/signin.jsp");
 
             dispatcher.forward(request, response);
+        } else {
+            request.getSession().setAttribute("user", user);
+            RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/index.jsp");
+            dispatcher.forward(request, response);
         }
-else {
-                request.getSession().setAttribute("user", user);
-                RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/index.jsp");
-                dispatcher.forward(request, response);
-            }
     }
 }
