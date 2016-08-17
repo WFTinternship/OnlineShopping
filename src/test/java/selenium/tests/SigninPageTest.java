@@ -1,10 +1,15 @@
 package selenium.tests;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import com.workfront.internship.business.UserManager;
+import com.workfront.internship.business.UserManagerImpl;
+import com.workfront.internship.common.User;
+import com.workfront.internship.dao.DataSource;
+import org.junit.*;
 import selenium.pages.HomePage;
 import selenium.pages.SigninPage;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -13,39 +18,67 @@ import static org.junit.Assert.assertNotNull;
  */
 public class SigninPageTest {
     private static SigninPage signinPage;
+    private static DataSource dataSource;
+    private static UserManager userManager;
     private static HomePage homePage;
+    private static User testUser;
+
+    @Before
+    public  void setUP() throws IOException, SQLException {
+        testUser = getTestUser();
+        userManager.createAccount(testUser);
+        testUser = getTestUser();
+
+    }
+    @After
+    public void tearDown() {
+        userManager.deleteAllUsers();
+        signinPage.getWebDriver().get("http://localhost:8080/signin.jsp");
+
+    }
 
     @BeforeClass
-    public static void setUp() {
+    public static void setUpClass() throws IOException, SQLException {
+        dataSource = DataSource.getInstance();
+        userManager = new UserManagerImpl(dataSource);
         signinPage = new SigninPage();
         homePage = new HomePage();
-        signinPage.init();
+        signinPage.init("http://localhost:8080/signin.jsp");
     }
 
     @AfterClass
-    public static void tearDown() {
+    public static void tearDownClass() {
         signinPage.getWebDriver().close();
+        userManager=null;
+        signinPage=null;
+        dataSource=null;
+        testUser=null;
     }
 
     @Test
     public void login_success() throws InterruptedException {
-        homePage.clickLogin();
-        signinPage.typeUsername("sonamika");
-        signinPage.typePassword("sonasona");
+        signinPage.typeUsername(testUser.getUsername());
+        signinPage.typePassword(testUser.getPassword());
         signinPage.clickSignin();
 
-        // assertFalse("login page is not closed", homePage.getLoginPopup().isDisplayed());
         assertNotNull("loguot button is not displayed", homePage.getCart());
     }
 
     @Test
     public void login_fail() throws InterruptedException {
-        homePage.clickLogin();
         signinPage.typeUsername("asasdadadasd");
         signinPage.typePassword("asfawefwaefawd");
         signinPage.clickSignin();
 
-        // assertFalse("login page is not closed", homePage.getLoginPopup().isDisplayed());
         assertNotNull("login was done", signinPage.getSigninButton());
+    }
+
+    private User getTestUser() {
+        User user = new User();
+        user.setFirstname("Anahit").setLastname("galstyan").
+                setUsername("anigal").setPassword("anahitgal85").
+                setEmail("galstyan@gmail.com").setConfirmationStatus(true).
+                setAccessPrivilege("user");
+        return user;
     }
 }

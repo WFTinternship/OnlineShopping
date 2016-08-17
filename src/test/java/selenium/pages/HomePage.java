@@ -19,6 +19,7 @@ public class HomePage extends AbstractPage {
     }
 
     public WebElement clickCreateAccount() throws InterruptedException {
+        Thread.sleep(2000);
         WebElement createAccountButton = getWebDriver().findElement(By.cssSelector("#registration_button"));
         createAccountButton.click();
         return getRegistrationPage();

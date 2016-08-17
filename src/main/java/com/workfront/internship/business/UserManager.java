@@ -18,6 +18,7 @@ public interface UserManager {
     List<Product> getList(User user);
     void addToList(User user, Product product);
     void deleteFromList(User user, Product product);
+    void deleteAllUsers();
 
 
 }

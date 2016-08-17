@@ -9,11 +9,10 @@ import org.openqa.selenium.WebElement;
 public class SigninPage extends AbstractPage {
     public void typeUsername(String username) throws InterruptedException {
         WebElement usernameField = getWebDriver().findElement(By.name("username"));
-        Thread.sleep(1000);
         usernameField.sendKeys(username);
     }
 
-    public void typePassword(String password) {
+    public void typePassword(String password) throws InterruptedException {
         WebElement passwordField = getWebDriver().findElement(By.name("password"));
         passwordField.sendKeys(password);
     }

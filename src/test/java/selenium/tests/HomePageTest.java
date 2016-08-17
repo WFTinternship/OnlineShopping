@@ -15,17 +15,19 @@ public class HomePageTest {
     @BeforeClass
     static public void setUp() {
         homePage = new HomePage();
-        homePage.init();
+        homePage.init("http://localhost:8080");
     }
 
     @AfterClass
     static public void tearDownAfterClass() {
         homePage.getWebDriver().close();
+        homePage=null;
     }
 
     @After
     public void tearDown() {
         homePage.getWebDriver().get("http://localhost:8080");
+
     }
 
     @Test

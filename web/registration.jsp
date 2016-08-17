@@ -11,7 +11,7 @@
     <p style="font-size:30px;">Create account</p><br>
     <% String string = (String) request.getAttribute("errorString");
         if (string != null) {%>
-    <p style="font-size:12px; color:red"><%=request.getAttribute("errorString")%>
+    <p style="font-size:12px; color:red" id="errorString"><%=request.getAttribute("errorString")%>
     </p><br>
     <%
         }

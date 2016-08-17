@@ -136,6 +136,10 @@ public class UserManagerImpl implements UserManager {
         user.setWishList(userDao.getWishlist(user.getUserID()));
 
     }
+    @Override
+    public void deleteAllUsers(){
+        userDao.deleteAllUsers();
+    }
 
     private boolean validateUser(User user) {
         if (user != null && (user.getFirstname() != null) &&

@@ -11,9 +11,9 @@ public class AbstractPage {
     static private WebDriver webDriver;
 
 
-    static public void init() {
+    static public void init(String url) {
         webDriver = new ChromeDriver();
-        webDriver.get("http://localhost:8080");
+        webDriver.get(url);
     }
 
     public WebDriver getWebDriver() {
