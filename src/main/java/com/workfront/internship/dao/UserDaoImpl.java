@@ -4,16 +4,26 @@ import com.workfront.internship.common.Address;
 import com.workfront.internship.common.Product;
 import com.workfront.internship.common.User;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.xml.ws.soap.Addressing;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class UserDaoImpl extends GeneralDao implements UserDao {
 
     private static final Logger LOGGER = Logger.getLogger(UserDao.class);
+
+    @Autowired
     private DataSource dataSource;
+
+    public UserDaoImpl() {
+
+    }
 
     public UserDaoImpl(DataSource dataSource) throws SQLException, IOException {
         this.dataSource = dataSource;

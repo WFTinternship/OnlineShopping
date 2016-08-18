@@ -5,6 +5,8 @@ import com.workfront.internship.common.*;
 import com.workfront.internship.dao.*;
 import org.apache.log4j.Logger;
 import org.mockito.internal.matchers.Or;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -16,19 +18,25 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class UserManagerImpl implements UserManager {
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
-    private DataSource dataSource;
+    @Autowired
     private UserDao userDao;
-    AddressDao addressDao;
+    @Autowired
+    private AddressDao addressDao;
+    @Autowired
     private EmailManager emailManager;
 
+    public UserManagerImpl() {
+
+    }
+
     public UserManagerImpl(DataSource dataSource) throws IOException, SQLException {
-        this.dataSource = dataSource;
         userDao = new UserDaoImpl(dataSource);
         addressDao = new AddressDaoImpl(dataSource);
         emailManager = new EmailManager();

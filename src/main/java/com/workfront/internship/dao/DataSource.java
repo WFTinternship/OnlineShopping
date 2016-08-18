@@ -11,12 +11,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DataSource {
     private static DataSource datasource;
     private BasicDataSource ds;
 
-    private DataSource() throws IOException, SQLException {
+    public DataSource() throws IOException, SQLException {
         ds = new BasicDataSource();
         ds.setDriverClassName("com.mysql.jdbc.Driver");
         ds.setUsername("root");

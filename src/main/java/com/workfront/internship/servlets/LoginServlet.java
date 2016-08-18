@@ -4,8 +4,10 @@ import com.workfront.internship.business.UserManager;
 import com.workfront.internship.business.UserManagerImpl;
 import com.workfront.internship.common.User;
 import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.spring.OnlineShopApplication;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,13 +19,13 @@ import java.sql.SQLException;
  * Created by Anna Asmangulyan on 8/9/2016.
  */
 public class LoginServlet extends HttpServlet {
-    private DataSource dataSource;
+
     private UserManager userManager;
 
-    public LoginServlet() throws IOException, SQLException {
-        super();
-        dataSource = DataSource.getInstance();
-        userManager = new UserManagerImpl(dataSource);
+    @Override
+    public void init(ServletConfig servletConfig) throws ServletException {
+        super.init();
+        userManager = OnlineShopApplication.getApplicationContext(servletConfig.getServletContext()).getBean(UserManager.class);
     }
 
     @Override

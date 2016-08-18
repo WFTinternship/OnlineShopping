@@ -184,7 +184,8 @@
         <a href="#">edit account</a>
         <a href="#">your orders</a>
         <a href="#">your wish list</a>
-        <a href="/index.jsp?user=null" id="logout_button">logout</a>
+        <%request.getSession().setAttribute("user", null);%>
+        <a href="/index.jsp" id="logout_button">logout</a>
     </div>
 </div>
 

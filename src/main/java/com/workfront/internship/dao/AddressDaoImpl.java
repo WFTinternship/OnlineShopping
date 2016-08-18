@@ -1,6 +1,8 @@
 package com.workfront.internship.dao;
 import org.apache.log4j.Logger;
 import com.workfront.internship.common.Address;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 import java.io.IOException;
@@ -11,10 +13,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class AddressDaoImpl extends GeneralDao implements AddressDao {
 
     private static final Logger LOGGER = Logger.getLogger(AddressDaoImpl.class);
+
+    @Autowired
     private DataSource dataSource;
+
+    public AddressDaoImpl() {
+
+    }
 
     public AddressDaoImpl(DataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
