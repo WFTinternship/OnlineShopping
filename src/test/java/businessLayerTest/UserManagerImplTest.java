@@ -5,7 +5,7 @@ import com.workfront.internship.business.UserManager;
 import com.workfront.internship.business.UserManagerImpl;
 import com.workfront.internship.common.Address;
 import com.workfront.internship.common.User;
-import com.workfront.internship.dao.LegacyDataSource;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

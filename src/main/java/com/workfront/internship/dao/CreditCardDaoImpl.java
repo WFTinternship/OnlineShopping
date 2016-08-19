@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,12 +20,12 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
 
     private static final Logger LOGGER = Logger.getLogger(CreditCard.class);
     @Autowired
-    private LegacyDataSource dataSource;
+    private DataSource dataSource;
 
-    public CreditCardDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
+   /* public CreditCardDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
     }
-
+*/
     @Override
     public CreditCard getCreditCardByCardID(int cardId) {
         CreditCard creditCard = null;

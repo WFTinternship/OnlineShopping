@@ -1,11 +1,8 @@
-package com.workfront.internship.dao;
+package businessLayerTest;
 
 /**
- * Created by Workfront on 7/1/2016.
+ * Created by Anna Asmangulyan on 8/19/2016.
  */
-
-/*
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -54,4 +51,4 @@ public class LegacyDataSource {
         return ds;
     }
 
-}*/
+}

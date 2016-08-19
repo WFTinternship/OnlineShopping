@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,12 +19,12 @@ import java.util.List;
 public class BasketDaoImpl extends GeneralDao implements BasketDao {
     private static final Logger LOGGER = Logger.getLogger(BasketDao.class);
     @Autowired
-    private LegacyDataSource dataSource;
+    private DataSource dataSource;
 
-    public BasketDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
+  /*  public BasketDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
 
-    }
+    }*/
     @Override
     public int insertBasket(Basket basket) {
         int lastId = 0;
@@ -149,7 +150,7 @@ public class BasketDaoImpl extends GeneralDao implements BasketDao {
     private Basket createBasket(ResultSet resultSet) throws IOException, SQLException {
         Basket basket = null;
         while (resultSet.next()) {
-            OrderItemDao orderItemDao = new OrderItemDaoImpl(dataSource);
+            OrderItemDao orderItemDao = new OrderItemDaoImpl();
             int basketId = resultSet.getInt("basket_id");
             int userId = resultSet.getInt("user_id");
             double totalPrice = resultSet.getDouble("total_price");

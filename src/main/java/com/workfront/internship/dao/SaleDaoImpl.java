@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,14 +16,22 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
 
     private static final Logger LOGGER = Logger.getLogger(SaleDao.class);
     @Autowired
-    private LegacyDataSource dataSource;
-    public SaleDaoImpl(){
+    private DataSource dataSource;
+    @Autowired
+    private BasketDao basketDao;
+    @Autowired
+    private OrderItemDao orderItemDao;
+    @Autowired
+    private ProductDao productDao;
+    @Autowired
+    private CreditCardDao creditCardDao;
+    /*public SaleDaoImpl(){
 
     }
     public SaleDaoImpl(LegacyDataSource dataSource) throws SQLException, IOException {
         this.dataSource = dataSource;
     }
-
+*/
     @Override
     public Sale getSaleBySaleID(int id){
         Sale sale = null;
@@ -165,10 +174,10 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         try {
             connection = dataSource.getConnection();
             connection.setAutoCommit(false);
-            BasketDao basketDao = new BasketDaoImpl(dataSource);
-            OrderItemDao orderItemDao = new OrderItemDaoImpl(dataSource);
-            ProductDao productDao = new ProductDaoImpl(dataSource);
-            CreditCardDao creditCardDao = new CreditCardDaoImpl(dataSource);
+
+
+
+
 
 
 
@@ -202,7 +211,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
                 sale.setSaleID(lastId);
             }
 
-        } catch (SQLException | IOException e) {
+        } catch (SQLException  e) {
             e.printStackTrace();
             try {
                 connection.rollback();

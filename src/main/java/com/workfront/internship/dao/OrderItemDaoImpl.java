@@ -4,9 +4,11 @@ import com.workfront.internship.common.Basket;
 import com.workfront.internship.common.OrderItem;
 import com.workfront.internship.common.Product;
 import org.apache.log4j.Logger;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,11 +25,15 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
 
     private static final Logger LOGGER = Logger.getLogger(OrderItemDao.class);
     @Autowired
-    private LegacyDataSource dataSource;
+    private DataSource dataSource;
+    @Autowired
+    private ProductDao productDao;
+    @Autowired
+    private BasketDao basketDao;
 
-    public OrderItemDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
+   /* public OrderItemDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
-    }
+    }*/
 
     @Override
     public List<OrderItem> getOrderItemByBasketID(int basketid) {
@@ -133,8 +139,6 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         Product product = null;
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
         while (resultSet.next()) {
-
-            ProductDao productDao = new ProductDaoImpl(dataSource);
             product = productDao.getProductByID(resultSet.getInt("product_id"));
 
             OrderItem orderItem = new OrderItem();
@@ -152,7 +156,6 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         Product product;
         OrderItem orderItem = null;
         while (resultSet.next()) {
-            ProductDao productDao = new ProductDaoImpl(dataSource);
             product = productDao.getProductByID(resultSet.getInt("product_id"));
             orderItem = new OrderItem();
             orderItem = orderItem.setOrderItemID(resultSet.getInt("orderitem_id")).
@@ -238,8 +241,6 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
             connection = dataSource.getConnection();
 
             OrderItem oldOrderItem = getOrderItemByItemID(orderItem.getOrderItemID());
-
-            BasketDao basketDao = new BasketDaoImpl(dataSource);
             int basketId = orderItem.getBasketID();
 
             Basket basket = basketDao.getBasket(basketId);
@@ -256,7 +257,7 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
             preparedStatement.executeUpdate();
             connection.commit();
 
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
             try {
@@ -284,7 +285,6 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         try {
             connection = dataSource.getConnection();
             connection.setAutoCommit(false);
-            BasketDao basketDao = new BasketDaoImpl(dataSource);
             int basketId = orderItem.getBasketID();
             Basket basket = basketDao.getBasket(basketId);
             basket.setTotalPrice(basket.getTotalPrice() + orderItem.getProduct().getPrice()*orderItem.getQuantity()
@@ -310,7 +310,7 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
                 orderItem.setOrderItemID(lastId);
             }
 
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
 

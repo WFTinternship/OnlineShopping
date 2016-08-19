@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,11 +22,15 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
 
     private static final Logger LOGGER = Logger.getLogger(ProductDao.class);
     @Autowired
-    private LegacyDataSource dataSource;
-
+    private DataSource dataSource;
+    @Autowired
+    private MediaDao mediaDao;
+    @Autowired
+    private CategoryDao categoryDao;
+/*
     public ProductDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
-    }
+    }*/
 
     @Override
     public Product getProductByID(int productId) {
@@ -78,7 +83,6 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         Product product = null;
         Category category = null;
         List<Media> medias = new ArrayList<Media>();
-        MediaDao mediaDao = new MediaDaoImpl(dataSource);
         while (resultSet.next()) {
             category = new Category();
             category = category.setCategoryID(resultSet.getInt("category_id")).
@@ -293,7 +297,6 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
 
     private List<Product> createProductList(ResultSet resultSet) throws SQLException, IOException {
         List<Product> products = new ArrayList<>();
-        CategoryDao categoryDao = new CategoryDaoImpl(dataSource);
         Product product = null;
         Category category;
         while (resultSet.next()) {

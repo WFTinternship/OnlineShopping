@@ -3,7 +3,6 @@ package com.workfront.internship.business;
 import com.workfront.internship.common.Basket;
 import com.workfront.internship.common.Sale;
 import com.workfront.internship.common.User;
-import com.workfront.internship.dao.LegacyDataSource;
 import com.workfront.internship.dao.SaleDao;
 import com.workfront.internship.dao.SaleDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +18,12 @@ import java.util.List;
 @Component
 public class SalesManagerImpl implements SalesManager {
 
-    @Autowired
-    private LegacyDataSource dataSource;
+
     @Autowired
     private SaleDao saleDao;
     @Autowired
     BasketManager basketManager;
 
-
-
-    public SalesManagerImpl(LegacyDataSource dataSource) throws IOException, SQLException {
-        this.dataSource = dataSource;
-        saleDao = new SaleDaoImpl(dataSource);
-        basketManager = new BasketManagerImpl(dataSource);
-
-    }
     @Override
     public List<Sale> getSales(User user) {
         if(user == null)

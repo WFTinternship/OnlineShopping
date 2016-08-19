@@ -32,6 +32,7 @@
 <div class="wrapper">
     <div class="wrapper1">
         <%
+
             LegacyDataSource dataSource = LegacyDataSource.getInstance();
             CategoryManager categoryManager = new CategoryManagerImpl(dataSource);
             List<Category> mainCategories = categoryManager.getCategoriesByParentID(0);

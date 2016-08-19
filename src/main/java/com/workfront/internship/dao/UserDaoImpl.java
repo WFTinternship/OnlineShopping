@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,15 +18,23 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
     private static final Logger LOGGER = Logger.getLogger(UserDao.class);
 
     @Autowired
-    private LegacyDataSource dataSource;
+    private DataSource dataSource;
+    @Autowired
+    private AddressDao addressDao;
+    @Autowired
+    private ProductDao productDao;
+    @Autowired
+    private BasketDao basketDao;
+    @Autowired
+    private SaleDao saleDao;
 
-    public UserDaoImpl() {
+   /* public UserDaoImpl() {
 
     }
 
     public UserDaoImpl(LegacyDataSource dataSource) throws SQLException, IOException {
         this.dataSource = dataSource;
-    }
+    }*/
     @Override
     public int insertUser(User user){
         int lastId = 0;
@@ -382,7 +391,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         User user = null;
         while (resultSet.next()) {
 
-            AddressDao addressDao = new AddressDaoImpl(dataSource);
+
             user = new User();
             user.setUserID(resultSet.getInt("user_id")).
                     setFirstname(resultSet.getString("firstname")).
@@ -401,7 +410,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
 
     private List<Product> createWishlist(ResultSet resultSet) throws SQLException, IOException {
         List<Product> wishlist = new ArrayList<Product>();
-        ProductDao productDao = new ProductDaoImpl(dataSource);
+
         while (resultSet.next()) {
             //Retrieve by column name
             int uid = resultSet.getInt("user_id");
@@ -414,9 +423,6 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         List<User> users = new ArrayList<User>();
         User user = null;
         int userId = 0;
-        BasketDao basketDao = new BasketDaoImpl(dataSource);
-        SaleDao saleDao = new SaleDaoImpl(dataSource);
-        AddressDao addressDao = new AddressDaoImpl(dataSource);
         while (resultSet.next()) {
             user = new User();
             userId = resultSet.getInt("user_id");

@@ -22,14 +22,14 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
     @Autowired
     private DataSource dataSource;
 
-    public AddressDaoImpl() {
+ /*   public AddressDaoImpl() {
 
     }
 
     public AddressDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource.getDataSource();
 
-    }
+    }*/
 
     @Override
     public List<Address> getShippingAddressByUserID(int userid) {

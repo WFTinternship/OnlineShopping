@@ -3,7 +3,6 @@ package com.workfront.internship.business;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.dao.CategoryDao;
 import com.workfront.internship.dao.CategoryDaoImpl;
-import com.workfront.internship.dao.LegacyDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +17,8 @@ import java.util.List;
 public class CategoryManagerImpl implements CategoryManager {
     @Autowired
     private CategoryDao categoryDao;
-    @Autowired
-    private LegacyDataSource dataSource;
 
-    public CategoryManagerImpl(LegacyDataSource dataSource)throws IOException, SQLException {
-        this.dataSource = dataSource;
-        categoryDao = new CategoryDaoImpl(dataSource);
-    }
+
 
     public Category getCategoryByID(int id){
         if(id <=0)

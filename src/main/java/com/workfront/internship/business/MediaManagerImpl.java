@@ -1,9 +1,8 @@
 package com.workfront.internship.business;
 
 import com.workfront.internship.common.Media;
-import com.workfront.internship.dao.LegacyDataSource;
+
 import com.workfront.internship.dao.MediaDao;
-import com.workfront.internship.dao.MediaDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,15 +16,11 @@ import java.util.List;
 @Component
 public class MediaManagerImpl implements MediaManager {
 
-    @Autowired
-    private LegacyDataSource dataSource;
+
     @Autowired
     private MediaDao mediaDao;
 
-    public MediaManagerImpl(LegacyDataSource dataSource)throws IOException, SQLException {
-        this.dataSource = dataSource;
-        mediaDao = new MediaDaoImpl(dataSource);
-    }
+
     public List<Media> getMediaByProductID(int id){
         if(id <= 0)
             throw new RuntimeException("invalid id");

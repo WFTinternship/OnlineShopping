@@ -15,8 +15,7 @@ import java.util.List;
 @Component
 public class BasketManagerImpl implements BasketManager {
 
-    @Autowired
-    private LegacyDataSource dataSource;
+
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -24,15 +23,6 @@ public class BasketManagerImpl implements BasketManager {
     @Autowired
     private BasketDao basketDao;
 
-
-    public BasketManagerImpl(LegacyDataSource dataSource) throws IOException, SQLException {
-        this.dataSource = dataSource;
-        userDao = new UserDaoImpl(dataSource);
-        orderItemDao = new OrderItemDaoImpl(dataSource);
-        basketDao = new BasketDaoImpl(dataSource);
-
-
-    }
 
     @Override
     public int createNewBasket(Basket basket) {

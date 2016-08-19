@@ -15,19 +15,13 @@ import java.util.List;
  */
 @Component
 public class ProductManagerImpl implements ProductManager{
-   @Autowired
-   private LegacyDataSource dataSource;
+
    @Autowired
    private ProductDao productDao;
    @Autowired
    private MediaManager mediaManager;
 
-   public ProductManagerImpl(LegacyDataSource dataSource)throws IOException, SQLException {
-       this.dataSource = dataSource;
-       productDao = new ProductDaoImpl(dataSource);
 
-       mediaManager = new MediaManagerImpl(dataSource);
-   }
    public int createNewProduct(Product product){
        if(!validateProduct(product))
            throw new RuntimeException("not valid product");

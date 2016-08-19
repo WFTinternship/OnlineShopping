@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,11 +21,11 @@ public class MediaDaoImpl extends GeneralDao implements MediaDao {
 
     private static final Logger LOGGER = Logger.getLogger(MediaDao.class);
     @Autowired
-    private LegacyDataSource dataSource;
-
+    private DataSource dataSource;
+/*
     public MediaDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
-    }
+    }*/
     @Override
     public List<Media> getMediaByProductID(int productId) {
         List<Media> medias = new ArrayList<Media>();
