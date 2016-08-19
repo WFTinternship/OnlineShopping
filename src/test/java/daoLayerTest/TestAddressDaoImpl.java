@@ -8,11 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +22,7 @@ import static org.junit.Assert.assertNull;
  * Created by Administrator on 08.07.2016.
  */
 public class TestAddressDaoImpl{
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     Address address = null;
     User user = null;
     int lastInsertedIndex = 0;
@@ -35,7 +31,7 @@ public class TestAddressDaoImpl{
 
     @Before
     public void setUpDB() throws SQLException, IOException{
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
 
         addressDao = new AddressDaoImpl(dataSource);
 

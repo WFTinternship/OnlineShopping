@@ -1,19 +1,15 @@
 package com.workfront.internship.servlets;
 
 import com.workfront.internship.business.UserManager;
-import com.workfront.internship.business.UserManagerImpl;
 import com.workfront.internship.common.User;
-import com.workfront.internship.dao.DataSource;
 import com.workfront.internship.spring.OnlineShopApplication;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Created by Anna Asmangulyan on 8/9/2016.
@@ -23,15 +19,14 @@ public class LoginServlet extends HttpServlet {
     private UserManager userManager;
 
     @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
-        super.init();
-        userManager = OnlineShopApplication.getApplicationContext(servletConfig.getServletContext()).getBean(UserManager.class);
+    public void init() throws ServletException {
+        userManager = OnlineShopApplication.getApplicationContext(getServletContext()).getBean(UserManager.class);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Boolean hasError = false;
+
         String errorString = null;
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -42,8 +37,6 @@ public class LoginServlet extends HttpServlet {
 
             errorString = "Username or password invalid";
 
-
-            // If error, forward to /signin.jsp
 
             user = new User();
             user.setUsername(username);

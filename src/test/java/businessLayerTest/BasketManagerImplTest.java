@@ -2,14 +2,14 @@ package businessLayerTest;
 
 import com.workfront.internship.business.*;
 import com.workfront.internship.common.*;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertFalse;
 
@@ -25,13 +25,14 @@ public class BasketManagerImplTest {
     private UserManager userManager;
     private CategoryManager categoryManager;
     private ProductManager productManager;
-    DataSource dataSource;
+    LegacyDataSource dataSource;
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
         basketManager = new BasketManagerImpl(dataSource);
-        userManager = new UserManagerImpl(dataSource);
+        userManager = new UserManagerImpl();
+        Whitebox.setInternalState(userManager, "dataSource", dataSource);
         categoryManager = new CategoryManagerImpl(dataSource);
         productManager = new ProductManagerImpl(dataSource);
 
@@ -42,12 +43,9 @@ public class BasketManagerImplTest {
         category = getTestCategory();
         product = getTestProduct();
 
-
         categoryManager.createNewCategory(category);
         productManager.createNewProduct(product);
         basketManager.createNewBasket(basket);
-
-
     }
 
 

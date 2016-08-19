@@ -3,8 +3,9 @@ package selenium.tests;
 import com.workfront.internship.business.UserManager;
 import com.workfront.internship.business.UserManagerImpl;
 import com.workfront.internship.common.User;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import org.junit.*;
+import org.mockito.internal.util.reflection.Whitebox;
 import selenium.pages.HomePage;
 import selenium.pages.SigninPage;
 
@@ -18,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
  */
 public class SigninPageTest {
     private static SigninPage signinPage;
-    private static DataSource dataSource;
+    private static LegacyDataSource dataSource;
     private static UserManager userManager;
     private static HomePage homePage;
     private static User testUser;
@@ -39,8 +40,9 @@ public class SigninPageTest {
 
     @BeforeClass
     public static void setUpClass() throws IOException, SQLException {
-        dataSource = DataSource.getInstance();
-        userManager = new UserManagerImpl(dataSource);
+        dataSource = LegacyDataSource.getInstance();
+        userManager = new UserManagerImpl();
+        Whitebox.setInternalState(userManager, "dataSource", dataSource);
         signinPage = new SigninPage();
         homePage = new HomePage();
         signinPage.init("http://localhost:8080/signin.jsp");

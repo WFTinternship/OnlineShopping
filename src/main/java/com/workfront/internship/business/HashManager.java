@@ -1,11 +1,14 @@
 package com.workfront.internship.business;
 
+import org.springframework.stereotype.Component;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by Workfront on 7/28/2016.
  */
+@Component
 public class HashManager {
     public static String getHash(String str) {
         try {

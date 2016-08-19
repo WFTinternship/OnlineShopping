@@ -27,7 +27,7 @@ public class BasketManagerImplUnitTest {
     private OrderItem orderItem;
     Product product;
     private BasketManager basketManager;
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     BasketDao basketDao;
     OrderItemDao orderItemDao;
 

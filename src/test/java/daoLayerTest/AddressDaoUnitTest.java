@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 
 public class AddressDaoUnitTest {
 
-    DataSource dataSource;
+    LegacyDataSource dataSource;
 
     AddressDao addressDao;
 
@@ -27,7 +27,7 @@ public class AddressDaoUnitTest {
     @Before
     public void beforeTest() throws Exception {
 
-        dataSource = Mockito.mock(DataSource.class);
+        dataSource = Mockito.mock(LegacyDataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
 

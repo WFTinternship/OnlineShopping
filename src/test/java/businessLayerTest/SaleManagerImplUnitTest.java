@@ -5,7 +5,7 @@ import com.workfront.internship.business.BasketManagerImpl;
 import com.workfront.internship.business.SalesManager;
 import com.workfront.internship.business.SalesManagerImpl;
 import com.workfront.internship.common.*;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import com.workfront.internship.dao.SaleDao;
 import com.workfront.internship.dao.SaleDaoImpl;
 import org.junit.After;
@@ -29,7 +29,7 @@ public class SaleManagerImplUnitTest {
     private Sale sale;
     private SalesManager salesManager;
     private BasketManager basketManager;
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     SaleDao saleDao;
 
     @Before

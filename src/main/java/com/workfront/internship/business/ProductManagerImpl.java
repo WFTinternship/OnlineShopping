@@ -1,9 +1,10 @@
 package com.workfront.internship.business;
 
-import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
 import com.workfront.internship.dao.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -12,14 +13,16 @@ import java.util.List;
 /**
  * Created by Administrator on 23.07.2016.
  */
+@Component
 public class ProductManagerImpl implements ProductManager{
-
-   private DataSource dataSource;
+   @Autowired
+   private LegacyDataSource dataSource;
+   @Autowired
    private ProductDao productDao;
-
+   @Autowired
    private MediaManager mediaManager;
 
-   public ProductManagerImpl(DataSource dataSource)throws IOException, SQLException {
+   public ProductManagerImpl(LegacyDataSource dataSource)throws IOException, SQLException {
        this.dataSource = dataSource;
        productDao = new ProductDaoImpl(dataSource);
 

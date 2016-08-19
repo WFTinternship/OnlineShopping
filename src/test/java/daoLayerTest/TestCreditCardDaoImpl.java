@@ -1,17 +1,12 @@
 package daoLayerTest;
 
-import com.workfront.internship.common.Basket;
 import com.workfront.internship.common.CreditCard;
 import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +16,14 @@ import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertNull;
 
 public class TestCreditCardDaoImpl {
-    DataSource  dataSource;
+    LegacyDataSource dataSource;
     CreditCard creditCard = null;
     int lastInsertedIndex = 0;
     CreditCardDao creditCardDao;
 
     @Before
     public void setUpDB()  throws SQLException, IOException{
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
         creditCardDao = new CreditCardDaoImpl(dataSource);
         creditCard = getRandomCreditCard();
         lastInsertedIndex = creditCardDao.insertCreditCard(creditCard);

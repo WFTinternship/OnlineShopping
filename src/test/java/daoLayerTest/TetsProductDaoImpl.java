@@ -18,7 +18,7 @@ import static junit.framework.TestCase.assertEquals;
 
 
 public class TetsProductDaoImpl{
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     Product product = null;
     Category category = null;
     int lastInsertedIndex = 0;
@@ -27,7 +27,7 @@ public class TetsProductDaoImpl{
 
     @Before
     public void setUpDB() throws SQLException, IOException{
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
 
         productDao = new ProductDaoImpl(dataSource);
 

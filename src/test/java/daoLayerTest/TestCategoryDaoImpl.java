@@ -18,14 +18,14 @@ import static org.junit.Assert.assertNull;
 
 
 public class TestCategoryDaoImpl  {
-    DataSource  dataSource;
+    LegacyDataSource dataSource;
     Category category = null;
     int lastInsertedIndex = 0;
     CategoryDao categoryDao;
 
     @Before
     public void setUpDB()  throws SQLException, IOException{
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
         categoryDao = new CategoryDaoImpl(dataSource);
         category = getRandomCategory();
         lastInsertedIndex = categoryDao.insertCategory(category);

@@ -28,14 +28,14 @@ public class UserManagerImplUnitTest {
     private UserDao userDao;
     private AddressDao addressDao;
     private UserManager userManager;
-    DataSource dataSource;
+    LegacyDataSource dataSource;
 
     @Before
     public void setUP() throws IOException, SQLException {
 
         user = getTestUser();
         product = getTestProduct();
-        userManager = new UserManagerImpl(dataSource);
+        userManager = new UserManagerImpl();
         userDao = Mockito.mock(UserDaoImpl.class);
         addressDao = Mockito.mock(AddressDaoImpl.class);
         Whitebox.setInternalState(userManager, "userDao", userDao);

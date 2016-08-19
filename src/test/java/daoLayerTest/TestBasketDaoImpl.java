@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNull;
 
 
 public class TestBasketDaoImpl  {
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     Basket basket = null;
     User user = null;
     int lastInsertedIndex = 0;
@@ -26,7 +26,7 @@ public class TestBasketDaoImpl  {
     UserDao userDao;
     @Before
     public void setUpDB() throws SQLException, IOException{
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
         user = getRandomUser();
         basketDao = new BasketDaoImpl(dataSource);
         userDao = new UserDaoImpl(dataSource);

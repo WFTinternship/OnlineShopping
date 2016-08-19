@@ -1,4 +1,4 @@
-<%@ page import="com.workfront.internship.dao.DataSource" %>
+<%@ page import="com.workfront.internship.dao.LegacyDataSource" %>
 <%@ page import="com.workfront.internship.business.CategoryManager" %>
 <%@ page import="com.workfront.internship.business.CategoryManagerImpl" %>
 <%@ page import="com.workfront.internship.common.Category" %>
@@ -39,7 +39,7 @@
 <div class="wrapper">
     <div class="wrapper1">
         <%
-            DataSource dataSource = DataSource.getInstance();
+            LegacyDataSource dataSource = LegacyDataSource.getInstance();
             CategoryManager categoryManager = new CategoryManagerImpl(dataSource);
             List<Category> mainCategories = categoryManager.getCategoriesByParentID(0);
             String cat1 = mainCategories.get(0).getName();

@@ -3,9 +3,11 @@ package com.workfront.internship.business;
 import com.workfront.internship.common.Basket;
 import com.workfront.internship.common.Sale;
 import com.workfront.internship.common.User;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import com.workfront.internship.dao.SaleDao;
 import com.workfront.internship.dao.SaleDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,15 +16,19 @@ import java.util.List;
 /**
  * Created by Workfront on 7/25/2016.
  */
+@Component
 public class SalesManagerImpl implements SalesManager {
 
-    private DataSource dataSource;
+    @Autowired
+    private LegacyDataSource dataSource;
+    @Autowired
     private SaleDao saleDao;
+    @Autowired
     BasketManager basketManager;
 
 
 
-    public SalesManagerImpl(DataSource dataSource) throws IOException, SQLException {
+    public SalesManagerImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
         saleDao = new SaleDaoImpl(dataSource);
         basketManager = new BasketManagerImpl(dataSource);

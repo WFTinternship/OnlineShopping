@@ -1,23 +1,28 @@
 package com.workfront.internship.business;
 
 import com.workfront.internship.common.Media;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import com.workfront.internship.dao.MediaDao;
 import com.workfront.internship.dao.MediaDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Created by Workfront on 7/28/2016.
+ * Created by Anna Asmangulyan on 7/28/2016.
  */
+@Component
 public class MediaManagerImpl implements MediaManager {
 
-    private DataSource dataSource;
+    @Autowired
+    private LegacyDataSource dataSource;
+    @Autowired
     private MediaDao mediaDao;
 
-    public MediaManagerImpl(DataSource dataSource)throws IOException, SQLException {
+    public MediaManagerImpl(LegacyDataSource dataSource)throws IOException, SQLException {
         this.dataSource = dataSource;
         mediaDao = new MediaDaoImpl(dataSource);
     }

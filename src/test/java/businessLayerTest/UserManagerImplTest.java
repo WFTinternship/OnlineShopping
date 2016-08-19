@@ -5,7 +5,7 @@ import com.workfront.internship.business.UserManager;
 import com.workfront.internship.business.UserManagerImpl;
 import com.workfront.internship.common.Address;
 import com.workfront.internship.common.User;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,14 +24,14 @@ import static org.mockito.Mockito.when;
 public class UserManagerImplTest {
     private User user;
     private UserManager userManager;
-    DataSource dataSource;
+    LegacyDataSource dataSource;
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
         user = getTestUser();
-        userManager = new UserManagerImpl(dataSource);
-
+        userManager = new UserManagerImpl();
+        Whitebox.setInternalState(userManager, "dataSource", dataSource);
     }
 
     @After

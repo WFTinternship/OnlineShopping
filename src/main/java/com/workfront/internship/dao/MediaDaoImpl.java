@@ -3,6 +3,8 @@ package com.workfront.internship.dao;
 
 import com.workfront.internship.common.Media;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 import java.io.IOException;
@@ -13,13 +15,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class MediaDaoImpl extends GeneralDao implements MediaDao {
 
     private static final Logger LOGGER = Logger.getLogger(MediaDao.class);
-    private DataSource dataSource;
+    @Autowired
+    private LegacyDataSource dataSource;
 
-    public MediaDaoImpl(DataSource dataSource) throws IOException, SQLException {
+    public MediaDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
     }
     @Override

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 public class ProductManagerUnitTest {
     private Product product;
     private ProductManager productManager;
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     ProductDao productDao;
     MediaManager mediaManager;
 

@@ -19,14 +19,14 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 public class UserDaoUnitTest {
-    DataSource dataSource;
+    LegacyDataSource dataSource;
 
     UserDao userDao;
 
     @SuppressWarnings("unchecked")
     @Before
     public void beforeTest() throws Exception {
-        dataSource = Mockito.mock(DataSource.class);
+        dataSource = Mockito.mock(LegacyDataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);

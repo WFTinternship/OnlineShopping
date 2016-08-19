@@ -6,11 +6,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -22,7 +20,7 @@ import static org.junit.Assert.assertNull;
  * Created by Administrator on 09.07.2016.
  */
 public class TestSaleDaoImpl {
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     User user = null;
     Basket basket = null;
     CreditCard creditCard = null;
@@ -37,7 +35,7 @@ public class TestSaleDaoImpl {
 
     @Before
     public void setUpDB() throws SQLException, IOException {
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
         userDao = new UserDaoImpl(dataSource);
         basketDao = new BasketDaoImpl(dataSource);
         creditCardDao = new CreditCardDaoImpl(dataSource);

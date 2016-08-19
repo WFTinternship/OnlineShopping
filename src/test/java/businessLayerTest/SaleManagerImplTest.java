@@ -2,10 +2,11 @@ package businessLayerTest;
 
 import com.workfront.internship.business.*;
 import com.workfront.internship.common.*;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -30,14 +31,14 @@ public class SaleManagerImplTest {
     private UserManager userManager;
 
     private SalesManager salesManager;
-    private DataSource dataSource;
+    private LegacyDataSource dataSource;
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
         basketManager = new BasketManagerImpl(dataSource);
-        userManager = new UserManagerImpl(dataSource);
-
+        userManager = new UserManagerImpl();
+        Whitebox.setInternalState(userManager, "dataSource", dataSource);
         creditcardManager = new CreditcardManagerImpl(dataSource);
         salesManager = new SalesManagerImpl(dataSource);
 

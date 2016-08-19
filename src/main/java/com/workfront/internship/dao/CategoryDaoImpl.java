@@ -2,6 +2,8 @@ package com.workfront.internship.dao;
 
 import com.workfront.internship.common.Category;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -11,13 +13,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class CategoryDaoImpl extends GeneralDao implements CategoryDao {
 
     private static final Logger LOGGER = Logger.getLogger(CategoryDao.class);
-    private DataSource dataSource;
+    @Autowired
+    private LegacyDataSource dataSource;
 
-    public CategoryDaoImpl(DataSource dataSource) throws IOException, SQLException {
+    public CategoryDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
 
     }

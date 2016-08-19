@@ -1,17 +1,14 @@
 package daoLayerTest;
 
-import com.workfront.internship.common.Address;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Product;
 import com.workfront.internship.common.User;
 import com.workfront.internship.dao.*;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 
-import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ import static org.junit.Assert.assertNull;
 
 
 public class TestUserDaoImpl{
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     User user = null;
     Product product = null;
     Category category = null;
@@ -36,7 +33,7 @@ public class TestUserDaoImpl{
 
     @Before
     public void setUpDB() throws SQLException, IOException {
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
         userDao = new UserDaoImpl(dataSource);
         productDao = new ProductDaoImpl(dataSource);
         categoryDao = new CategoryDaoImpl(dataSource);

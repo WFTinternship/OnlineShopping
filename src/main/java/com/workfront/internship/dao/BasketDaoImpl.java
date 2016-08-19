@@ -3,6 +3,8 @@ package com.workfront.internship.dao;
 
 import com.workfront.internship.common.*;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -12,12 +14,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class BasketDaoImpl extends GeneralDao implements BasketDao {
     private static final Logger LOGGER = Logger.getLogger(BasketDao.class);
-    private DataSource dataSource;
+    @Autowired
+    private LegacyDataSource dataSource;
 
-    public BasketDaoImpl(DataSource dataSource) throws IOException, SQLException {
+    public BasketDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
 
     }

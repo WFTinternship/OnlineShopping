@@ -1,21 +1,25 @@
 package com.workfront.internship.dao;
 
-import com.mysql.cj.mysqlx.protobuf.MysqlxCrud;
 import com.workfront.internship.common.*;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class SaleDaoImpl extends GeneralDao implements SaleDao {
 
     private static final Logger LOGGER = Logger.getLogger(SaleDao.class);
-    private DataSource dataSource;
+    @Autowired
+    private LegacyDataSource dataSource;
+    public SaleDaoImpl(){
 
-    public SaleDaoImpl(DataSource dataSource) throws SQLException, IOException {
+    }
+    public SaleDaoImpl(LegacyDataSource dataSource) throws SQLException, IOException {
         this.dataSource = dataSource;
     }
 

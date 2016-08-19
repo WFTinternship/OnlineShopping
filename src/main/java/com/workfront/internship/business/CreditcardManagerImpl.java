@@ -3,17 +3,21 @@ package com.workfront.internship.business;
 import com.workfront.internship.common.CreditCard;
 import com.workfront.internship.dao.CreditCardDao;
 import com.workfront.internship.dao.CreditCardDaoImpl;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-
+@Component
 public class CreditcardManagerImpl implements CreditcardManager {
-    private DataSource dataSource;
+    @Autowired
+    private LegacyDataSource dataSource;
+    @Autowired
     private CreditCardDao creditCardDao;
 
-    public CreditcardManagerImpl(DataSource dataSource) throws IOException, SQLException {
+    public CreditcardManagerImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
         creditCardDao = new CreditCardDaoImpl(dataSource);
     }

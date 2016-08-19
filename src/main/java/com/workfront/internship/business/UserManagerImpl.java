@@ -3,17 +3,11 @@ package com.workfront.internship.business;
 import com.workfront.internship.common.*;
 
 import com.workfront.internship.dao.*;
-import org.apache.log4j.Logger;
-import org.mockito.internal.matchers.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,17 +25,6 @@ public class UserManagerImpl implements UserManager {
     private AddressDao addressDao;
     @Autowired
     private EmailManager emailManager;
-
-    public UserManagerImpl() {
-
-    }
-
-    public UserManagerImpl(DataSource dataSource) throws IOException, SQLException {
-        userDao = new UserDaoImpl(dataSource);
-        addressDao = new AddressDaoImpl(dataSource);
-        emailManager = new EmailManager();
-
-    }
 
     public int createAccount(User user) {
         if (!validateUser(user)) {

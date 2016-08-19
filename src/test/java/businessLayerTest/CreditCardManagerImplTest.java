@@ -3,7 +3,7 @@ package businessLayerTest;
 import com.workfront.internship.business.CreditcardManager;
 import com.workfront.internship.business.CreditcardManagerImpl;
 import com.workfront.internship.common.CreditCard;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,11 +19,11 @@ import static org.junit.Assert.assertFalse;
 public class CreditCardManagerImplTest {
     private CreditCard creditCard;
     private CreditcardManager creditcardManager;
-    DataSource dataSource;
+    LegacyDataSource dataSource;
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
         creditCard = getTestCreditCard();
         creditcardManager = new CreditcardManagerImpl(dataSource);
 

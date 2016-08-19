@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNull;
 
 
 public class TestOrderItemDaoImpl {
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     OrderItem orderItem = null;
     Product product = null;
     Category category = null;
@@ -34,7 +34,7 @@ public class TestOrderItemDaoImpl {
 
     @Before
     public void setUpDB() throws SQLException, IOException {
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
         orderItemDao = new OrderItemDaoImpl(dataSource);
         productDao = new ProductDaoImpl(dataSource);
         categoryDao = new CategoryDaoImpl(dataSource);

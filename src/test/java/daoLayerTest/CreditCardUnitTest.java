@@ -2,7 +2,6 @@ package daoLayerTest;
 
 import com.workfront.internship.common.CreditCard;
 import com.workfront.internship.dao.*;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,12 +19,12 @@ import static org.mockito.Mockito.when;
 
 public class CreditCardUnitTest {
 
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     CreditCardDao creditCardDao;
 
     @Before
     public void beforeTest()throws IOException, SQLException{
-        dataSource = Mockito.mock(DataSource.class);
+        dataSource = Mockito.mock(LegacyDataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);

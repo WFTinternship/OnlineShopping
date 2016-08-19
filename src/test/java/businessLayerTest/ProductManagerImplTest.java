@@ -6,7 +6,7 @@ import com.workfront.internship.business.ProductManager;
 import com.workfront.internship.business.ProductManagerImpl;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Product;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,11 +24,11 @@ public class ProductManagerImplTest {
     private Category category;
     private ProductManager productManager;
     private CategoryManager categoryManager;
-    private DataSource dataSource;
+    private LegacyDataSource dataSource;
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = DataSource.getInstance();
+        dataSource = LegacyDataSource.getInstance();
         productManager = new ProductManagerImpl(dataSource);
         categoryManager = new CategoryManagerImpl(dataSource);
         category = getTestCategory();

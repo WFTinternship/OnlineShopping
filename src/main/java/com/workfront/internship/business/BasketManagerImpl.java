@@ -5,21 +5,27 @@ import com.workfront.internship.common.OrderItem;
 import com.workfront.internship.common.Product;
 import com.workfront.internship.common.User;
 import com.workfront.internship.dao.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class BasketManagerImpl implements BasketManager {
 
-    private DataSource dataSource;
+    @Autowired
+    private LegacyDataSource dataSource;
+    @Autowired
     private UserDao userDao;
+    @Autowired
     private OrderItemDao orderItemDao;
+    @Autowired
     private BasketDao basketDao;
 
 
-    public BasketManagerImpl(DataSource dataSource) throws IOException, SQLException {
+    public BasketManagerImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
         userDao = new UserDaoImpl(dataSource);
         orderItemDao = new OrderItemDaoImpl(dataSource);

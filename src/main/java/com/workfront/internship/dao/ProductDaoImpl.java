@@ -4,6 +4,8 @@ import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 import java.io.IOException;
@@ -14,13 +16,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class ProductDaoImpl extends GeneralDao implements ProductDao {
 
     private static final Logger LOGGER = Logger.getLogger(ProductDao.class);
-    private DataSource dataSource;
+    @Autowired
+    private LegacyDataSource dataSource;
 
-    public ProductDaoImpl(DataSource dataSource) throws IOException, SQLException {
+    public ProductDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
     }
 

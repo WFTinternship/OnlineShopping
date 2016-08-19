@@ -5,7 +5,7 @@ import com.workfront.internship.business.CategoryManagerImpl;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.dao.CategoryDao;
 import com.workfront.internship.dao.CategoryDaoImpl;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class CategoryManagerImpUnitlTest {
     private Category category;
     private CategoryManager categoryManager;
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     CategoryDao categoryDao;
 
     @Before

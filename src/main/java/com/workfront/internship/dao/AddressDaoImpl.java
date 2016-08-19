@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,8 +26,8 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
 
     }
 
-    public AddressDaoImpl(DataSource dataSource) throws IOException, SQLException {
-        this.dataSource = dataSource;
+    public AddressDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
+        this.dataSource = dataSource.getDataSource();
 
     }
 

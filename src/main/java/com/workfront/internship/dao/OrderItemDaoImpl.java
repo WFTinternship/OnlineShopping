@@ -1,12 +1,12 @@
 package com.workfront.internship.dao;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import com.workfront.internship.common.Basket;
 import com.workfront.internship.common.OrderItem;
 import com.workfront.internship.common.Product;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,14 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 04.07.2016.
+ * Created by Anna Asmangulyan on 04.07.2016.
  */
+@Component
 public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
 
     private static final Logger LOGGER = Logger.getLogger(OrderItemDao.class);
-    private DataSource dataSource;
+    @Autowired
+    private LegacyDataSource dataSource;
 
-    public OrderItemDaoImpl(DataSource dataSource) throws IOException, SQLException {
+    public OrderItemDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
         this.dataSource = dataSource;
     }
 

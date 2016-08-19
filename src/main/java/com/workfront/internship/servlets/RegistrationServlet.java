@@ -1,9 +1,8 @@
 package com.workfront.internship.servlets;
 
 import com.workfront.internship.business.UserManager;
-import com.workfront.internship.business.UserManagerImpl;
 import com.workfront.internship.common.User;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.spring.OnlineShopApplication;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,19 +10,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Created by Anna Asmangulyan on 8/10/2016.
  */
 public class RegistrationServlet extends HttpServlet {
-    private DataSource dataSource;
+
     private UserManager userManager;
 
-    public RegistrationServlet() throws IOException, SQLException {
-        super();
-        dataSource = DataSource.getInstance();
-        userManager = new UserManagerImpl(dataSource);
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        userManager = OnlineShopApplication.getApplicationContext(getServletContext()).getBean(UserManager.class);
     }
 
     @Override

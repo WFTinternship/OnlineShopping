@@ -5,21 +5,21 @@ package com.workfront.internship.dao;
  */
 
 
-import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
+
 @Component
-public class DataSource {
-    private static DataSource datasource;
+public class LegacyDataSource {
+    private static LegacyDataSource datasource;
     private BasicDataSource ds;
 
-    public DataSource() throws IOException, SQLException {
+    public LegacyDataSource() throws IOException, SQLException {
         ds = new BasicDataSource();
         ds.setDriverClassName("com.mysql.jdbc.Driver");
         ds.setUsername("root");
@@ -34,10 +34,10 @@ public class DataSource {
         ds.getConnection();
     }
 
-    public static DataSource getInstance() {
+    public static LegacyDataSource getInstance() {
         if (datasource == null) {
             try {
-                datasource = new DataSource();
+                datasource = new LegacyDataSource();
             } catch (Exception ex) {
                 throw new RuntimeException(ex.getMessage(), ex);
             }
@@ -48,4 +48,9 @@ public class DataSource {
     public Connection getConnection() throws SQLException {
         return this.ds.getConnection();
     }
+
+    public DataSource getDataSource() {
+        return ds;
+    }
+
 }

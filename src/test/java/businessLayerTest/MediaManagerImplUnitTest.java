@@ -5,7 +5,7 @@ import com.workfront.internship.business.MediaManagerImpl;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import com.workfront.internship.dao.MediaDao;
 import com.workfront.internship.dao.MediaDaoImpl;
 import org.junit.After;
@@ -30,7 +30,7 @@ public class MediaManagerImplUnitTest {
     private Media media;
     private Product product;
     private MediaManager mediaManager;
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     MediaDao mediaDao;
 
     @Before

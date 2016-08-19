@@ -3,8 +3,9 @@ package selenium.tests;
 import com.workfront.internship.business.UserManager;
 import com.workfront.internship.business.UserManagerImpl;
 import com.workfront.internship.common.User;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import org.junit.*;
+import org.mockito.internal.util.reflection.Whitebox;
 import selenium.pages.HomePage;
 import selenium.pages.RegistrationPage;
 
@@ -21,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 public class RegistrationPageTest {
     private static RegistrationPage registrationPage;
     private static HomePage homePage;
-    private static DataSource dataSource;
+    private static LegacyDataSource dataSource;
     private static UserManager userManager;
     private static User testUser;
     @Before
@@ -40,8 +41,9 @@ public class RegistrationPageTest {
     }
     @BeforeClass
     public static void setUpClass() throws IOException, SQLException {
-        dataSource = DataSource.getInstance();
-        userManager = new UserManagerImpl(dataSource);
+        dataSource = LegacyDataSource.getInstance();
+        userManager = new UserManagerImpl();
+        Whitebox.setInternalState(userManager, "dataSource", dataSource);
         registrationPage = new RegistrationPage();
         homePage = new HomePage();
         registrationPage.init("http://localhost:8080/registration.jsp");

@@ -2,7 +2,6 @@ package daoLayerTest;
 
 import com.workfront.internship.common.OrderItem;
 import com.workfront.internship.dao.*;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,12 +19,12 @@ import static org.mockito.Mockito.when;
 
 public class OrderItemDaoUnitTest {
 
-    DataSource dataSource;
+    LegacyDataSource dataSource;
     OrderItemDao orderItemDao;
 
     @Before
     public void beforeTest()throws IOException, SQLException{
-        dataSource = Mockito.mock(DataSource.class);
+        dataSource = Mockito.mock(LegacyDataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);

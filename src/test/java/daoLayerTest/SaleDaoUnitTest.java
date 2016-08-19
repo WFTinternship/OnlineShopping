@@ -1,7 +1,7 @@
 package daoLayerTest;
 
 import com.workfront.internship.common.Sale;
-import com.workfront.internship.dao.DataSource;
+import com.workfront.internship.dao.LegacyDataSource;
 import com.workfront.internship.dao.SaleDao;
 import com.workfront.internship.dao.SaleDaoImpl;
 import org.junit.After;
@@ -21,14 +21,14 @@ import static org.mockito.Mockito.when;
  * Created by Administrator on 17.07.2016.
  */
 public class SaleDaoUnitTest {
-    DataSource dataSource;
+    LegacyDataSource dataSource;
 
     SaleDao saleDao;
 
     @SuppressWarnings("unchecked")
     @Before
     public void beforeTest() throws Exception {
-        dataSource = Mockito.mock(DataSource.class);
+        dataSource = Mockito.mock(LegacyDataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
