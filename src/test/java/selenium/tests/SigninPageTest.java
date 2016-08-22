@@ -3,7 +3,7 @@ package selenium.tests;
 import com.workfront.internship.business.UserManager;
 import com.workfront.internship.business.UserManagerImpl;
 import com.workfront.internship.common.User;
-import com.workfront.internship.dao.LegacyDataSource;
+
 import org.junit.*;
 import org.mockito.internal.util.reflection.Whitebox;
 import selenium.pages.HomePage;

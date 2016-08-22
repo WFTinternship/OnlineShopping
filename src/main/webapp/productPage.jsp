@@ -1,4 +1,4 @@
-<%@ page import="com.workfront.internship.dao.LegacyDataSource" %>
+
 <%@ page import="com.workfront.internship.business.CategoryManager" %>
 <%@ page import="com.workfront.internship.business.CategoryManagerImpl" %>
 <%@ page import="com.workfront.internship.common.Category" %>
@@ -6,7 +6,8 @@
 <%@ page import="com.workfront.internship.common.User" %>
 <%@ page import="com.workfront.internship.common.Product" %>
 <%@ page import="com.workfront.internship.business.ProductManager" %>
-<%@ page import="com.workfront.internship.business.ProductManagerImpl" %><%--
+<%@ page import="com.workfront.internship.business.ProductManagerImpl" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: Workfront
   Date: 8/15/2016
@@ -39,30 +40,21 @@
 <div class="wrapper">
     <div class="wrapper1">
         <%
-            //LegacyDataSource dataSource = LegacyDataSource.getInstance();
-            CategoryManager categoryManager = new CategoryManagerImpl(dataSource);
-            List<Category> mainCategories = categoryManager.getCategoriesByParentID(0);
-            String cat1 = mainCategories.get(0).getName();
-            String cat2 = mainCategories.get(1).getName();
-            String cat3 = mainCategories.get(2).getName();
-            String cat4 = mainCategories.get(3).getName();
-            String cat5 = mainCategories.get(4).getName();
 
+            List<Category> mainCategories = (List<Category>)request.getSession().getAttribute("mainCategories");
+            List<String> categoriesName = new ArrayList<>();
+            for(int i=0; i<mainCategories.size(); i++)
+                categoriesName.add(mainCategories.get(i).getName());
 
         %>
         <form method="get" action="http://www.google.com"><br><br><br><br>
             <select name="category">
                 <option value="all" selected>All</option>
-                <option value="cat1"><%=cat1%>
+                <% for(int i=0; i<categoriesName.size(); i++){%>
+                <option value="cat1"><%=categoriesName.get(i)%>
                 </option>
-                <option value="cat2"><%=cat2%>
-                </option>
-                <option value="cat3"><%=cat3%>
-                </option>
-                <option value="cat4"><%=cat4%>
-                </option>
-                <option value="cat5"><%=cat5%>
-                </option>
+                <%}
+                %>
 
             </select><input type="text" class="textinput" name="productName" size="60" maxlength="120"><input
                     type="submit" value="search" class="button">
@@ -74,84 +66,29 @@
         <div class="category">
 
 
+            <%  List<Category> subCategories;
+                for(int j=0; j< mainCategories.size(); j++){%>
             <div class="dropdown">
-                <button class="dropbtn"><%=cat1%>
+
+                <button class="dropbtn" id="dropdown1"><%=mainCategories.get(j).getName()%>
                 </button>
 
-                <% List<Category> subCategories1 = categoryManager.getCategoriesByParentID(mainCategories.get(0).getCategoryID());%>
 
-                <div class="dropdown-content">
+                <div class="dropdown-content" id="dropdown-content1">
+                    <%
+                        subCategories = (List<Category>)request.getSession().getAttribute("subcategories" + j);
+                        for(int i=0;  i<subCategories.size(); i++ ){%>
 
-
-                    <a href="/productsPage?id=<%=subCategories1.get(0).getCategoryID()%>"><%=subCategories1.get(0).getName()%>
+                    <a href="/productsPage?id=<%=subCategories.get(i).getCategoryID()%>"><%=subCategories.get(i).getName()%>
                     </a>
-                    <a href="/productsPage?id=<%=subCategories1.get(1).getCategoryID()%>"><%=subCategories1.get(1).getName()%>
-                    </a>
-
-
+                    <%}
+                    %>
                 </div>
+
+
             </div>
-            <div class="dropdown">
-                <button class="dropbtn"><%=cat2%>
-                </button>
-                <% List<Category> subCategories2 = categoryManager.getCategoriesByParentID(mainCategories.get(1).getCategoryID());%>
-                <div class="dropdown-content">
-
-
-                    <a href="/productsPage?id=<%=subCategories2.get(0).getCategoryID()%>"><%=subCategories2.get(0).getName()%>
-                    </a>
-                    <a href="/productsPage?id=<%=subCategories2.get(1).getCategoryID()%>"><%=subCategories2.get(1).getName()%>
-                    </a>
-
-
-                </div>
-            </div>
-            <div class="dropdown">
-                <button class="dropbtn"><%=cat3%>
-                </button>
-                <% List<Category> subCategories3 = categoryManager.getCategoriesByParentID(mainCategories.get(2).getCategoryID());%>
-                <div class="dropdown-content">
-
-                    <%--
-                                        <a href="/productsPage?id=<%=subCategories2.get(0).getCategoryID()%>"><%=subCategories2.get(0).getName()%>
-                                        </a>
-                                        <a href="/productsPage?id=<%=subCategories2.get(1).getCategoryID()%>"><%=subCategories2.get(1).getName()%>
-                                        </a>
-                                        <a href="/productsPage?id=<%=subCategories2.get(2).getCategoryID()%>"><%=subCategories2.get(2).getName()%>
-                                        </a>--%>
-
-                </div>
-            </div>
-            <div class="dropdown">
-                <button class="dropbtn"><%=cat4%>
-                </button>
-                <% List<Category> subCategories4 = categoryManager.getCategoriesByParentID(mainCategories.get(3).getCategoryID());%>
-                <div class="dropdown-content">
-
-
-                    <a href="/productsPage?id=<%=subCategories4.get(0).getCategoryID()%>"><%=subCategories4.get(0).getName()%>
-                    </a>
-                    <a href="/productsPage?id=<%=subCategories4.get(1).getCategoryID()%>"><%=subCategories4.get(1).getName()%>
-                    </a>
-
-
-                </div>
-            </div>
-            <div class="dropdown">
-                <button class="dropbtn"><%=cat5%>
-                </button>
-                <% List<Category> subCategories5 = categoryManager.getCategoriesByParentID(mainCategories.get(4).getCategoryID());%>
-                <div class="dropdown-content">
-
-
-                    <a href="/productsPage?id=<%=subCategories5.get(0).getCategoryID()%>"><%=subCategories5.get(0).getName()%>
-                    </a>
-                    <a href="/productsPage?id=<%=subCategories5.get(1).getCategoryID()%>"><%=subCategories5.get(1).getName()%>
-                    </a>
-
-
-                </div>
-            </div>
+            <%}
+            %>
         </div>
 
         <%

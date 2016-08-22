@@ -9,6 +9,11 @@
         <servlet-class>com.workfront.internship.servlets.LoginServlet</servlet-class>
 
     </servlet>
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>com.workfront.internship.servlets.HomeServlet</servlet-class>
+
+    </servlet>
 
     <servlet>
         <servlet-name>RegistrationServlet</servlet-name>
@@ -42,6 +47,10 @@
     <servlet-mapping>
         <servlet-name>ProductsServlet</servlet-name>
         <url-pattern>/productsPage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern></url-pattern>
     </servlet-mapping>
 
     <listener>
