@@ -6,6 +6,7 @@ import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 
 import java.io.IOException;
@@ -33,9 +34,11 @@ public class TestAddressDaoImpl{
     public void setUpDB() throws SQLException, IOException{
         dataSource = LegacyDataSource.getInstance();
 
-        addressDao = new AddressDaoImpl(dataSource);
+        addressDao = new AddressDaoImpl();
+        Whitebox.setInternalState(addressDao, "dataSource", dataSource);
 
-        userDao = new UserDaoImpl(dataSource);
+        userDao = new UserDaoImpl();
+        Whitebox.setInternalState(userDao, "dataSource", dataSource);
         user = getRandomUser();
         userDao.insertUser(user);
 

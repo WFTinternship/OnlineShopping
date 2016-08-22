@@ -4,7 +4,7 @@ import com.workfront.internship.business.*;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
-import com.workfront.internship.dao.LegacyDataSource;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,14 +24,14 @@ public class MediaManagerImplTest {
     private MediaManager mediaManager;
     private ProductManager productManager;
     private CategoryManager categoryManager;
-    private LegacyDataSource dataSource;
+   // private LegacyDataSource dataSource;
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = LegacyDataSource.getInstance();
-        mediaManager = new MediaManagerImpl(dataSource);
-        productManager = new ProductManagerImpl(dataSource);
-        categoryManager = new CategoryManagerImpl(dataSource);
+      //  dataSource = LegacyDataSource.getInstance();
+        mediaManager = new MediaManagerImpl();
+        productManager = new ProductManagerImpl();
+        categoryManager = new CategoryManagerImpl();
         category = getTestCategory();
         categoryManager.createNewCategory(category);
         product = getTestProduct();

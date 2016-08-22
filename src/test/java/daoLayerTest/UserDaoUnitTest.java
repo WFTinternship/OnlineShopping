@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 
 
 import java.sql.Connection;
@@ -33,7 +34,8 @@ public class UserDaoUnitTest {
         when(connection.prepareStatement(any(String.class))).thenThrow(SQLException.class);
         when(connection.prepareStatement(any(String.class), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenThrow(SQLException.class);
 
-        userDao = new UserDaoImpl(dataSource);
+        userDao = new UserDaoImpl();
+        Whitebox.setInternalState(userDao, "dataSource", dataSource);
     }
 
     @After

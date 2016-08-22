@@ -5,6 +5,7 @@ import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -24,7 +25,8 @@ public class TestCreditCardDaoImpl {
     @Before
     public void setUpDB()  throws SQLException, IOException{
         dataSource = LegacyDataSource.getInstance();
-        creditCardDao = new CreditCardDaoImpl(dataSource);
+        creditCardDao = new CreditCardDaoImpl();
+        Whitebox.setInternalState(creditCardDao, "dataSource", dataSource);
         creditCard = getRandomCreditCard();
         lastInsertedIndex = creditCardDao.insertCreditCard(creditCard);
 

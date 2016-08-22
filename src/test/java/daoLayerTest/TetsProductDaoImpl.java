@@ -6,6 +6,7 @@ import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 
 import java.io.IOException;
@@ -29,9 +30,11 @@ public class TetsProductDaoImpl{
     public void setUpDB() throws SQLException, IOException{
         dataSource = LegacyDataSource.getInstance();
 
-        productDao = new ProductDaoImpl(dataSource);
+        productDao = new ProductDaoImpl();
+        Whitebox.setInternalState(productDao, "dataSource", dataSource);
 
-        categoryDao = new CategoryDaoImpl(dataSource);
+        categoryDao = new CategoryDaoImpl();
+        Whitebox.setInternalState(categoryDao, "dataSource", dataSource);
         category = getRandomCategory();
         categoryDao.insertCategory(category);
 

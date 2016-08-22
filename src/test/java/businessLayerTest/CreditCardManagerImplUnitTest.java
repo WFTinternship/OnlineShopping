@@ -4,7 +4,7 @@ import com.workfront.internship.business.CreditcardManager;
 import com.workfront.internship.business.CreditcardManagerImpl;
 import com.workfront.internship.common.CreditCard;
 import com.workfront.internship.dao.CreditCardDao;
-import com.workfront.internship.dao.LegacyDataSource;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,13 +24,13 @@ import static org.mockito.Mockito.when;
 public class CreditCardManagerImplUnitTest {
     private CreditCard creditCard;
     private CreditcardManager creditcardManager;
-    LegacyDataSource dataSource;
+
     CreditCardDao creditCardDao;
 
     @Before
     public void setUP() throws IOException, SQLException {
         creditCard = getTestCreditCard();
-        creditcardManager = new CreditcardManagerImpl(dataSource);
+        creditcardManager = new CreditcardManagerImpl();
         creditCardDao = Mockito.mock(CreditCardDao.class);
         Whitebox.setInternalState(creditcardManager, "creditCardDao", creditCardDao);
 

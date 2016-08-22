@@ -3,7 +3,7 @@ package businessLayerTest;
 import com.workfront.internship.business.CategoryManager;
 import com.workfront.internship.business.CategoryManagerImpl;
 import com.workfront.internship.common.Category;
-import com.workfront.internship.dao.LegacyDataSource;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,13 +20,13 @@ import static org.junit.Assert.assertNotNull;
 public class CategoryManagerImplTest {
     private Category category;
     private CategoryManager categoryManager;
-    LegacyDataSource dataSource;
+ //   LegacyDataSource dataSource;
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = LegacyDataSource.getInstance();
+      //  dataSource = LegacyDataSource.getInstance();
         category = getTestCategory();
-        categoryManager = new CategoryManagerImpl(dataSource);
+        categoryManager = new CategoryManagerImpl();
     }
 
 

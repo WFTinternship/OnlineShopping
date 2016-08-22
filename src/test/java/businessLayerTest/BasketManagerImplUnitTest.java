@@ -27,7 +27,7 @@ public class BasketManagerImplUnitTest {
     private OrderItem orderItem;
     Product product;
     private BasketManager basketManager;
-    LegacyDataSource dataSource;
+   // LegacyDataSource dataSource;
     BasketDao basketDao;
     OrderItemDao orderItemDao;
 
@@ -38,7 +38,7 @@ public class BasketManagerImplUnitTest {
         user = getTestUser();
         orderItem = getTestOrderItem();
 
-        basketManager = new BasketManagerImpl(dataSource);
+        basketManager = new BasketManagerImpl();
         basketDao = Mockito.mock(BasketDaoImpl.class);
         orderItemDao = Mockito.mock(OrderItemDaoImpl.class);
         Whitebox.setInternalState(basketManager, "basketDao", basketDao);

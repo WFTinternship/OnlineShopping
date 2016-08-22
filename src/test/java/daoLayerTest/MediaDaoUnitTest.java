@@ -5,6 +5,7 @@ import com.workfront.internship.dao.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 
 
 import java.io.IOException;
@@ -29,7 +30,8 @@ public class MediaDaoUnitTest {
         when(dataSource.getConnection()).thenReturn(connection);
         when(connection.prepareStatement(any(String.class), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenThrow(SQLException.class);
 
-        mediaDao = new MediaDaoImpl(dataSource);
+        mediaDao = new MediaDaoImpl();
+        Whitebox.setInternalState(mediaDao, "dataSource", dataSource);
     }
     @Test(expected = RuntimeException.class)
     public void insertMedia_dbError() {

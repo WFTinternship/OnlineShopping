@@ -6,6 +6,7 @@ import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 
 import java.io.IOException;
@@ -28,8 +29,10 @@ public class TestBasketDaoImpl  {
     public void setUpDB() throws SQLException, IOException{
         dataSource = LegacyDataSource.getInstance();
         user = getRandomUser();
-        basketDao = new BasketDaoImpl(dataSource);
-        userDao = new UserDaoImpl(dataSource);
+        basketDao = new BasketDaoImpl();
+        Whitebox.setInternalState(basketDao, "dataSource", dataSource);
+        userDao = new UserDaoImpl();
+        Whitebox.setInternalState(userDao, "dataSource", dataSource);
         userDao.insertUser(user);
         basket = getRandomBasket();
 

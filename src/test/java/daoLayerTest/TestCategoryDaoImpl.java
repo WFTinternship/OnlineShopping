@@ -5,6 +5,7 @@ import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 
 import java.io.IOException;
@@ -26,7 +27,8 @@ public class TestCategoryDaoImpl  {
     @Before
     public void setUpDB()  throws SQLException, IOException{
         dataSource = LegacyDataSource.getInstance();
-        categoryDao = new CategoryDaoImpl(dataSource);
+        categoryDao = new CategoryDaoImpl();
+        Whitebox.setInternalState(categoryDao, "dataSource", dataSource);
         category = getRandomCategory();
         lastInsertedIndex = categoryDao.insertCategory(category);
         category.setCategoryID(lastInsertedIndex);

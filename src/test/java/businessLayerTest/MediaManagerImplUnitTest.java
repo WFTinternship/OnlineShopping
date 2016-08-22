@@ -5,7 +5,6 @@ import com.workfront.internship.business.MediaManagerImpl;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
-import com.workfront.internship.dao.LegacyDataSource;
 import com.workfront.internship.dao.MediaDao;
 import com.workfront.internship.dao.MediaDaoImpl;
 import org.junit.After;
@@ -30,14 +29,15 @@ public class MediaManagerImplUnitTest {
     private Media media;
     private Product product;
     private MediaManager mediaManager;
-    LegacyDataSource dataSource;
+
     MediaDao mediaDao;
 
     @Before
     public void setUP() throws IOException, SQLException {
         product = getTestProduct();
         media = getTestMedia();
-        mediaManager = new MediaManagerImpl(dataSource);
+        mediaManager = new MediaManagerImpl();
+
         mediaDao = Mockito.mock(MediaDaoImpl.class);
         Whitebox.setInternalState(mediaManager, "mediaDao", mediaDao);
 

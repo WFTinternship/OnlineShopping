@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 
 
 import java.sql.Connection;
@@ -35,7 +36,8 @@ public class AddressDaoUnitTest {
         when(connection.prepareStatement(any(String.class))).thenThrow(SQLException.class);
         when(connection.prepareStatement(any(String.class), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenThrow(SQLException.class);
 
-        addressDao = new AddressDaoImpl(dataSource);
+        addressDao = new AddressDaoImpl();
+        Whitebox.setInternalState(addressDao, "dataSource", dataSource);
     }
 
     @After

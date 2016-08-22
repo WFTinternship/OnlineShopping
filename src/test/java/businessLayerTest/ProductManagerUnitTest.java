@@ -24,14 +24,13 @@ import static org.mockito.Mockito.*;
 public class ProductManagerUnitTest {
     private Product product;
     private ProductManager productManager;
-    LegacyDataSource dataSource;
     ProductDao productDao;
     MediaManager mediaManager;
 
     @Before
     public void setUP() throws IOException, SQLException {
         product = getTestProduct();
-        productManager = new ProductManagerImpl(dataSource);
+        productManager = new ProductManagerImpl();
         productDao = Mockito.mock(ProductDaoImpl.class);
         mediaManager = Mockito.mock(MediaManagerImpl.class);
         Whitebox.setInternalState(productManager, "productDao", productDao);

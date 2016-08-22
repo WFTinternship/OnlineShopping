@@ -31,7 +31,7 @@ public class UserManagerImplTest {
         dataSource = LegacyDataSource.getInstance();
         user = getTestUser();
         userManager = new UserManagerImpl();
-        Whitebox.setInternalState(userManager, "dataSource", dataSource);
+
     }
 
     @After

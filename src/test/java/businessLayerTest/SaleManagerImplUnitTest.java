@@ -5,7 +5,6 @@ import com.workfront.internship.business.BasketManagerImpl;
 import com.workfront.internship.business.SalesManager;
 import com.workfront.internship.business.SalesManagerImpl;
 import com.workfront.internship.common.*;
-import com.workfront.internship.dao.LegacyDataSource;
 import com.workfront.internship.dao.SaleDao;
 import com.workfront.internship.dao.SaleDaoImpl;
 import org.junit.After;
@@ -35,7 +34,8 @@ public class SaleManagerImplUnitTest {
     @Before
     public void setUP() throws IOException, SQLException {
         sale = getTestSale();
-        salesManager = new SalesManagerImpl(dataSource);
+        salesManager = new SalesManagerImpl();
+
         saleDao = Mockito.mock(SaleDaoImpl.class);
         basketManager = Mockito.mock(BasketManagerImpl.class);
         Whitebox.setInternalState(salesManager, "saleDao", saleDao);

@@ -2,7 +2,6 @@ package businessLayerTest;
 
 import com.workfront.internship.business.*;
 import com.workfront.internship.common.*;
-import com.workfront.internship.dao.LegacyDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,11 +35,14 @@ public class SaleManagerImplTest {
     @Before
     public void setUP() throws IOException, SQLException {
         dataSource = LegacyDataSource.getInstance();
-        basketManager = new BasketManagerImpl(dataSource);
+        basketManager = new BasketManagerImpl();
+        Whitebox.setInternalState(basketManager, "dataSource", dataSource);
         userManager = new UserManagerImpl();
         Whitebox.setInternalState(userManager, "dataSource", dataSource);
-        creditcardManager = new CreditcardManagerImpl(dataSource);
-        salesManager = new SalesManagerImpl(dataSource);
+        creditcardManager = new CreditcardManagerImpl();
+        Whitebox.setInternalState(creditcardManager, "dataSource", dataSource);
+        salesManager = new SalesManagerImpl();
+        Whitebox.setInternalState(salesManager, "dataSource", dataSource);
 
         user = getTestUser();
         userManager.createAccount(user);

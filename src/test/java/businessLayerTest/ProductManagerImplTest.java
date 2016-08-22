@@ -6,10 +6,10 @@ import com.workfront.internship.business.ProductManager;
 import com.workfront.internship.business.ProductManagerImpl;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Product;
-import com.workfront.internship.dao.LegacyDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -24,13 +24,14 @@ public class ProductManagerImplTest {
     private Category category;
     private ProductManager productManager;
     private CategoryManager categoryManager;
-    private LegacyDataSource dataSource;
+  //  private LegacyDataSource dataSource;
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = LegacyDataSource.getInstance();
-        productManager = new ProductManagerImpl(dataSource);
-        categoryManager = new CategoryManagerImpl(dataSource);
+     //   dataSource = LegacyDataSource.getInstance();
+        productManager = new ProductManagerImpl();
+        categoryManager = new CategoryManagerImpl();
+
         category = getTestCategory();
         categoryManager.createNewCategory(category);
         product = getTestProduct();

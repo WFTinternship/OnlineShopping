@@ -2,7 +2,7 @@ package businessLayerTest;
 
 import com.workfront.internship.business.*;
 import com.workfront.internship.common.*;
-import com.workfront.internship.dao.LegacyDataSource;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,16 +25,16 @@ public class BasketManagerImplTest {
     private UserManager userManager;
     private CategoryManager categoryManager;
     private ProductManager productManager;
-    LegacyDataSource dataSource;
+  //  LegacyDataSource dataSource;
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = LegacyDataSource.getInstance();
-        basketManager = new BasketManagerImpl(dataSource);
+      //  dataSource = LegacyDataSource.getInstance();
+        basketManager = new BasketManagerImpl();
         userManager = new UserManagerImpl();
-        Whitebox.setInternalState(userManager, "dataSource", dataSource);
-        categoryManager = new CategoryManagerImpl(dataSource);
-        productManager = new ProductManagerImpl(dataSource);
+
+        categoryManager = new CategoryManagerImpl();
+        productManager = new ProductManagerImpl();
 
         user = getTestUser();
         userManager.createAccount(user);

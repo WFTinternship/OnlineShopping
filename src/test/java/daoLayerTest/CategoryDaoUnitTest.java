@@ -5,6 +5,7 @@ import com.workfront.internship.dao.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 
 
 import java.io.IOException;
@@ -32,7 +33,8 @@ public class CategoryDaoUnitTest {
         when(connection.prepareStatement(any(String.class), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenThrow(SQLException.class);
 
 
-        categoryDao = new CategoryDaoImpl(dataSource);
+        categoryDao = new CategoryDaoImpl();
+        Whitebox.setInternalState(categoryDao, "dataSource", dataSource);
     }
     @Test(expected = RuntimeException.class)
     public void insertCategory_dbError() {

@@ -5,6 +5,7 @@ import com.workfront.internship.dao.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 
 
 import java.io.IOException;
@@ -32,7 +33,8 @@ public class BasketDaoUnitTest {
         when(connection.prepareStatement(any(String.class))).thenThrow(SQLException.class);
         when(connection.prepareStatement(any(String.class), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenThrow(SQLException.class);
 
-        basketDao = new BasketDaoImpl(dataSource);
+        basketDao = new BasketDaoImpl();
+        Whitebox.setInternalState(basketDao, "dataSource", dataSource);
     }
 
     @Test(expected = RuntimeException.class)
