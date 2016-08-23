@@ -1,3 +1,4 @@
+/*
 package com.workfront.internship.servlets;
 
 import com.workfront.internship.business.UserManager;
@@ -11,9 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+*/
 /**
  * Created by Anna Asmangulyan on 8/9/2016.
- */
+ *//*
+
 public class LoginServlet extends HttpServlet {
 
     private UserManager userManager;
@@ -60,3 +63,4 @@ public class LoginServlet extends HttpServlet {
         }
     }
 }
+*/

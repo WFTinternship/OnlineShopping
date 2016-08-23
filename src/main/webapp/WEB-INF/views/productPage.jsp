@@ -1,4 +1,4 @@
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="com.workfront.internship.business.CategoryManager" %>
 <%@ page import="com.workfront.internship.business.CategoryManagerImpl" %>
 <%@ page import="com.workfront.internship.common.Category" %>
@@ -23,20 +23,20 @@
     <title>Search Box</title>
 
     <!-- CSS styles for standard search box -->
-    <link rel="stylesheet" type="text/css" href="./css/reset.css">
-    <link rel="stylesheet" type="text/css" href="./css/main.css">
-    <script src="/jquery-1.12.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/reset.css" />">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />">
 
-    <script src="/jquery.elevatezoom.js"></script>
-    <script src="/jquery.elevateZoom-3.0.8.min.js"></script>
-    <script src="/jquery-1.8.3.min.js"></script>
+    <script src="<c:url value="/resources/js/jquery-1.12.1.min.js" />"></script>
+    <script src="<c:url value="/resources/js/jquery.elevatezoom.js" />"></script>
+    <script src="<c:url value="/resources/js/jquery-1.8.3.min.js" />"></script>
+    <script src="<c:url value="/resources/js/jquery.elevateZoom-3.0.8.min.js" />"></script>
+    <script src="<c:url value="/resources/js/jzoom.min.js" />"></script>
 
-    <script src="/jzoom.min.js"></script>
 
 </head>
 <body>
 <!-- HTML for SEARCH BAR -->
-<div class="logo"><img src="/image/logo3.PNG" width="140px;" alt="logo"></div>
+<div class="logo"><img src="/resources/image/logo3.PNG" width="140px;" alt="logo"></div>
 <div class="wrapper">
     <div class="wrapper1">
         <%
@@ -98,8 +98,8 @@
         %>
 
         <div class="signinRegister">
-            <a href="./signin.jsp" class="register" id="login_button">SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="/registration.jsp" class="register" id="registration_button">CREATE ACCOUNT</a>
+            <a href="/signin.jsp" class="register" id="login_button">SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/jspgistration.jsp" class="register" id="registration_button">CREATE ACCOUNT</a>
         </div>
 
         <div class="clear"></div>
@@ -118,7 +118,7 @@
 %>
 
 <a href="./cart.jsp" class="cart">
-    <img src="/image/cart.PNG" class="cart" alt="cart image">
+    <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
 </a>
 <div class="dropdown">
     <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
@@ -127,7 +127,7 @@
         <a href="#">edit account</a>
         <a href="#">your orders</a>
         <a href="#">your wish list</a>
-        <a href="/index.jsp?user=null" id="logout_button">logout</a>
+        <a href="/WEB-INF/views/index.jsp?user=null" id="logout_button">logout</a>
     </div>
 </div>
 
@@ -142,10 +142,10 @@
 
 
 <div>
-    <img src="./image/pic4.jpg" alt="image1" class="backimg1">
+    <img src="/resources/image/pic4.jpg" alt="image1" class="backimg1">
 
 
-    <img src="./image/pic1.jpg" alt="image2" class="backimg2">
+    <img src="/resources/image/pic1.jpg" alt="image2" class="backimg2">
 </div>
 <div class="product">
     <%

@@ -1,6 +1,6 @@
+/*
 package com.workfront.internship.spring;
 
-import com.workfront.internship.dao.LegacyDataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -11,9 +11,11 @@ import org.springframework.context.annotation.Configuration;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
+*/
 /**
  * Created by Anna Asmangulyan on 8/18/2016.
- */
+ *//*
+
 @Configuration
 @ComponentScan(basePackages = "com.workfront")
 public class OnlineShopApplication {
@@ -42,3 +44,4 @@ public class OnlineShopApplication {
         return dataSource;
     }
 }
+*/

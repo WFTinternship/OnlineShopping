@@ -1,3 +1,4 @@
+/*
 package com.workfront.internship.servlets;
 
 import com.workfront.internship.business.CategoryManager;
@@ -19,9 +20,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * Created by Anna Asmangulyan on 8/22/2016.
- */
+ *//*
+
 public class HomeServlet extends HttpServlet{
     private CategoryManager categoryManager;
     private ProductManager productManager;
@@ -66,3 +69,4 @@ public class HomeServlet extends HttpServlet{
         }
     }
 
+*/

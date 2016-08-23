@@ -1,3 +1,4 @@
+/*
 package com.workfront.internship.servlets;
 
 import com.workfront.internship.business.UserManager;
@@ -11,9 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+*/
 /**
  * Created by Anna Asmangulyan on 8/10/2016.
- */
+ *//*
+
 public class RegistrationServlet extends HttpServlet {
 
     private UserManager userManager;
@@ -44,9 +47,11 @@ public class RegistrationServlet extends HttpServlet {
 
             // If error, forward to /registration.jsp
 
-            /*user = new User();
+            */
+/*user = new User();
             user.setUsername(username);
-            user.setPassword(password);*/
+            user.setPassword(password);*//*
+
 
 
             // Store information in request attribute, before forward.
@@ -67,3 +72,4 @@ public class RegistrationServlet extends HttpServlet {
         }
     }
 }
+*/

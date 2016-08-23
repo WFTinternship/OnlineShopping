@@ -1,3 +1,4 @@
+/*
 package com.workfront.internship.servlets;
 
 import com.workfront.internship.business.ProductManager;
@@ -12,9 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+*/
 /**
  * Created by Anna Asmangulyan on 8/10/2016.
- */
+ *//*
+
 public class ProductServlet extends HttpServlet {
 
     private ProductManager productManager;
@@ -29,7 +32,6 @@ public class ProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int productId = Integer.parseInt(request.getParameter("id"));
-        System.out.println("productid issssssss" + productId);
 
         Product product = productManager.getProduct(productId);
 
@@ -40,3 +42,4 @@ public class ProductServlet extends HttpServlet {
 
 }
 }
+*/

@@ -2,11 +2,11 @@
 <html>
 <head>
     <title>Registration Page</title>
-    <link rel="stylesheet" type="text/css" href="./css/reset.css">
-    <link rel="stylesheet" type="text/css" href="./css/main.css">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/reset.css" />">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />">
 </head>
 <body class="registration">
-<div class="logo"><img src="/image/logo3.PNG" width="140px;" alt="logo"></div>
+<div class="logo"><img src="/resources/image/logo3.PNG" width="140px;" alt="logo"></div>
 <form method="post" action="/registration" id="registrationPage" name="theForm" onsubmit="return checkPasswords();">
     <p style="font-size:30px;">Create account</p><br>
     <% String string = (String) request.getAttribute("errorString");

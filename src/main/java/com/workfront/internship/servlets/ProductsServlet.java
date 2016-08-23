@@ -1,3 +1,4 @@
+/*
 package com.workfront.internship.servlets;
 
 import com.workfront.internship.business.CategoryManager;
@@ -17,9 +18,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * Created by Anna Asmangulyan on 8/16/2016.
- */
+ *//*
+
 public class ProductsServlet extends HttpServlet {
 
     private ProductManager productManager;
@@ -37,7 +40,7 @@ public class ProductsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int categoryId = Integer.parseInt(request.getParameter("id"));
-        String name = request.getParameter("name");
+       // String name = request.getParameter("name");
         System.out.println("productid issssssss" + categoryId);
 
 
@@ -71,3 +74,4 @@ public class ProductsServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 }
+*/
