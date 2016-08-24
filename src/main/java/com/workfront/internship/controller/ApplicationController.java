@@ -40,13 +40,13 @@ public class ApplicationController {
 
         int productId = 0;
         List<Product> products = productManager.getLimitedNumberOfProducts();
-        model.addAttribute("products", products);
+        request.getSession().setAttribute("products", products);
         List<List<Media>> medias = new ArrayList<List<Media>>();
         for (int i = 0; i < products.size(); i++) {
             productId = products.get(i).getProductID();
             medias.add(mediaManager.getMediaByProductID(productId));
             products.get(i).setMedias(mediaManager.getMediaByProductID(productId));
-            model.addAttribute("medias" + i, medias.get(i));
+            request.getSession().setAttribute("medias" + i, medias.get(i));
 
 
         }
@@ -84,14 +84,14 @@ public class ApplicationController {
 
             // Store information in request attribute, before forward.
             model.addAttribute("errorString", errorString);
-            model.addAttribute("user", user);
+            request.getSession().setAttribute("user", user);
 
 
             // Forward to/signin.jsp
 
            return "signin";
         } else {
-            model.addAttribute("user", user);
+            request.getSession().setAttribute("user", user);
            return "index";
         }
     }
@@ -138,9 +138,14 @@ public class ApplicationController {
     }
 
     @RequestMapping("/registration")
-    public String registration(@RequestAttribute("username") String username, @RequestAttribute("password") String password, @RequestAttribute("email") String email,
-                               @RequestAttribute("firstname") String firstname,@RequestAttribute("lastname") String lastname,Model model) {
+    public String registration(HttpServletRequest request,Model model) {
         String errorString = null;
+        String firstname = request.getParameter("firstname");
+        String lastname = request.getParameter("lastname");
+        String email = request.getParameter("email");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String repassword = request.getParameter("repeatpassword");
         User user = new User();
         user.setFirstname(firstname).setLastname(lastname).setUsername(username).setEmail(email).setPassword(password).setAccessPrivilege("user").setConfirmationStatus(true);
         int id = userManager.createAccount(user);
@@ -165,9 +170,25 @@ public class ApplicationController {
             return ("registration");
         } else {
 
-            model.addAttribute("user", user);
+            request.getSession().setAttribute("user", user);
             return ("index");
         }
 
     }
+    @RequestMapping("/login")
+    public String getLoginPage(){
+
+        return "signin";
+    }
+    @RequestMapping("/createaccount")
+    public String getRegistrationPage(){
+
+        return "registration";
+    }
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request){
+    request.getSession().setAttribute("user", null);
+        return "index";
+    }
+
 }

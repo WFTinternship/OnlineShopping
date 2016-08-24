@@ -91,8 +91,8 @@
         %>
 
         <div class="signinRegister">
-            <a href="./signin.jsp" class="register" id="login_button">SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="/WEB-INF/views/registration.jsp" class="register" id="registration_button">CREATE ACCOUNT</a>
+            <a href="/login" class="register" id="login_button">SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/createaccount" class="register" id="registration_button">CREATE ACCOUNT</a>
         </div>
 
         <div class="clear"></div>
@@ -120,8 +120,8 @@
         <a href="#">edit account</a>
         <a href="#">your orders</a>
         <a href="#">your wish list</a>
-        <%request.getSession().setAttribute("user", null);%>
-        <a href="/WEB-INF/views/index.jsp" id="logout_button">logout</a>
+
+        <a href="/logout" id="logout_button">logout</a>
     </div>
 </div>
 
@@ -143,10 +143,10 @@
 </div>
 <%
 
- List<Product> products = (List<Product>)request.getAttribute("products");
+ List<Product> products = (List<Product>)request.getSession().getAttribute("products");
     List<Media> medias;
     for(int i=0; i<products.size(); i++){
-        medias = (List<Media>)request.getAttribute("medias" + i);
+        medias = (List<Media>)request.getSession().getAttribute("medias" + i);
         int productId = products.get(i).getProductID();
 
 %>

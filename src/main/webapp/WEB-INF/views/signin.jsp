@@ -38,7 +38,7 @@
     <br><br>
     <p>Not a customer?
     <p>
-        <a href="/registration.jsp" style="font-size: 12px;" class="register">Start here</a>
+        <a href="/createaccount" style="font-size: 12px;" class="register">Start here</a>
 </form>
 <div class="clear"></div>
 

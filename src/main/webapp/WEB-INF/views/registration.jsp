@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,7 +50,7 @@
     <br><br>
     <p>Already have an account?
     <p>
-        <a href="/signin.jsp" style="font-size: 12px;" class="register">Sign in</a>
+        <a href="/login" style="font-size: 12px;" class="register">Sign in</a>
 </form>
 <div class="clear"></div>
 
