@@ -36,7 +36,7 @@ public class SaleManagerImplTest {
     public void setUP() throws IOException, SQLException {
         dataSource = LegacyDataSource.getInstance();
         basketManager = new BasketManagerImpl();
-        Whitebox.setInternalState(basketManager, "dataSource", dataSource);
+        Whitebox.setInternalState(basketManager, "basketDao", dataSource);
         userManager = new UserManagerImpl();
         Whitebox.setInternalState(userManager, "dataSource", dataSource);
         creditcardManager = new CreditcardManagerImpl();

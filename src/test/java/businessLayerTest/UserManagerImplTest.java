@@ -6,9 +6,12 @@ import com.workfront.internship.business.UserManagerImpl;
 import com.workfront.internship.common.Address;
 import com.workfront.internship.common.User;
 
+import com.workfront.internship.dao.UserDao;
+import com.workfront.internship.dao.UserDaoImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
@@ -19,18 +22,26 @@ import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 
 public class UserManagerImplTest {
     private User user;
     private UserManager userManager;
-    LegacyDataSource dataSource;
+    private LegacyDataSource dataSource;
+    private UserDao userDao;
 
     @Before
     public void setUP() throws IOException, SQLException {
         dataSource = LegacyDataSource.getInstance();
         user = getTestUser();
         userManager = new UserManagerImpl();
+        userDao = new UserDaoImpl();
+        Whitebox.setInternalState(userDao, "dataSource", dataSource);
+        Whitebox.setInternalState(userManager, "userDao", userDao);
 
     }
 
