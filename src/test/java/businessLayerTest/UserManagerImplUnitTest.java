@@ -8,8 +8,12 @@ import com.workfront.internship.dao.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -22,9 +26,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
+@Component
 public class UserManagerImplUnitTest {
     private User user;
     private Product product;
+
     private UserDao userDao;
     private AddressDao addressDao;
     private UserManager userManager;

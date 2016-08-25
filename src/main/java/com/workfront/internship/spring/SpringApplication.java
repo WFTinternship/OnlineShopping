@@ -4,6 +4,10 @@ package com.workfront.internship.spring;
  * Created by Anna Asmangulyan on 8/23/2016.
  */
 
+import com.workfront.internship.business.UserManager;
+import com.workfront.internship.business.UserManagerImpl;
+import com.workfront.internship.dao.UserDao;
+import com.workfront.internship.dao.UserDaoImpl;
 import org.apache.commons.dbcp.BasicDataSource;
     import org.springframework.context.annotation.Bean;
     import org.springframework.context.annotation.ComponentScan;
@@ -27,5 +31,6 @@ public class SpringApplication {
         dataSource.setMaxOpenPreparedStatements(180);
         return dataSource;
     }
+
 }
 

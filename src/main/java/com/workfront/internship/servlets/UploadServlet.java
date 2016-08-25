@@ -22,7 +22,7 @@ public class UploadServlet extends HttpServlet {
 
 
     private String filePath;
-    private int maxFileSize = 50 * 1024;
+    private int maxFileSize = 70 * 1024;
 
     private File file ;
 
@@ -60,6 +60,7 @@ public class UploadServlet extends HttpServlet {
                     // Get the uploaded file parameters
                     String fileName = fi.getName();
                     // Write the file
+                    System.out.println(fileName.lastIndexOf("\\"));
                     if( fileName.lastIndexOf("\\") >= 0 ){
                         file = new File( filePath +
                                 fileName.substring( fileName.lastIndexOf("\\"))) ;

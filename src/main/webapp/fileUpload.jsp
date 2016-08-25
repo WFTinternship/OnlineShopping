@@ -15,7 +15,8 @@
 Select a file to upload: <br />
 <form action="UploadServlet" method="post"
       enctype="multipart/form-data">
-    <input type="file" name="file" size="50" />
+    <input type="file" name="file1" size="50" multiple />
+
     <br />
     <input type="submit" value="Upload File" />
 </form>

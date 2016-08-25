@@ -2,12 +2,9 @@ package businessLayerTest;
 
 import com.workfront.internship.business.EmailManager;
 import com.workfront.internship.business.UserManager;
-import com.workfront.internship.business.UserManagerImpl;
 import com.workfront.internship.common.Address;
 import com.workfront.internship.common.User;
 
-import com.workfront.internship.dao.UserDao;
-import com.workfront.internship.dao.UserDaoImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,29 +19,27 @@ import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = ManagerTestService.class)
 public class UserManagerImplTest {
+
     private User user;
+
+    @Autowired
     private UserManager userManager;
-    private LegacyDataSource dataSource;
-    private UserDao userDao;
+
 
     @Before
     public void setUP() throws IOException, SQLException {
-        dataSource = LegacyDataSource.getInstance();
+
         user = getTestUser();
-        userManager = new UserManagerImpl();
-        userDao = new UserDaoImpl();
-        Whitebox.setInternalState(userDao, "dataSource", dataSource);
-        Whitebox.setInternalState(userManager, "userDao", userDao);
-
     }
-
     @After
     public void tearDown()  {
         userManager.deleteAccount(user.getUserID());
@@ -61,6 +56,7 @@ public class UserManagerImplTest {
         User actualUser = userManager.login(user.getUsername(), password);
         assertNotNull(actualUser);
     }
+
     private User getTestUser() {
         User user = new User();
         user.setFirstname("Anahit").setLastname("galstyan").
