@@ -9,10 +9,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
@@ -22,34 +27,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-@Component
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = ManagerTestConfig.class)
+@ActiveProfiles("test")
 public class UserManagerImplUnitTest {
     private User user;
     private Product product;
-
+    @Mock
     private UserDao userDao;
+    @Mock
     private AddressDao addressDao;
+    @Autowired
+    @InjectMocks
     private UserManager userManager;
-    LegacyDataSource dataSource;
+
 
     @Before
     public void setUP() throws IOException, SQLException {
-
+        MockitoAnnotations.initMocks(this);
         user = getTestUser();
         product = getTestProduct();
-        userManager = new UserManagerImpl();
-        userDao = Mockito.mock(UserDaoImpl.class);
-        addressDao = Mockito.mock(AddressDaoImpl.class);
-        Whitebox.setInternalState(userManager, "userDao", userDao);
-        Whitebox.setInternalState(userManager, "addressDao", addressDao);
-
     }
-
     @After
     public void tearDown() {
         user = null;
@@ -71,40 +75,27 @@ public class UserManagerImplUnitTest {
     }
 
     @Test
-    public void createAccount_validUser_notInserted() {
+    public void createAccount_validUser(){
         userManager.createAccount(user);
-
+        //testing method... inserting a valid user
         Mockito.verify(userDao).insertUser(user);
-        Mockito.verify(addressDao, Mockito.never()).insertAddress(any(Address.class));
 
-    }
-
-    @Test
-    public void createAccount_validUser_Inserted() {
-        when(userDao.insertUser(user)).thenReturn(10);
-
-        userManager.createAccount(user);
-
-        Mockito.verify(addressDao).insertAddress(any(Address.class));
 
     }
 
     @Test(expected = RuntimeException.class)
     public void createAccount_invalidUser() {
         user.setEmail("invalidEmail");
-
+        //testing method... user has invalid email
         userManager.createAccount(user);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void login_validUsername_validPassword_returned_null_user() {
-
-        user.setPassword(HashManager.getHash(user.getPassword()));
-
-        // testing method
-        userManager.login(user.getUsername(), user.getPassword());
-
-        Mockito.verify(userDao).getUserByUsername(user.getUsername());
+        when(userDao.getUserByUsername(any(String.class))).thenReturn(null);
+        // testing method... when can't get user from db... returned user is null
+        User user1 = userManager.login(user.getUsername(), user.getPassword());
+        assertNull(user1);
 
 
     }
@@ -117,7 +108,7 @@ public class UserManagerImplUnitTest {
         user.setPassword(HashManager.getHash(user.getPassword()));
 
         when(userDao.getUserByUsername(any(String.class))).thenReturn(user);
-
+        //testing method... user is returned from db
         User user1 = userManager.login(user.getUsername(), notHashedPassword);
 
         doAssertion(user, user1);
@@ -128,6 +119,7 @@ public class UserManagerImplUnitTest {
     @Test(expected = RuntimeException.class)
     public void login_notValid_username_or_password() {
         User user1 = new User();
+        //testing method... ehwn username or password is invalid
         userManager.login(user1.getUsername(), user1.getPassword());
     }
 
@@ -135,7 +127,7 @@ public class UserManagerImplUnitTest {
     public void editProfile_updateUser_and_getShippingAddressByUserID_is_called() {
 
         userManager.editProfile(user);
-
+        //testing method...
         Mockito.verify(userDao).updateUser(user);
         Mockito.verify(addressDao).getShippingAddressByUserID(user.getUserID());
 
@@ -149,7 +141,7 @@ public class UserManagerImplUnitTest {
         updatedUser.getShippingAddresses().add(newAddress);
 
         when(addressDao.getShippingAddressByUserID(user.getUserID())).thenReturn(user.getShippingAddresses());
-
+        //testing method... when new shipping addresses are added
         userManager.editProfile(updatedUser);
 
         Mockito.verify(addressDao).insertAddress(any(Address.class));
@@ -165,7 +157,7 @@ public class UserManagerImplUnitTest {
         user.getShippingAddresses().add(newAddress);
 
         when(addressDao.getShippingAddressByUserID(user.getUserID())).thenReturn(user.getShippingAddresses());
-
+        //testing method... when some shipping addresses are removed
         userManager.editProfile(updatedUser);
 
         Mockito.verify(addressDao, Mockito.never()).insertAddress(any(Address.class));
@@ -176,12 +168,13 @@ public class UserManagerImplUnitTest {
     @Test(expected = RuntimeException.class)
     public void editProfile_notValidUser() {
         User user1 = new User();
+        //testing method... invalid user
         userManager.editProfile(user1);
     }
 
     @Test
     public void deleteAccount_validUserID() {
-
+        //testing method...
         userManager.deleteAccount(user.getUserID());
 
         Mockito.verify(userDao).deleteUser(any(Integer.class));
@@ -189,7 +182,7 @@ public class UserManagerImplUnitTest {
 
     @Test(expected = RuntimeException.class)
     public void deleteAccount_notValidUserID() {
-
+        //testing method... invalid id
         userManager.deleteAccount(-1);
     }
 
@@ -203,11 +196,13 @@ public class UserManagerImplUnitTest {
         products.add(product1);
 
         when(userDao.getWishlist(user.getUserID())).thenReturn(products);
+        //testing method... inserting a product into a wishlist
         userManager.addToList(user, product);
 
         Mockito.verify(userDao).insertIntoWishlist(user.getUserID(), product.getProductID());
 
         assertEquals(products.get(0), user.getWishList().get(0));
+
         assertEquals(products.get(1), user.getWishList().get(1));
 
     }

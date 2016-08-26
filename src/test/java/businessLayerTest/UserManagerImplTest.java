@@ -26,14 +26,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ManagerTestService.class)
+@ContextConfiguration(classes = ManagerTestConfig.class)
 public class UserManagerImplTest {
 
     private User user;
 
     @Autowired
     private UserManager userManager;
-
 
     @Before
     public void setUP() throws IOException, SQLException {

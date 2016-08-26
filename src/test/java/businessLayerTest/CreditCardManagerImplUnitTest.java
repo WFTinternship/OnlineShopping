@@ -8,7 +8,10 @@ import com.workfront.internship.dao.CreditCardDao;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.IOException;
@@ -24,15 +27,14 @@ import static org.mockito.Mockito.when;
 public class CreditCardManagerImplUnitTest {
     private CreditCard creditCard;
     private CreditcardManager creditcardManager;
-
+    @Mock
     CreditCardDao creditCardDao;
 
     @Before
     public void setUP() throws IOException, SQLException {
         creditCard = getTestCreditCard();
         creditcardManager = new CreditcardManagerImpl();
-        creditCardDao = Mockito.mock(CreditCardDao.class);
-        Whitebox.setInternalState(creditcardManager, "creditCardDao", creditCardDao);
+        MockitoAnnotations.initMocks(this);
 
     }
     @After

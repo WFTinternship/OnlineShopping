@@ -8,6 +8,7 @@ import java.util.List;
  * Created by Workfront on 7/28/2016.
  */
 public interface CategoryManager {
+
     int createNewCategory(Category category);
     Category getCategoryByID(int catId);
     void updateCategory(Category category);

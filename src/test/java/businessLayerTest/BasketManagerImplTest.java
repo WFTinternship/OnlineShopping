@@ -6,35 +6,40 @@ import com.workfront.internship.common.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 /**
- * Created by Workfront on 8/1/2016.
+ * Created by Anna Asmangulyan on 8/1/2016.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = ManagerTestConfig.class)
 public class BasketManagerImplTest {
     private Basket basket;
     private User user;
     private Product product;
     private Category category;
+    @Autowired
     private BasketManager basketManager;
+    @Autowired
     private UserManager userManager;
+    @Autowired
     private CategoryManager categoryManager;
+    @Autowired
     private ProductManager productManager;
-  //  LegacyDataSource dataSource;
+
 
     @Before
     public void setUP() throws IOException, SQLException {
-      //  dataSource = LegacyDataSource.getInstance();
-        basketManager = new BasketManagerImpl();
-        userManager = new UserManagerImpl();
-
-        categoryManager = new CategoryManagerImpl();
-        productManager = new ProductManagerImpl();
 
         user = getTestUser();
         userManager.createAccount(user);
@@ -53,6 +58,7 @@ public class BasketManagerImplTest {
     public void tearDown()  {
         userManager.deleteAccount(user.getUserID());
         categoryManager.deleteCategory(category.getCategoryID());
+
     }
     @Test
     public void addToBasket(){
@@ -63,6 +69,16 @@ public class BasketManagerImplTest {
 
         assertFalse(result == 0);
 
+    }
+    @Test
+    public void createBasket(){
+        int id = basketManager.createNewBasket(basket);
+        assertFalse(id==0);
+    }
+    @Test
+    public void getCurrentBasket(){
+        Basket basket = basketManager.getCurrentBasket(user);
+        assertNotNull(basket);
     }
 
     private Basket getTestBasket() {

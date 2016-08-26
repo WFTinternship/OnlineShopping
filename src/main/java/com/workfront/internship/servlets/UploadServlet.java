@@ -1,8 +1,11 @@
+/*
 package com.workfront.internship.servlets;
 
+*/
 /**
  * Created by Anna Asmangulyan on 8/24/2016.
- */
+ *//*
+
 import java.io.*;
 import java.util.*;
 
@@ -79,3 +82,4 @@ public class UploadServlet extends HttpServlet {
     }
 
 }
+*/

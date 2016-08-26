@@ -10,8 +10,12 @@ import com.workfront.internship.dao.SaleDaoImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -23,19 +27,20 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = ManagerTestConfig.class)
 public class SaleManagerImplUnitTest {
     private Sale sale;
+    @Autowired
     private SalesManager salesManager;
+    @Autowired
     private BasketManager basketManager;
-    LegacyDataSource dataSource;
+
     SaleDao saleDao;
 
     @Before
     public void setUP() throws IOException, SQLException {
         sale = getTestSale();
-        salesManager = new SalesManagerImpl();
-
         saleDao = Mockito.mock(SaleDaoImpl.class);
         basketManager = Mockito.mock(BasketManagerImpl.class);
         Whitebox.setInternalState(salesManager, "saleDao", saleDao);

@@ -34,7 +34,6 @@ public class UserManagerImpl implements UserManager {
         int id=0;
         String hashOfPassword = HashManager.getHash(user.getPassword());
         user.setPassword(hashOfPassword);
-        System.out.println(user.getFirstname() + "  "  + user.getLastname());
         try {
             id= userDao.insertUser(user);
         }catch (RuntimeException e){
@@ -43,12 +42,12 @@ public class UserManagerImpl implements UserManager {
         }
 
         if (id > 0) {
-            if (user.getShippingAddresses() != null && !user.getShippingAddresses().isEmpty()) {
+           /* if (user.getShippingAddresses() != null && !user.getShippingAddresses().isEmpty()) {
                 for (int i = 0; i < user.getShippingAddresses().size(); i++) {
                     user.getShippingAddresses().get(i).setUserID(id);
                     addressDao.insertAddress(user.getShippingAddresses().get(i));
                 }
-            }
+            }*/
             emailManager.sendVerificationEmail(user);
         }
 

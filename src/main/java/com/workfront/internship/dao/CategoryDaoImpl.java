@@ -20,11 +20,7 @@ public class CategoryDaoImpl extends GeneralDao implements CategoryDao {
     private static final Logger LOGGER = Logger.getLogger(CategoryDao.class);
     @Autowired
     private DataSource dataSource;
-/*
-    public CategoryDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
-        this.dataSource = dataSource;
 
-    }*/
     @Override
     public Category getCategoryByID(int categoryId) {
         Category category = null;
@@ -53,6 +49,36 @@ public class CategoryDaoImpl extends GeneralDao implements CategoryDao {
         }
         return category;
     }
+    public Category getMainCategoryByName(String name){
+        Category category = null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+
+            String sql = "SELECT * from categories where category_name =?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, name);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                category = new Category();
+                int id = resultSet.getInt("category_id");
+                int parentId = resultSet.getInt("parent_id");
+                category.setCategoryID(id);
+                category.setName(name).setParentID(parentId);
+            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return category;
+
+    }
+
     @Override
     public int insertCategory(Category category) {
         int lastId = 0;
@@ -62,9 +88,10 @@ public class CategoryDaoImpl extends GeneralDao implements CategoryDao {
         try {
             connection = dataSource.getConnection();
 
-            String sql = "INSERT into categories(category_name) VALUES (?)";
+            String sql = "INSERT into categories(category_name, parent_id) VALUES (?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, category.getName());
+            preparedStatement.setInt(2, category.getParentID());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {

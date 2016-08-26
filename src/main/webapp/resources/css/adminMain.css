@@ -1,0 +1,108 @@
+
+.wrapper{
+    background-color:#F5F5F5;
+
+}
+.buttons a{
+    color:  #DD127B;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: Arial;
+    padding-right: 20px;
+}
+.buttons{
+
+
+    width: 80%;
+    float:right;
+    padding-top: 100px;
+
+}
+#logo{
+
+}
+.buttons a:hover {
+    color: #B9C710;
+    background-color: transparent;
+    text-decoration: none;
+}
+.clear{
+    clear:both;
+}
+#icons{
+    float: right;
+    margin-right: 100px;
+    margin-top: 5px;
+}
+#addProductForm {
+    float: left;
+    background-color:white;
+    width: 300px;
+
+    margin-left: 500px;
+    margin-top: 100px;
+}
+#addProductForm input{
+    width: 250px;
+    height: 30px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+#addProductForm select{
+    width: 250px;
+    height: 30px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+#sizeVersion1{
+    display: none;
+}
+#sizeVersion2{
+    display: none;
+
+}
+#sizeVersion1 select{
+    width:50px;
+    margin-bottom: 20px;
+}
+#sizeVersion2 select{
+    width:50px;
+    margin-bottom: 20px;
+}
+#upload{
+    padding-top: 20px;
+}
+#uploadfile{
+
+}
+#uploadfile {
+    margin: 0px;
+    padding: 5px 15px;
+    font-size:14px;
+    font-family: Arial;
+    outline: none;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    border: solid 1px #0076a3;
+    background: -webkit-gradient(linear, left top, left bottom, from(#D6E240), to(#B9C710));
+    background: -moz-linear-gradient(top,  #D6E240,  #B9C710);
+    border-top-right-radius: 5px 5px;
+    border-bottom-right-radius: 5px 5px;
+    border-color: grey;
+    color: black;
+
+
+
+}
+#uploadfile:hover {
+    text-decoration: none;
+    background: #007ead;
+    background: -webkit-gradient(linear, left top, left bottom, from(#A8B504), to(#9CA807));
+    background: -moz-linear-gradient(top,  #A8B504,  #9CA807);
+}
+/* Fixes submit button height problem in Firefox */
+#uploadfile::-moz-focus-inner {
+    border: 0;
+}

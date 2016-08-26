@@ -46,6 +46,7 @@ public class CategoryManagerImpl implements CategoryManager {
 
     }
 
+
     public List<Category> getAllCategories(){
 
         List<Category> categories = categoryDao.getAllCategories();
@@ -56,7 +57,7 @@ public class CategoryManagerImpl implements CategoryManager {
         return  categories;
     }
     private boolean validateCategory(Category category){
-        if(category!=null && category.getName()!=null)
+        if(category!=null && category.getName()!=null && category.getParentID()>=0)
             return true;
             return false;
     }

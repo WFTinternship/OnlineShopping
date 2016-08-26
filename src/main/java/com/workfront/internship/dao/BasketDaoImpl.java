@@ -20,11 +20,9 @@ public class BasketDaoImpl extends GeneralDao implements BasketDao {
     private static final Logger LOGGER = Logger.getLogger(BasketDao.class);
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private OrderItemDao orderItemDao;
 
-  /*  public BasketDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
-        this.dataSource = dataSource;
-
-    }*/
     @Override
     public int insertBasket(Basket basket) {
         int lastId = 0;
@@ -150,7 +148,7 @@ public class BasketDaoImpl extends GeneralDao implements BasketDao {
     private Basket createBasket(ResultSet resultSet) throws IOException, SQLException {
         Basket basket = null;
         while (resultSet.next()) {
-            OrderItemDao orderItemDao = new OrderItemDaoImpl();
+
             int basketId = resultSet.getInt("basket_id");
             int userId = resultSet.getInt("user_id");
             double totalPrice = resultSet.getDouble("total_price");
