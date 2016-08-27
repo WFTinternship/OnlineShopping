@@ -39,7 +39,7 @@
 <div class="clear"></div>
 <div>
     <% List<Category> categories = (List<Category>)request.getSession().getAttribute("categories");
-        Product product = (Product)request.getAttribute("product");
+        Product product = (Product)request.getSession().getAttribute("product");
         System.out.println(product.getCategory().getName() + "   "  + product.getCategory().getCategoryID());
 
     %>
@@ -80,17 +80,26 @@
 <% for(int i=0; i<listofCategoriesList.size(); i++){%>
 
     <option value="<%=listofCategoriesList.get(i).get(0).getCategoryID()%>" selected><%=listofCategoriesList.get(i).get(0).getName()%></option>
+         <%System.out.println(listofCategoriesList.get(i).get(0).getCategoryID() +  "  "+ listofCategoriesList.get(i).get(0).getName());%>
           <% for(int l=1; l<listofCategoriesList.get(i).size(); l++) {%>
             <option value="<%=listofCategoriesList.get(i).get(l).getCategoryID()%>"><%="-" + listofCategoriesList.get(i).get(l).getName()%></option>
-<%}
+            <%System.out.println(listofCategoriesList.get(i).get(l).getCategoryID() +  "  "+ listofCategoriesList.get(i).get(l).getName());%>
+            <%}
+
 %>
         <%}
             System.out.println("aaaaaaaa"  +  product.getCategory().getCategoryID());
         %>
         </select>
+        <%--<script>
+           <%System.out.println("bbbbbbbbbbbbbbb"  +  product.getCategory().getCategoryID());%>
+            document.getElementById('currentCategory').getElementsByTagName('option')[<%=product.getCategory().getCategoryID()%>].selected='selected';
+        </script><br><br>--%>
         <script>
-           document.getElementById('currentCategory').getElementsByTagName('option')[<%=product.getCategory().getCategoryID()%>].selected='selected';
-        </script><br><br>
+            $("#currentCategory").val("<%=product.getCategory().getCategoryID()%>");
+
+
+        </script>
         Size type<br>
         <select id="size"  onchange="changeFunc();">
             <option value="" selected></option>

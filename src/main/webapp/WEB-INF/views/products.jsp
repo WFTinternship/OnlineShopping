@@ -67,7 +67,9 @@
         <%--<a href="" id="edit" onclick="document.getElementById('form_id').submit()">
 
             <img src="/resources/image/edit.jpg" alt="add" style="height: 40px; width:42px;"></a>--%>
+        <input value="edit" name="option" style="display: none;">
         <input type="submit" value="Edit" id = "uploadfile"/>
+
 
 
 </form>

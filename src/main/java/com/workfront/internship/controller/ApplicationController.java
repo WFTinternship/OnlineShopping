@@ -221,10 +221,11 @@ public class ApplicationController {
     public String geteditProductPage(HttpServletRequest request) {
         List<Category> categories = categoryManager.getAllCategories();
         int productId = Integer.parseInt(request.getParameter("product"));
-
+        String option = (String)request.getParameter("option");
         Product product = productManager.getProduct(productId);
-        request.setAttribute("product", product);
+        request.getSession().setAttribute("product", product);
         request.getSession().setAttribute("categories", categories);
+        request.getSession().setAttribute("option", option);
         return "addProduct";
     }
     @RequestMapping("/delete")
@@ -307,8 +308,15 @@ String name="";
             System.out.println(ex);
         }
         Category category = categoryManager.getCategoryByID(categoryId);
+        if(request.getSession().getAttribute("option").equals("edit")){
+            Product product = (Product)request.getSession().getAttribute("product");
+            product.setName(name).setPrice(price).setShippingPrice(shippingPrice).setDescription(color).setCategory(category);
+            productManager.updateProduct(product);
+            return "admin";
+        }
         Product product = new Product();
         product.setName(name).setPrice(price).setShippingPrice(shippingPrice).setDescription(color).setCategory(category);
+
         int id = productManager.createNewProduct(product);
         Media media=null;
         for(int i=0; i<2;i++) {
