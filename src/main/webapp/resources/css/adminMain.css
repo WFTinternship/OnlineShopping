@@ -106,3 +106,25 @@
 #uploadfile::-moz-focus-inner {
     border: 0;
 }
+#productsList table {
+    width: 80%;
+    margin-top: 20px;
+}
+
+
+
+#productsList table th {
+    padding: 4px;
+    border: 1px solid lightgrey;
+}
+
+#productsList table td {
+    padding: 8px;
+    border: 1px solid lightgrey;
+    text-align: center;
+    vertical-align: middle;
+
+}
+#productsList{
+    padding-left: 100px;
+}

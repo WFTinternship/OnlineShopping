@@ -58,6 +58,10 @@ public class ProductManagerImpl implements ProductManager{
 
 
    }
+   public  List<Product> getAllProducts(){
+       List<Product> products = productDao.getAllProducts();
+       return products;
+   }
    public List<Product> getProdactsByCategoryID(int id){
 
        List<Product> products = productDao.getProdactsByCategoryID(id);

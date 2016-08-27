@@ -8,6 +8,7 @@ import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
 import com.workfront.internship.common.User;
+import org.apache.commons.codec.language.DoubleMetaphone;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -210,15 +211,35 @@ public class ApplicationController {
     @RequestMapping("/add")
     public String getaddProductPage(HttpServletRequest request) {
         List<Category> categories = categoryManager.getAllCategories();
+        Product product = new Product();
+        product.setName("").setPrice(0.0).setShippingPrice(0.0).setDescription("");
+        request.setAttribute("product", product);
         request.getSession().setAttribute("categories", categories);
         return "addProduct";
+    }
+    @RequestMapping("/edit")
+    public String geteditProductPage(HttpServletRequest request) {
+        List<Category> categories = categoryManager.getAllCategories();
+        int productId = Integer.parseInt(request.getParameter("product"));
+
+        Product product = productManager.getProduct(productId);
+        request.setAttribute("product", product);
+        request.getSession().setAttribute("categories", categories);
+        return "addProduct";
+    }
+    @RequestMapping("/delete")
+    public String getProductPage(HttpServletRequest request) {
+        List<Category> categories = categoryManager.getAllCategories();
+        int productId = Integer.parseInt(request.getParameter("product"));
+        productManager.deleteProduct(productId);
+        return "products";
     }
 
     @RequestMapping("/saveProduct")
     public String saveProduct(HttpServletResponse response, HttpServletRequest request) throws IOException {
 
         String filePath = "C:\\Users\\Workfront\\IdeaProjects\\OnlineShop\\OnlineShop\\src\\main\\webapp\\resources\\image";
-        int maxFileSize = 70 * 1024;
+        int maxFileSize = 140 * 1024;
 
         File file;
 
@@ -231,15 +252,13 @@ public class ApplicationController {
         ServletFileUpload upload = new ServletFileUpload(factory);
         // maximum file size to be uploaded.
         upload.setSizeMax(maxFileSize);
-        String name = (String)request.getParameter("productName");
-        Double price = Double.parseDouble(request.getParameter("price"));
-        Double shippingPrice = Double.parseDouble(request.getParameter("shippingPrice"));
-        String color = (String)request.getParameter("color");
-        int categoryId = Integer.parseInt(request.getParameter("category"));
-        Category category = categoryManager.getCategoryByID(categoryId);
-        Product product = new Product();
-        product.setName(name).setPrice(price).setShippingPrice(shippingPrice).setDescription(color).setCategory(category);
-int id = productManager.createNewProduct(product);
+String name="";
+        Double price=0.0;
+        Double shippingPrice=0.0;
+        String color="";
+        int categoryId=0;
+        String[] fileName = new String[3];
+        int j =0;
 
 
         try {
@@ -252,30 +271,74 @@ int id = productManager.createNewProduct(product);
                 FileItem fi = (FileItem) i.next();
                 if (!fi.isFormField()) {
                     // Get the uploaded file parameters
-                    String fileName = fi.getName();
+                    fileName[j] = fi.getName();
                     // Write the file
 
-                    System.out.println(fileName.lastIndexOf("\\"));
-                    if (fileName.lastIndexOf("\\") >= 0) {
+                    System.out.println(fileName[j].lastIndexOf("\\"));
+                    if (fileName[j].lastIndexOf("\\") >= 0) {
                         file = new File(filePath +
-                                fileName.substring(fileName.lastIndexOf("\\")));
+                                fileName[j].substring(fileName[j].lastIndexOf("\\")));
                     } else {
                         file = new File(filePath +
-                                fileName.substring(fileName.lastIndexOf("\\") + 1));
+                                fileName[j].substring(fileName[j].lastIndexOf("\\") + 1));
                     }
                     fi.write(file);
-                    out.println("Uploaded Filename: " + fileName + "<br>");
-                    Media media = new Media();
-                    media.setProductID(id).setMediaPath("/resources/image/" + fileName);
-                    mediaManager.insertMedia(media);
+                    out.println("Uploaded Filename: " + fileName[j] + "<br>");
+                    j++;
+
+                }
+                else{
+                    String paramName=fi.getFieldName();
+                    String value=fi.getString();
+                    if(paramName.equals("productName"))
+                        name=value;
+                    if(paramName.equals("price"))
+                       price= Double.parseDouble(value);
+                    if(paramName.equals("shippingPrice"))
+                       shippingPrice=Double.parseDouble(value);
+                    if(paramName.equals("color"))
+                       color=value;
+                    if(paramName.equals("category"))
+                        categoryId=Integer.parseInt(value);
                 }
             }
 
         } catch (Exception ex) {
             System.out.println(ex);
         }
+        Category category = categoryManager.getCategoryByID(categoryId);
+        Product product = new Product();
+        product.setName(name).setPrice(price).setShippingPrice(shippingPrice).setDescription(color).setCategory(category);
+        int id = productManager.createNewProduct(product);
+        Media media=null;
+        for(int i=0; i<2;i++) {
+            media = new Media();
+            media.setProductID(id).setMediaPath("/resources/image/" + fileName[i]);
+            mediaManager.insertMedia(media);
+        }
         return "admin";
 
 
     }
+    @RequestMapping("/products")
+    public String getAllProducts(HttpServletRequest request){
+        List<Product> products = productManager.getAllProducts();
+        Category category=null;
+        for(Product product : products){
+            category = product.getCategory();
+            category.setName((categoryManager.getCategoryByID(category.getParentID())).getName() + ": " + category.getName());
+            product.setCategory(category);
+        }
+        request.setAttribute("products", products);
+        return "products";
+    }
+    @RequestMapping("/categories")
+    public String getAllCategories(HttpServletRequest request){
+        List<Category> categories = categoryManager.getAllCategories();
+        request.setAttribute("categories", categories);
+        return "categories";
+    }
+
 }
+
+

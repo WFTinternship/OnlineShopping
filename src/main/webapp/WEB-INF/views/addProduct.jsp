@@ -1,7 +1,8 @@
 <%@ page import="com.workfront.internship.common.Category" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %><%--
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.workfront.internship.common.Product" %><%--
   Created by IntelliJ IDEA.
   User: Workfront
   Date: 8/26/2016
@@ -37,18 +38,22 @@
 
 <div class="clear"></div>
 <div>
-    <% List<Category> categories = (List<Category>)request.getSession().getAttribute("categories");%>
+    <% List<Category> categories = (List<Category>)request.getSession().getAttribute("categories");
+        Product product = (Product)request.getAttribute("product");
+        System.out.println(product.getCategory().getName() + "   "  + product.getCategory().getCategoryID());
+
+    %>
     <form action="/saveProduct" method="post"
           enctype="multipart/form-data" id="addProductForm">
 
         Product name<br>
-        <input type="text" name="productName" required><br><br>
+        <input type="text" name="productName" required value="<%=product.getName()%>"><br><br>
         Price<br>
-        <input type="text" name="price" required><br><br>
+        <input type="text" name="price" required value="<%=product.getPrice()%>"><br><br>
         Shipping price<br>
-        <input type="text" name="shippingPrice" required><br><br>
+        <input type="text" name="shippingPrice" required value="<%=product.getShippingPrice()%>"><br><br>
         Color<br><br>
-        <input type="text" name="color" required><br><br>
+        <input type="text" name="color" required value="<%=product.getDescription()%>"><br><br>
         Category<br>
 
             <%List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
@@ -70,16 +75,22 @@
         }
     }
     %>
-        <select name="category">
+        <select name="category" id="currentCategory">
+
 <% for(int i=0; i<listofCategoriesList.size(); i++){%>
+
     <option value="<%=listofCategoriesList.get(i).get(0).getCategoryID()%>" selected><%=listofCategoriesList.get(i).get(0).getName()%></option>
           <% for(int l=1; l<listofCategoriesList.get(i).size(); l++) {%>
             <option value="<%=listofCategoriesList.get(i).get(l).getCategoryID()%>"><%="-" + listofCategoriesList.get(i).get(l).getName()%></option>
 <%}
 %>
         <%}
+            System.out.println("aaaaaaaa"  +  product.getCategory().getCategoryID());
         %>
-        </select><br><br>
+        </select>
+        <script>
+           document.getElementById('currentCategory').getElementsByTagName('option')[<%=product.getCategory().getCategoryID()%>].selected='selected';
+        </script><br><br>
         Size type<br>
         <select id="size"  onchange="changeFunc();">
             <option value="" selected></option>

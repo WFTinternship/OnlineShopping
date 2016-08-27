@@ -15,5 +15,6 @@ public interface ProductManager {
     void deleteProduct(int id);
     List<Product> getProdactsByCategoryID(int id);
     List<Product> getLimitedNumberOfProducts();
+    List<Product> getAllProducts();
 
 }

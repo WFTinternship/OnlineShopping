@@ -301,7 +301,6 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         Category category;
         while (resultSet.next()) {
             product = new Product();
-            category = new Category();
             category = categoryDao.getCategoryByID(resultSet.getInt("category_id"));
             product.setProductID(resultSet.getInt("product_id")).
                     setName(resultSet.getString("name")).

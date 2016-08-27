@@ -37,8 +37,9 @@ public class CategoryDaoImpl extends GeneralDao implements CategoryDao {
             while (resultSet.next()) {
                 category = new Category();
                 String catname = resultSet.getString("category_name");
+                int parenId = resultSet.getInt("parent_id");
                 category.setCategoryID(categoryId);
-                category.setName(catname);
+                category.setName(catname).setParentID(parenId);
             }
         }  catch (SQLException e) {
             e.printStackTrace();

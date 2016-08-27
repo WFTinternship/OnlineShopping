@@ -27,21 +27,12 @@
 <div class="wrapper">
     <img src="/resources/image/logo3.PNG" width="140px;" alt="logo" id="logo">
     <div class="buttons">
-        <a href="#" id="categories">CATEGORIES</a>
-        <a href="#" id="products">PRODUCTS</a>
+        <a href="/categories" id="categories">CATEGORIES</a>
+        <a href="/products" id="products">PRODUCTS</a>
         <a href="#" id="users">USERS</a>
         <a href="#" id="orders">ORDEERS</a>
     </div>
 
-</div>
-<div class="clear"></div>
-<div id="icons">
-    <a href="/add" id="add">
-        <img src="/resources/image/add.jpg" alt="add" style="height: 40px; width:42px;"></a>
-    <a href="#" id="edit">
-        <img src="/resources/image/edit.jpg" alt="add" style="height: 40px; width:42px;"></a>
-    <a href="#" id="delete">
-        <img src="/resources/image/delete.jpg" alt="add" style="height: 40px; width:42px;"></a>
 </div>
 <div class="clear"></div>
 </body>
