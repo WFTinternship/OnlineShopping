@@ -2,7 +2,9 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.workfront.internship.common.Product" %><%--
+<%@ page import="com.workfront.internship.common.Product" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %><%--
   Created by IntelliJ IDEA.
   User: Workfront
   Date: 8/26/2016
@@ -40,7 +42,7 @@
 <div>
     <% List<Category> categories = (List<Category>)request.getSession().getAttribute("categories");
         Product product = (Product)request.getSession().getAttribute("product");
-        System.out.println(product.getCategory().getName() + "   "  + product.getCategory().getCategoryID());
+        String option = (String)request.getSession().getAttribute("option");
 
     %>
     <form action="/saveProduct" method="post"
@@ -77,29 +79,35 @@
     %>
         <select name="category" id="currentCategory">
 
-<% for(int i=0; i<listofCategoriesList.size(); i++){%>
+<% Map map = new HashMap();
+    int optionNumber = 0;
+    for(int i=0; i<listofCategoriesList.size(); i++){%>
 
     <option value="<%=listofCategoriesList.get(i).get(0).getCategoryID()%>" selected><%=listofCategoriesList.get(i).get(0).getName()%></option>
-         <%System.out.println(listofCategoriesList.get(i).get(0).getCategoryID() +  "  "+ listofCategoriesList.get(i).get(0).getName());%>
+
+         <%map.put(listofCategoriesList.get(i).get(0).getCategoryID(), optionNumber++);
+             System.out.println(listofCategoriesList.get(i).get(0).getCategoryID() +  "  "+ listofCategoriesList.get(i).get(0).getName());%>
           <% for(int l=1; l<listofCategoriesList.get(i).size(); l++) {%>
             <option value="<%=listofCategoriesList.get(i).get(l).getCategoryID()%>"><%="-" + listofCategoriesList.get(i).get(l).getName()%></option>
-            <%System.out.println(listofCategoriesList.get(i).get(l).getCategoryID() +  "  "+ listofCategoriesList.get(i).get(l).getName());%>
+            <%map.put(listofCategoriesList.get(i).get(l).getCategoryID(), optionNumber++);
+                System.out.println(listofCategoriesList.get(i).get(l).getCategoryID() +  "  "+ listofCategoriesList.get(i).get(l).getName());%>
             <%}
 
 %>
         <%}
-            System.out.println("aaaaaaaa"  +  product.getCategory().getCategoryID());
+
         %>
         </select>
-        <%--<script>
-           <%System.out.println("bbbbbbbbbbbbbbb"  +  product.getCategory().getCategoryID());%>
-            document.getElementById('currentCategory').getElementsByTagName('option')[<%=product.getCategory().getCategoryID()%>].selected='selected';
-        </script><br><br>--%>
         <script>
-            $("#currentCategory").val("<%=product.getCategory().getCategoryID()%>");
+           <%
+           if(!option.equals("add")){
+           optionNumber=(Integer)map.get(product.getCategory().getCategoryID());
+          %>
+            document.getElementById('currentCategory').getElementsByTagName('option')[<%=optionNumber%>].selected='selected';
+       <%}
+       %>
+        </script><br><br>
 
-
-        </script>
         Size type<br>
         <select id="size"  onchange="changeFunc();">
             <option value="" selected></option>

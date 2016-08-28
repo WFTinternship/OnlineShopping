@@ -37,10 +37,15 @@
 
 </div>
 <div class="clear"></div>
-<form action="/edit" method="post" id="form_id">
+<form action="/edit" method="post" id="form_id"  name="productForm" >
 <div id="icons">
+    <a href="/add?option=add" id="add">
+        <img src="/resources/image/add.jpg" alt="add" style="height: 40px; width:42px;"></a>
+
+    <button type="submit" value="Edit" class = "littleButtons" onclick="function1();"><img src="/resources/image/edit.jpg" alt="add" style="height: 40px; width:42px;"></button>
+    <button type="submit" value="Edit" class = "littleButtons" onclick="function2();"><img src="/resources/image/delete.jpg" alt="add" style="height: 40px; width:42px;"></button>
     <%--<a href="/add" id="add">
-        <img src="/resources/image/add.jpg" alt="add" style="height: 40px; width:42px;"></a>--%>
+            <img src="/resources/image/add.jpg" alt="add" style="height: 40px; width:42px;"></a>--%>
 
     <%--<a href="/delete" id="delete">
         <img src="/resources/image/delete.jpg" alt="add" style="height: 40px; width:42px;"></a>--%>
@@ -52,9 +57,11 @@
         <thead>
         <tr><th>&nbsp;&nbsp;&nbsp;ID</th> <th>&nbsp;&nbsp;&nbsp;Name</th><th>&nbsp;&nbsp;&nbsp;Price($)</th><th>&nbsp;&nbsp;&nbsp;Category</th></tr>
         </thead>
-        <% for(Product product : products){%>
+        <%
+            int i=0;
+            for(Product product : products){%>
         <tr>
-            <td><input type="checkbox" name="product" value="<%=product.getProductID()%>"> <%=product.getProductID()%><br></td>
+            <td><input type="checkbox"  name="product" value="<%=product.getProductID()%>"> <%=product.getProductID()%><br></td>
             <td><%=product.getName()%></td>
             <td><%=product.getPrice()%></td>
             <td><%=product.getCategory().getName()%></td>
@@ -67,13 +74,26 @@
         <%--<a href="" id="edit" onclick="document.getElementById('form_id').submit()">
 
             <img src="/resources/image/edit.jpg" alt="add" style="height: 40px; width:42px;"></a>--%>
-        <input value="edit" name="option" style="display: none;">
-        <input type="submit" value="Edit" id = "uploadfile"/>
+        <input value="0" name="option" type="hidden" id="actionOption">
+
 
 
 
 </form>
+<script>
+    function function1() {
+        document.productForm.option.value = 'edit';
+        return true;
+    }
+    function function2() {
+        document.productForm.option.value = 'delete';
+        return true;
+    }
+
+
+</script>
 </div>
+
 </body>
 </html>
 

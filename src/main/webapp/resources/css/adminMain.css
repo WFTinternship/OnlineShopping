@@ -128,3 +128,7 @@
 #productsList{
     padding-left: 100px;
 }
+.littleButtons{
+    background-color: white;
+    border: none;
+}

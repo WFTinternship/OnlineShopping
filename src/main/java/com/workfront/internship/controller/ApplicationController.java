@@ -212,9 +212,12 @@ public class ApplicationController {
     public String getaddProductPage(HttpServletRequest request) {
         List<Category> categories = categoryManager.getAllCategories();
         Product product = new Product();
-        product.setName("").setPrice(0.0).setShippingPrice(0.0).setDescription("");
-        request.setAttribute("product", product);
+        Category category = new Category();
+        String option = (String)request.getParameter("option");
+        product.setName(" ").setPrice(0.0).setShippingPrice(0.0).setDescription(" ").setCategory(category);
+        request.getSession().setAttribute("product", product);
         request.getSession().setAttribute("categories", categories);
+        request.getSession().setAttribute("option", option);
         return "addProduct";
     }
     @RequestMapping("/edit")
@@ -223,19 +226,23 @@ public class ApplicationController {
         int productId = Integer.parseInt(request.getParameter("product"));
         String option = (String)request.getParameter("option");
         Product product = productManager.getProduct(productId);
+      if(option.equals("delete")){
+          productManager.deleteProduct(productId);
+          List<Product> products = productManager.getAllProducts();
+          Category category=null;
+          for(Product product1 : products){
+              category = product1.getCategory();
+              category.setName((categoryManager.getCategoryByID(category.getParentID())).getName() + ": " + category.getName());
+              product.setCategory(category);
+          }
+          request.setAttribute("products", products);
+          return "products";
+      }
         request.getSession().setAttribute("product", product);
         request.getSession().setAttribute("categories", categories);
         request.getSession().setAttribute("option", option);
         return "addProduct";
     }
-    @RequestMapping("/delete")
-    public String getProductPage(HttpServletRequest request) {
-        List<Category> categories = categoryManager.getAllCategories();
-        int productId = Integer.parseInt(request.getParameter("product"));
-        productManager.deleteProduct(productId);
-        return "products";
-    }
-
     @RequestMapping("/saveProduct")
     public String saveProduct(HttpServletResponse response, HttpServletRequest request) throws IOException {
 
