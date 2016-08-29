@@ -67,6 +67,16 @@ public class CategoryManagerImpUnitlTest {
 
 
     }
+    @Test
+    public void getCategoriesByParentId(){
+        List<Category> categories = new ArrayList<>();
+        categories.add(category);
+        when(categoryDao.getCategoriesByParentID(category.getParentID())).thenReturn(categories);
+
+        List<Category> categories1 = categoryManager.getCategoriesByParentID(category.getParentID());
+        doAssertion(categories.get(0), categories1.get(0));
+
+    }
     @Test(expected = RuntimeException.class)
     public void getCategory_not_validID(){
 
@@ -107,7 +117,7 @@ public class CategoryManagerImpUnitlTest {
         Random random = new Random();
         int x = random.nextInt(100000);
         Category category = new Category();
-        category.setName("oldCategory" + x).setCategoryID(x);
+        category.setName("oldCategory" + x).setCategoryID(x).setParentID(1);
         return category;
     }
     private void doAssertion(Category category, Category category1){

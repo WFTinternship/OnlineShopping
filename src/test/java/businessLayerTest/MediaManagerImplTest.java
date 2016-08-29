@@ -5,11 +5,13 @@ import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
 
+import com.workfront.internship.spring.TestConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -22,7 +24,8 @@ import static org.junit.Assert.assertFalse;
  * Created by Anna Asmangulyan on 01.08.2016.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ManagerTestConfig.class)
+@ContextConfiguration(classes = TestConfiguration.class)
+@ActiveProfiles("test")
 public class MediaManagerImplTest {
     private Media media;
     private Product product;

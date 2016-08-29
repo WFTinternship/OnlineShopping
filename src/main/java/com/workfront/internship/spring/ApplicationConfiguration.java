@@ -1,8 +1,12 @@
+/*
 package com.workfront.internship.spring;
 
+*/
 /**
  * Created by Anna Asmangulyan on 8/23/2016.
- */
+ *//*
+
+
 
 import com.workfront.internship.business.UserManager;
 import com.workfront.internship.business.UserManagerImpl;
@@ -12,25 +16,31 @@ import org.apache.commons.dbcp.BasicDataSource;
     import org.springframework.context.annotation.Bean;
     import org.springframework.context.annotation.ComponentScan;
     import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
-    import javax.sql.DataSource;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.Properties;
 
 @Configuration
-public class SpringApplication {
+@ComponentScan(basePackages = "com.workfront")
+public class ApplicationConfiguration {
 
     @Bean
-    public DataSource getDataSource() {
+        public DataSource getDataSource() throws IOException {
         BasicDataSource dataSource = new BasicDataSource();
+        Properties props = new Properties();
+        props.load(ApplicationConfiguration.class.getClassLoader().getResourceAsStream("config.properties"));
+
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUsername("root");
-        dataSource.setPassword("annaasm88");
-        dataSource.setUrl("jdbc:mysql://localhost/onlineshop");
-        // the settings below are optional -- dbcp can work with defaults
-        dataSource.setMinIdle(5);
-        dataSource.setMaxIdle(20);
-        dataSource.setMaxOpenPreparedStatements(180);
+
+        dataSource.setUsername(props.getProperty("jdbc.username"));
+        dataSource.setPassword(props.getProperty("jdbc.password"));
+        dataSource.setUrl(props.getProperty("jdbc.url"));
+
         return dataSource;
     }
 
 }
 
+*/

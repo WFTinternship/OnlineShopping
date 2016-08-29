@@ -42,8 +42,8 @@
     <a href="/add?option=add" id="add">
         <img src="/resources/image/add.jpg" alt="add" style="height: 40px; width:42px;"></a>
 
-    <button type="submit" value="Edit" class = "littleButtons" onclick="function1();"><img src="/resources/image/edit.jpg" alt="add" style="height: 40px; width:42px;"></button>
-    <button type="submit" value="Edit" class = "littleButtons" onclick="function2();"><img src="/resources/image/delete.jpg" alt="add" style="height: 40px; width:42px;"></button>
+    <button  value="0" class = "littleButtons" onclick="function1();"><img src="/resources/image/edit.jpg" alt="add" style="height: 40px; width:42px;"></button>
+    <button  value="0" class = "littleButtons" onclick="function2();"><img src="/resources/image/delete.jpg" alt="add" style="height: 40px; width:42px;"></button>
     <%--<a href="/add" id="add">
             <img src="/resources/image/add.jpg" alt="add" style="height: 40px; width:42px;"></a>--%>
 
@@ -61,7 +61,7 @@
             int i=0;
             for(Product product : products){%>
         <tr>
-            <td><input type="checkbox"  name="product" value="<%=product.getProductID()%>"> <%=product.getProductID()%><br></td>
+            <td><input type="checkbox" class = "checkBox" name="product" value="<%=product.getProductID()%>"> <%=product.getProductID()%><br></td>
             <td><%=product.getName()%></td>
             <td><%=product.getPrice()%></td>
             <td><%=product.getCategory().getName()%></td>
@@ -82,6 +82,18 @@
 </form>
 <script>
     function function1() {
+        alert("sdgsdg");
+
+        var $b = $('input[type=checkbox]');
+        alert($b.find(':checked').length); // gives 0
+        alert($b.filter(':checked').length); // works
+
+        alert($('input:checkbox:checked').length);
+
+        if($('.checkBox:checked').size() > 1){
+            document.getElementById("form_id")
+        alert($('.checkBox:checked').size());}
+        else
         document.productForm.option.value = 'edit';
         return true;
     }
@@ -89,6 +101,8 @@
         document.productForm.option.value = 'delete';
         return true;
     }
+
+
 
 
 </script>

@@ -75,11 +75,28 @@ public class ProductManagerUnitTest {
     }
     @Test
     public void getProduct(){
+        List<Product> products = new ArrayList<>();
+        products.add(product);
+        when(productDao.getAllProducts()).thenReturn(products);
 
-        when(productDao.getProductByID(product.getProductID())).thenReturn(product);
-        Product product1 = productManager.getProduct(product.getProductID());
+        List<Product> products1= productManager.getAllProducts();
 
-        doAssertion(product, product1);
+        doAssertion(products.get(0), products1.get(0));
+
+    }
+    @Test
+    public void getLimitedNumberOfProducts(){
+        List<Product> products = new ArrayList<>();
+        products.add(product);
+        when(productDao.getLimitedNumberOfProducts()).thenReturn(products);
+
+        List<Product> products1= productManager.getLimitedNumberOfProducts();
+
+        doAssertion(products.get(0), products1.get(0));
+
+    }
+    @Test
+    public void getAllProducts(){
 
     }
     @Test

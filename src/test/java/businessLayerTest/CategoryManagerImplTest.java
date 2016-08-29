@@ -4,11 +4,13 @@ import com.workfront.internship.business.CategoryManager;
 import com.workfront.internship.business.CategoryManagerImpl;
 import com.workfront.internship.common.Category;
 
+import com.workfront.internship.spring.TestConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -22,7 +24,8 @@ import static org.junit.Assert.assertNotNull;
  * Created by Anna Asmangulyan on 8/1/2016.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ManagerTestConfig.class)
+@ContextConfiguration(classes = TestConfiguration.class)
+@ActiveProfiles("test")
 public class CategoryManagerImplTest {
     private Category category;
     @Autowired

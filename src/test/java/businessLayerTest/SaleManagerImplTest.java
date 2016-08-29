@@ -2,12 +2,14 @@ package businessLayerTest;
 
 import com.workfront.internship.business.*;
 import com.workfront.internship.common.*;
+import com.workfront.internship.spring.TestConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -24,10 +26,12 @@ import static org.junit.Assert.assertFalse;
  * Created by Anna Asmangulyan on 01.08.2016.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ManagerTestConfig.class)
+@ContextConfiguration(classes = TestConfiguration.class)
+@ActiveProfiles("test")
 public class SaleManagerImplTest {
     private Basket basket;
     private User user;
+    private Address address;
 
     private CreditCard creditCard;
     private Sale sale;
@@ -39,6 +43,9 @@ public class SaleManagerImplTest {
     private UserManager userManager;
     @Autowired
     private SalesManager salesManager;
+    @Autowired
+    private AddressManager addressManager;
+
 
 
     @Before
@@ -46,6 +53,17 @@ public class SaleManagerImplTest {
 
         user = getTestUser();
         userManager.createAccount(user);
+
+        address = getTestAddress();
+        addressManager.insertAddress(address);
+
+        List<Address> addresses = new ArrayList<>();
+        addresses.add(address);
+        user.setShippingAddresses(addresses);
+
+
+
+
 
         basket = getTestBasket();
         creditCard = getTestCreditCard();
@@ -62,6 +80,7 @@ public class SaleManagerImplTest {
         userManager.deleteAccount(user.getUserID());
         creditcardManager.deleteCreditCard(creditCard.getCardID());
 
+
     }
     @Test
     public void makeNewSale(){
@@ -74,10 +93,6 @@ public class SaleManagerImplTest {
         return basket;
     }
     private User getTestUser() {
-        Address address = new Address();
-        address.setAddress("someAddress");
-        List<Address> addresses = new ArrayList<>();
-        addresses.add(address);
         user = new User();
         user.setFirstname("Anahit").
                 setLastname("galstyan").
@@ -85,8 +100,8 @@ public class SaleManagerImplTest {
                 setPassword("anahitgal85").
                 setEmail("galstyan@gmail.com").
                 setConfirmationStatus(true).
-                setAccessPrivilege("user").
-                setShippingAddresses(addresses);
+                setAccessPrivilege("user");
+
         return user;
     }
 
@@ -105,5 +120,10 @@ public class SaleManagerImplTest {
                 setDate(new Timestamp(date.getTime()));
         return sale;
 
+    }
+    private Address getTestAddress(){
+        address = new Address();
+        address.setUserID(user.getUserID()).setAddress("someaddress");
+        return address;
     }
 }

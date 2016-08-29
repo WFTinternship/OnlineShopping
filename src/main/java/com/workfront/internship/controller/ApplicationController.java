@@ -162,14 +162,6 @@ public class ApplicationController {
 
             errorString = "User with that username already exists";
 
-
-            // If error, forward to /registration.jsp
-
-            /*user = new User();
-            user.setUsername(username);
-            user.setPassword(password);*/
-
-
             // Store information in request attribute, before forward.
             model.addAttribute("errorString", errorString);
             // request.setAttribute("user", user);

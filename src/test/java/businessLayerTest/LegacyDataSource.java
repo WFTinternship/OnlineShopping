@@ -1,8 +1,11 @@
+/*
 package businessLayerTest;
 
+*/
 /**
  * Created by Anna Asmangulyan on 8/19/2016.
- */
+ *//*
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -52,3 +55,4 @@ public class LegacyDataSource {
     }
 
 }
+*/

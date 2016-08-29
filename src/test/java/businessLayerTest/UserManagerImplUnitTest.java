@@ -33,26 +33,30 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ManagerTestConfig.class)
-@ActiveProfiles("test")
+
 public class UserManagerImplUnitTest {
     private User user;
     private Product product;
-    @Mock
+
     private UserDao userDao;
-    @Mock
+
     private AddressDao addressDao;
-    @Autowired
-    @InjectMocks
+
     private UserManager userManager;
 
 
     @Before
     public void setUP() throws IOException, SQLException {
-        MockitoAnnotations.initMocks(this);
+
         user = getTestUser();
         product = getTestProduct();
+        userManager = new UserManagerImpl();
+        addressDao = Mockito.mock(AddressDaoImpl.class);
+        userDao = Mockito.mock(UserDaoImpl.class);
+
+        Whitebox.setInternalState(userManager, "addressDao", addressDao);
+        Whitebox.setInternalState(userManager, "userDao", userDao);
+
     }
     @After
     public void tearDown() {

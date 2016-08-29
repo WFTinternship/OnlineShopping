@@ -135,6 +135,20 @@ public class BasketManagerImplUnitTest {
         assertEquals(true, orderItems.isEmpty());
 
     }
+    @Test
+    public void showItemsInBasket_userBasket_null_current_basket_notNull(){
+        user.setBasket(null);
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(orderItem);
+        basket.setOrderItems(orderItems);
+        when(basketDao.getCurrentBasket(user.getUserID())).thenReturn(basket);
+
+        List<OrderItem> orderItems1 = basketManager.showItemsInCurrentBasket(user);
+
+        Mockito.verify(orderItemDao, Mockito.never()).getOrderItemByBasketID(any(Integer.class));
+        assertEquals(true, orderItems.isEmpty());
+
+    }
     @Test(expected = RuntimeException.class)
     public void showItemsInBasket_invalid_user(){
 

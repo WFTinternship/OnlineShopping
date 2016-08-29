@@ -27,22 +27,21 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ManagerTestConfig.class)
 public class SaleManagerImplUnitTest {
     private Sale sale;
-    @Autowired
+
     private SalesManager salesManager;
-    @Autowired
+
     private BasketManager basketManager;
 
-    SaleDao saleDao;
+    private SaleDao saleDao;
 
     @Before
     public void setUP() throws IOException, SQLException {
         sale = getTestSale();
         saleDao = Mockito.mock(SaleDaoImpl.class);
         basketManager = Mockito.mock(BasketManagerImpl.class);
+        salesManager = new SalesManagerImpl();
         Whitebox.setInternalState(salesManager, "saleDao", saleDao);
         Whitebox.setInternalState(salesManager, "basketManager", basketManager);
 

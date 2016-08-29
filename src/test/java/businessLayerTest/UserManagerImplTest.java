@@ -5,6 +5,7 @@ import com.workfront.internship.business.UserManager;
 import com.workfront.internship.common.Address;
 import com.workfront.internship.common.User;
 
+import com.workfront.internship.spring.TestConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,12 +22,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ManagerTestConfig.class)
+@ContextConfiguration(classes = TestConfiguration.class)
+@ActiveProfiles("test")
 public class UserManagerImplTest {
 
     private User user;
