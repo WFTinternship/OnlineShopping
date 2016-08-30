@@ -52,7 +52,7 @@
 </div>
 <div class="clear"></div>
 <div id="productsList">
-    <% List<Product> products = (List<Product>)request.getAttribute("products"); %>
+    <% List<Product> products = (List<Product>)request.getSession().getAttribute("products"); %>
     <table>
         <thead>
         <tr><th>&nbsp;&nbsp;&nbsp;ID</th> <th>&nbsp;&nbsp;&nbsp;Name</th><th>&nbsp;&nbsp;&nbsp;Price($)</th><th>&nbsp;&nbsp;&nbsp;Category</th></tr>

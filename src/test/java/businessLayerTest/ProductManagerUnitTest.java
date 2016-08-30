@@ -56,6 +56,7 @@ public class ProductManagerUnitTest {
         assertEquals("insertion failed!", result, 20);
 
     }
+
     @Test
     public void createNewProduct_with_no_medias(){
 
@@ -74,7 +75,7 @@ public class ProductManagerUnitTest {
         productManager.createNewProduct(null);
     }
     @Test
-    public void getProduct(){
+    public void getAllProduct(){
         List<Product> products = new ArrayList<>();
         products.add(product);
         when(productDao.getAllProducts()).thenReturn(products);
@@ -84,6 +85,7 @@ public class ProductManagerUnitTest {
         doAssertion(products.get(0), products1.get(0));
 
     }
+
     @Test
     public void getLimitedNumberOfProducts(){
         List<Product> products = new ArrayList<>();
@@ -95,8 +97,19 @@ public class ProductManagerUnitTest {
         doAssertion(products.get(0), products1.get(0));
 
     }
+
     @Test
-    public void getAllProducts(){
+    public void getProduct(){
+        when(productDao.getProductByID(product.getProductID())).thenReturn(product);
+
+        Product product1 = productManager.getProduct(product.getProductID());
+
+        doAssertion(product, product1);
+
+    }
+    @Test(expected = RuntimeException.class)
+    public void getProduct_invalidId(){
+        productManager.getProduct(-1);
 
     }
     @Test
@@ -180,7 +193,7 @@ public class ProductManagerUnitTest {
                 setShippingPrice(1).
                 setQuantity(50).
                 setCategory(category).
-                setMedias(medias);
+                setMedias(medias).setProductID(1);
         return product;
     }
     private void doAssertion(Product product, Product product1){

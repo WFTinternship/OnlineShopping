@@ -86,6 +86,11 @@ public class UserManagerImplUnitTest {
 
 
     }
+    @Test(expected = RuntimeException.class)
+    public void createAccount_duplicate(){
+        when(userDao.insertUser(any(User.class))).thenThrow(RuntimeException.class);
+        userManager.createAccount(user);
+    }
 
     @Test(expected = RuntimeException.class)
     public void createAccount_invalidUser() {

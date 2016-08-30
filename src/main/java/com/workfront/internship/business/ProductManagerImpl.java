@@ -34,7 +34,8 @@ public class ProductManagerImpl implements ProductManager{
        return index;
    }
    public Product getProduct(int productId){
-
+       if(productId<=0)
+           throw new RuntimeException("not valid id");
        Product product = productDao.getProductByID(productId);
        return product;
    }

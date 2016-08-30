@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -140,13 +141,31 @@ public class BasketManagerImplUnitTest {
         user.setBasket(null);
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(orderItem);
-        basket.setOrderItems(orderItems);
+       // basket.setOrderItems(orderItems);
         when(basketDao.getCurrentBasket(user.getUserID())).thenReturn(basket);
+
+        when(orderItemDao.getOrderItemByBasketID(basket.getBasketID())).thenReturn(orderItems);
 
         List<OrderItem> orderItems1 = basketManager.showItemsInCurrentBasket(user);
 
+        assertEquals(orderItems.get(0), orderItems1.get(0));
+
+
+
+    }
+    @Test
+    public void showItemsInBasket_userBasket_null_current_basket_Null(){
+        user.setBasket(null);
+
+        when(basketDao.getCurrentBasket(user.getUserID())).thenReturn(null);
+
+
+        List<OrderItem> orderItems = basketManager.showItemsInCurrentBasket(user);
         Mockito.verify(orderItemDao, Mockito.never()).getOrderItemByBasketID(any(Integer.class));
-        assertEquals(true, orderItems.isEmpty());
+
+        assertTrue(orderItems.isEmpty());
+
+
 
     }
     @Test(expected = RuntimeException.class)
