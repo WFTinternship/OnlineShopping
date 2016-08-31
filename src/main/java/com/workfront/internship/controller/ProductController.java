@@ -55,21 +55,35 @@ public class ProductController {
     }
 
     @RequestMapping("/productsPage")
-    public String getProducts(HttpServletRequest request, Model model) {
+    public String getProducts(HttpServletRequest request) {
+
+        getProductsForProductPage(request);
+        getCategories(request);
+
+        return "productsPage";
+    }
+    public void getProductsForProductPage(HttpServletRequest request){
 
         int productId = 0;
         int categoryId = Integer.parseInt(request.getParameter("id"));
         List<Product> products = productManager.getProdactsByCategoryID(categoryId);
-        model.addAttribute("products", products);
+        request.setAttribute("products", products);
         List<List<Media>> medias = new ArrayList<List<Media>>();
+        List<Media> medias1 = null;
         for (int i = 0; i < products.size(); i++) {
             productId = products.get(i).getProductID();
-            medias.add(mediaManager.getMediaByProductID(productId));
-            products.get(i).setMedias(mediaManager.getMediaByProductID(productId));
-            model.addAttribute("medias" + i, medias.get(i));
+            medias1 = mediaManager.getMediaByProductID(productId);
+            medias.add(medias1);
+            products.get(i).setMedias(medias1);
+            request.setAttribute("medias" + i, medias.get(i));
+
 
 
         }
+
+    }
+    public void getCategories(HttpServletRequest request){
+
         List<List<Category>> categories = new ArrayList<List<Category>>();
         List<Category> mainCategories = categoryManager.getCategoriesByParentID(0);
 
@@ -81,9 +95,6 @@ public class ProductController {
 
         request.getSession().setAttribute("mainCategories", mainCategories);
 
-
-        model.addAttribute("products", products);
-        return "productsPage";
     }
 
 }

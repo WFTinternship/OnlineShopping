@@ -27,6 +27,7 @@ import java.util.Random;
 import static controllerTest.TestHelper.getTestUser;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -101,7 +102,7 @@ public class UserControllerUnitTest {
         //testing method... success case of registration
         String result = userController.registration(testRequest);
 
-        verify(testSession).setAttribute(any(String.class), any(User.class));
+        verify(testSession).setAttribute(eq("user"), any(User.class));
 
         assertEquals(result, "index");
 
@@ -125,6 +126,18 @@ public class UserControllerUnitTest {
 
         verify(testSession).setAttribute("user", null);
         assertEquals(result, "index");
+
+    }
+    @Test
+    public void getLoginPage(){
+        String result = userController.getLoginPage();
+        assertEquals("signin", result);
+
+    }
+    @Test
+    public void getRegistrationPage(){
+        String result = userController.getRegistrationPage();
+        assertEquals("registration", result);
 
     }
 }
