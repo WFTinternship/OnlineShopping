@@ -43,6 +43,11 @@ public class UserControllerIntegrationTest {
     @Before
        public void setUp() {
        testRequest = new HttpServletRequestMock();
+
+
+
+
+       testRequest.setParameter("username", "anna");
        when(testRequest.getParameter("email")).thenReturn("turshujyan@gmail.com");
        when(testRequest.getParameter("password")).thenReturn("turshujyan");
        //when(testRequest.getSession()).thenReturn(testSession);

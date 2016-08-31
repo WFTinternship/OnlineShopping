@@ -19,6 +19,7 @@ import java.util.Map;
  */
 public class HttpServletRequestMock implements HttpServletRequest {
     private final Map<String, Object> attributes = new LinkedHashMap<String, Object>();
+    private final Map<String, String> parameters = new LinkedHashMap<String, String>(16);
 
     @Override
     public String getAuthType() {
@@ -182,7 +183,8 @@ public class HttpServletRequestMock implements HttpServletRequest {
 
     @Override
     public String getParameter(String s) {
-        return null;
+        String arr = (s != null ? this.parameters.get(s) : null);
+        return arr;
     }
 
     @Override
@@ -291,5 +293,8 @@ public class HttpServletRequestMock implements HttpServletRequest {
     @Override
     public int getLocalPort() {
         return 0;
+    }
+    public void setParameter(String name, String value) {
+        this.parameters.put(name, value);
     }
 }
