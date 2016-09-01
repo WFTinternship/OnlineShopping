@@ -63,6 +63,7 @@ public class UserController{
         User user = new User();
         user.setFirstname(firstname).setLastname(lastname).setUsername(username).setEmail(email).setPassword(password).setAccessPrivilege("user").setConfirmationStatus(true);
         int id = userManager.createAccount(user);
+        user.setUserID(id);
         if (id == 0) {
 
             errorString = "User with that username already exists";

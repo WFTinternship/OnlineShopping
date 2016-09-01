@@ -1,12 +1,17 @@
 package controllerTest;
 
+import com.workfront.internship.business.UserManager;
 import com.workfront.internship.common.User;
 import com.workfront.internship.controller.UserController;
 import com.workfront.internship.spring.TestConfiguration;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,6 +33,7 @@ import java.util.Map;
 
 import static controllerTest.TestHelper.getTestUser;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +48,10 @@ public class UserControllerIntegrationTest {
     @Autowired
     private UserController userController;
 
-    private HttpServletRequestMock testRequest;
+    @Autowired
+    private UserManager userManager;
+
+    private HttpServletRequestMock testRequest ;
     private User testUser;
 
     @Before
@@ -60,12 +69,20 @@ public class UserControllerIntegrationTest {
         userController.registration(testRequest);
 
     }
+    @After
+    public void tearDown(){
+        userManager.deleteAllUsers();
+    }
 @Test
     public void login(){
 
     String result = userController.login(testRequest);
 
+    Object object = testRequest.getSession().getAttribute("user");
+
+
     assertEquals(result, "index");
+    assertNotNull(object);
 
 }
 }

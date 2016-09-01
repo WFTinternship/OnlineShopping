@@ -1,8 +1,10 @@
 package controllerTest;
 
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.util.Assert;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.*;
 import java.io.BufferedReader;
@@ -20,6 +22,7 @@ import java.util.Map;
 public class HttpServletRequestMock implements HttpServletRequest {
     private final Map<String, Object> attributes = new LinkedHashMap<String, Object>();
     private final Map<String, String> parameters = new LinkedHashMap<String, String>(16);
+    private HttpSessionMock httpSessionMock = new HttpSessionMock();
 
     @Override
     public String getAuthType() {
@@ -123,7 +126,8 @@ public class HttpServletRequestMock implements HttpServletRequest {
 
     @Override
     public HttpSession getSession() {
-        return null;
+        return httpSessionMock;
+
     }
 
     @Override
