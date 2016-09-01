@@ -15,16 +15,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Search Box</title>
+    <title>Add Product</title>
 
-    <!-- CSS styles for standard search box -->
+
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/reset.css" />">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/adminMain.css" />">
 
 
 </head>
 <body>
-<!-- HTML for SEARCH BAR -->
+
 
 <div class="wrapper">
     <img src="/resources/image/logo3.PNG" width="140px;" alt="logo" id="logo">
@@ -45,17 +45,17 @@
         String option = (String)request.getSession().getAttribute("option");
 
     %>
-    <form action="/saveProduct" method="post"
-          enctype="multipart/form-data" id="addProductForm">
+    <form action="/saveProduct" method="post" name="myForm"
+          enctype="multipart/form-data" id="addProductForm" onsubmit = "return validateForm()">
 
         Product name<br>
-        <input type="text" name="productName" required value="<%=product.getName()%>"><br><br>
+        <input type="text" name="productName"  value="<%=product.getName()%>" required><br><br>
         Price<br>
-        <input type="text" name="price" required value="<%=product.getPrice()%>"><br><br>
+        <input type="text" name="price"  value="<%=product.getPrice()%>" required><br><br>
         Shipping price<br>
-        <input type="text" name="shippingPrice" required value="<%=product.getShippingPrice()%>"><br><br>
+        <input type="text" name="shippingPrice"  value="<%=product.getShippingPrice()%>" required><br><br>
         Color<br><br>
-        <input type="text" name="color" required value="<%=product.getDescription()%>"><br><br>
+        <input type="text" name="color"  value="<%=product.getDescription()%>" required><br><br>
         Category<br>
 
             <%List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
@@ -179,6 +179,26 @@
                 document.getElementById("sizeVersion2").style.display = "block";
             }
         }
+            function validateForm(){
+                alert("kjaglglkgougv")
+                var x = document.forms["myForm"]["productName"].value;
+                if (x == null || x == "") {
+                    alert("Name must be filled out");
+                    return false;}
+                    var x = document.forms["myForm"]["price"].value;
+                    if (x == null || x == "") {
+                        alert("Price must be filled out");
+                        return false;}
+                        var x = document.forms["myForm"]["shippingPrice"].value;
+                        if (x == null || x == "") {
+                            alert("ShippingPrice must be filled out");
+                            return false;}
+                            var x = document.forms["myForm"]["color"].value;
+                            if (x == null || x == "") {
+                                alert("Color must be filled out");
+                                return false;}
+            }
+
 
 
         </script>

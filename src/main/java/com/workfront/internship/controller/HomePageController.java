@@ -36,25 +36,26 @@ public class HomePageController {
 
         return "index";
     }
-    public void getProductsForHomePage(HttpServletRequest request){
 
+    public void getProductsForHomePage(HttpServletRequest request) {
         int productId = 0;
+
         List<Product> products = productManager.getLimitedNumberOfProducts();
         request.getSession().setAttribute("products", products);
+
         List<List<Media>> medias = new ArrayList<List<Media>>();
-        List<Media> ms=null;
+        List<Media> ms = null;
+
         for (int i = 0; i < products.size(); i++) {
             productId = products.get(i).getProductID();
             ms = mediaManager.getMediaByProductID(productId);
             medias.add(ms);
             products.get(i).setMedias(ms);
             request.getSession().setAttribute("medias" + i, medias.get(i));
-
-
         }
-
     }
-    public void getCategories(HttpServletRequest request){
+
+    public void getCategories(HttpServletRequest request) {
         List<List<Category>> categories = new ArrayList<List<Category>>();
         List<Category> mainCategories = categoryManager.getCategoriesByParentID(0);
 
@@ -64,6 +65,6 @@ public class HomePageController {
             request.getSession().setAttribute("subcategories" + i, categories.get(i));
         }
         request.getSession().setAttribute("mainCategories", mainCategories);
-
     }
+
 }

@@ -154,6 +154,7 @@
 
     <a href="/productPage?id=<%=productId %>" id="productHref">
         <img src="/resources/image/index.png" alt="index" class="index" style="width:80px;">
+
         <img src="<%=medias.get(0).getMediaPath()%>" class="img1" alt="cart image">
         <img src="<%=medias.get(1).getMediaPath()%>" class=img2 alt="cart image">
 

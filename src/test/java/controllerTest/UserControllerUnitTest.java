@@ -86,7 +86,7 @@ public class UserControllerUnitTest {
     }
 
     @Test
-    public void login_fali() {
+    public void login_fail() {
         when(userManager.login(testUser.getUsername(), testUser.getPassword())).thenReturn(null);
         String errorString = "Username or password invalid";
         //testing method... in case of wrong username or password
