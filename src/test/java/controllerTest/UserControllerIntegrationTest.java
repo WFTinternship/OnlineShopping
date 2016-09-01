@@ -1,8 +1,10 @@
 package controllerTest;
 
+import com.workfront.internship.common.User;
 import com.workfront.internship.controller.UserController;
 import com.workfront.internship.spring.TestConfiguration;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,6 +26,8 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 
+import static controllerTest.TestHelper.getTestUser;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,18 +43,29 @@ public class UserControllerIntegrationTest {
     private UserController userController;
 
     private HttpServletRequestMock testRequest;
+    private User testUser;
 
     @Before
-       public void setUp() {
-       testRequest = new HttpServletRequestMock();
+    public void setUp() {
+        testRequest = new HttpServletRequestMock();
+        testUser = getTestUser();
 
+        testRequest.setParameter("username", testUser.getUsername());
+        testRequest.setParameter("password", testUser.getPassword());
+        testRequest.setParameter("firstname", testUser.getFirstname());
+        testRequest.setParameter("lastname", testUser.getLastname());
+        testRequest.setParameter("email", testUser.getEmail());
+        testRequest.setParameter("repeatpassword", testUser.getPassword());
 
+        userController.registration(testRequest);
 
-
-       testRequest.setParameter("username", "anna");
-       when(testRequest.getParameter("email")).thenReturn("turshujyan@gmail.com");
-       when(testRequest.getParameter("password")).thenReturn("turshujyan");
-       //when(testRequest.getSession()).thenReturn(testSession);
     }
+@Test
+    public void login(){
 
+    String result = userController.login(testRequest);
+
+    assertEquals(result, "index");
+
+}
 }
