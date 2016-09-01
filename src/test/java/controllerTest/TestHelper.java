@@ -2,6 +2,7 @@ package controllerTest;
 
 import com.workfront.internship.common.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -16,7 +17,7 @@ public class TestHelper {
         Random random = new Random();
         int x = random.nextInt(100000);
         Category category = new Category();
-        category.setName("oldCategory" + x).setCategoryID(x).setParentID(0);
+        category.setName("oldCategory" + x).setCategoryID(x).setParentID(2);
         return category;
     }
 
@@ -29,15 +30,13 @@ public class TestHelper {
         return media;
     }
     public static Product getTestProduct(){
-        Category category = new Category();
-        category.setCategoryID(1).setName("hat");
         Product product = new Product();
         product.setName("baby hat").
                 setPrice(50).
                 setDescription("color:white").
                 setShippingPrice(1).
                 setQuantity(50).
-                setCategory(category).
+                setCategory(getTestCategory()).
                 setProductID(1);
         return product;
     }
@@ -54,4 +53,5 @@ public class TestHelper {
         user.setShippingAddresses(addressess);
         return user;
     }
+
 }

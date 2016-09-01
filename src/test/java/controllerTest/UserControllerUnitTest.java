@@ -128,14 +128,16 @@ public class UserControllerUnitTest {
         assertEquals(result, "index");
 
     }
+
     @Test
-    public void getLoginPage(){
+    public void getLoginPage() {
         String result = userController.getLoginPage();
         assertEquals("signin", result);
 
     }
+
     @Test
-    public void getRegistrationPage(){
+    public void getRegistrationPage() {
         String result = userController.getRegistrationPage();
         assertEquals("registration", result);
 

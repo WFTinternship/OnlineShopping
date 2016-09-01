@@ -51,7 +51,7 @@ public class UserControllerIntegrationTest {
     @Autowired
     private UserManager userManager;
 
-    private HttpServletRequestMock testRequest ;
+    private HttpServletRequestMock testRequest;
     private User testUser;
 
     @Before
@@ -69,20 +69,35 @@ public class UserControllerIntegrationTest {
         userController.registration(testRequest);
 
     }
+
     @After
-    public void tearDown(){
+    public void tearDown() {
         userManager.deleteAllUsers();
     }
-@Test
-    public void login(){
 
-    String result = userController.login(testRequest);
+    @Test
+    public void login() {
+        //testing method...
+        String result = userController.login(testRequest);
 
-    Object object = testRequest.getSession().getAttribute("user");
+        Object object = testRequest.getSession().getAttribute("user");
+
+        assertEquals(result, "index");
+        assertNotNull(object);
+
+    }
+
+    @Test
+    public void registration() {
+        userManager.deleteAllUsers();
+        //testing method...
+        String result = userController.registration(testRequest);
+
+        Object object = testRequest.getSession().getAttribute("user");
+
+        assertEquals(result, "index");
+        assertNotNull(object);
 
 
-    assertEquals(result, "index");
-    assertNotNull(object);
-
-}
+    }
 }

@@ -33,7 +33,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-
 public class UserManagerImplUnitTest {
     private User user;
     private Product product;
@@ -58,20 +57,17 @@ public class UserManagerImplUnitTest {
         Whitebox.setInternalState(userManager, "userDao", userDao);
 
     }
+
     @After
     public void tearDown() {
-        user = null;
-        product = null;
-        userManager = null;
-        userDao = null;
-        addressDao = null;
+
     }
 
     @Test
     public void createAccount_ValidUser_getHash() throws NoSuchAlgorithmException {
 
         String expectedPassword = HashManager.getHash(user.getPassword());
-
+        //testing method... testing if password is hashed
         userManager.createAccount(user);
 
         String actualPassword = user.getPassword();
@@ -79,15 +75,16 @@ public class UserManagerImplUnitTest {
     }
 
     @Test
-    public void createAccount_validUser(){
+    public void createAccount_validUser() {
         userManager.createAccount(user);
         //testing method... inserting a valid user
         Mockito.verify(userDao).insertUser(user);
 
 
     }
+
     @Test(expected = RuntimeException.class)
-    public void createAccount_duplicate(){
+    public void createAccount_duplicate() {
         when(userDao.insertUser(any(User.class))).thenThrow(RuntimeException.class);
         userManager.createAccount(user);
     }
@@ -104,7 +101,7 @@ public class UserManagerImplUnitTest {
         when(userDao.getUserByUsername(any(String.class))).thenReturn(null);
         // testing method... when can't get user from db... returned user is null
         User user1 = userManager.login(user.getUsername(), user.getPassword());
-        assertNull(user1);
+        assertNull("user is not null", user1);
 
 
     }
@@ -221,6 +218,7 @@ public class UserManagerImplUnitTest {
 
         userManager.addToList(null, product);
     }
+
     @Test(expected = RuntimeException.class)
     public void deleteFromList_invalid_entry() {
 
@@ -283,12 +281,12 @@ public class UserManagerImplUnitTest {
     }
 
     private void doAssertion(User user, User user1) {
-        assertEquals(user.getUserID(), user1.getUserID());
-        assertEquals(user.getFirstname(), user1.getFirstname());
-        assertEquals(user.getLastname(), user1.getLastname());
-        assertEquals(user.getUsername(), user1.getUsername());
-        assertEquals(user.getPassword(), user1.getPassword());
-        assertEquals(user.getPhone(), user1.getPhone());
+        assertEquals("ids are not equal", user.getUserID(), user1.getUserID());
+        assertEquals("firstnames are not equal",user.getFirstname(), user1.getFirstname());
+        assertEquals("lastnames are not equal",user.getLastname(), user1.getLastname());
+        assertEquals("usernames",user.getUsername(), user1.getUsername());
+        assertEquals("passwords",user.getPassword(), user1.getPassword());
+        assertEquals("phone numbers",user.getPhone(), user1.getPhone());
         assertEquals(user.getAccessPrivilege(), user1.getAccessPrivilege());
         assertEquals(user.getConfirmationStatus(), user1.getConfirmationStatus());
     }

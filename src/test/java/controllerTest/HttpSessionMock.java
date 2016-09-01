@@ -53,6 +53,7 @@ public class HttpSessionMock implements HttpSession {
 
     @Override
     public Object getAttribute(String name) {
+        Assert.notNull(name, "Attribute name must not be null");
         return this.attributes.get(name);
     }
 

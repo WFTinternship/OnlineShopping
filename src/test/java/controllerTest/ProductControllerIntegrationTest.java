@@ -7,19 +7,23 @@ import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
 import com.workfront.internship.controller.HomePageController;
+import com.workfront.internship.controller.ProductController;
 import com.workfront.internship.spring.TestConfiguration;
 import org.junit.After;
-import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static controllerTest.TestHelper.*;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static controllerTest.TestHelper.getTestCategory;
+import static controllerTest.TestHelper.getTestMedia;
+import static controllerTest.TestHelper.getTestProduct;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -28,9 +32,9 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
 @ActiveProfiles("test")
-public class HomePageControllerIntegrationTest {
+public class ProductControllerIntegrationTest {
     @Autowired
-    private HomePageController homePageController;
+    private ProductController productController;
     @Autowired
     private ProductManager productManager;
     @Autowired
@@ -38,10 +42,11 @@ public class HomePageControllerIntegrationTest {
     @Autowired
     private MediaManager mediaManager;
 
-    private HttpServletRequestMock testRequest ;
+    private HttpServletRequestMock testRequest;
     private Product testProduct;
     private Media testMedia;
     private Category testCategory;
+    private Category testParentCategory;
 
     @Before
     public void setUp() {
@@ -51,32 +56,41 @@ public class HomePageControllerIntegrationTest {
         testCategory = getTestCategory();
 
 
+
         categoryManager.createNewCategory(testCategory);
+
         testProduct.setCategory(testCategory);
         productManager.createNewProduct(testProduct);
         testMedia.setProductID(testProduct.getProductID());
         mediaManager.insertMedia(testMedia);
 
 
-
     }
+
     @After
-    public void tearDown(){
+    public void tearDown() {
         productManager.deleteProduct(testProduct.getProductID());
         categoryManager.deleteCategory(testCategory.getCategoryID());
+        categoryManager.deleteCategory(testParentCategory.getCategoryID());
     }
-
     @Test
-    public void getProductsForHomePage(){
+    public void getProducts(){
+        testParentCategory = new Category();
+        testParentCategory.setParentID(0).setCategoryID(testCategory.getParentID()).setName("parentCategoryName");
+        categoryManager.createNewCategory(testParentCategory);
+        testRequest.setParameter("id", Integer.toString(testCategory.getCategoryID()));
         //testing method...
-        homePageController.getProductsForHomePage(testRequest);
+        String result = productController.getProducts(testRequest);
 
-        Object object1 = testRequest.getSession().getAttribute("products");
-        Object object = testRequest.getSession().getAttribute("medias0");
+        Object object1 = testRequest.getAttribute("products");
+        Object object = testRequest.getAttribute("medias0");
+        Object object2 = testRequest.getSession().getAttribute("subcategories0");
+        Object object3 = testRequest.getSession().getAttribute("mainCategories");
 
         assertNotNull(object);
         assertNotNull(object1);
-
+        assertNotNull(object2);
+        assertNotNull(object3);
+        Assert.assertEquals("did not get a right page", result, "productsPage");
     }
-
 }

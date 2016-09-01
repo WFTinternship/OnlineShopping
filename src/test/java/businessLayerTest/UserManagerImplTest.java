@@ -42,13 +42,14 @@ public class UserManagerImplTest {
 
         user = getTestUser();
     }
+
     @After
-    public void tearDown()  {
+    public void tearDown() {
         userManager.deleteAccount(user.getUserID());
     }
 
     @Test
-    public void createAccount(){
+    public void createAccount() {
         EmailManager emailManager = Mockito.mock(EmailManager.class);
         Whitebox.setInternalState(userManager, "emailManager", emailManager);
         when(emailManager.sendVerificationEmail(user)).thenReturn(true);
@@ -56,7 +57,7 @@ public class UserManagerImplTest {
         userManager.createAccount(user);
 
         User actualUser = userManager.login(user.getUsername(), password);
-        assertNotNull(actualUser);
+        assertNotNull("can not login", actualUser);
     }
 
     private User getTestUser() {
