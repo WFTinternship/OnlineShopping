@@ -29,7 +29,6 @@
     <div class="buttons">
         <a href="/categories" id="categories">CATEGORIES</a>
         <a href="/products" id="products">PRODUCTS</a>
-        <a href="#" id="users">USERS</a>
         <a href="#" id="orders">ORDEERS</a>
     </div>
 

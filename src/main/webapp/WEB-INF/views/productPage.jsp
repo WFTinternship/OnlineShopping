@@ -7,7 +7,8 @@
 <%@ page import="com.workfront.internship.common.Product" %>
 <%@ page import="com.workfront.internship.business.ProductManager" %>
 <%@ page import="com.workfront.internship.business.ProductManagerImpl" %>
-<%@ page import="java.util.ArrayList" %><%--
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.workfront.internship.common.Media" %><%--
   Created by IntelliJ IDEA.
   User: Workfront
   Date: 8/15/2016
@@ -151,7 +152,7 @@
     <%
 
         Product product = (Product) request.getAttribute("product");
-        System.out.println(product.getMedias().get(1).getMediaPath());
+
     %>
     <%-- <img id="zoom_09" src="./image/girldress11.jpg" data-zoom-image="./image/girldress11_big.jpg"/>
 
@@ -176,20 +177,63 @@
 
 </div>
 <div class="bigproductImage">
+    <% List<Media> medias= product.getMedias();
+    if(medias.size() == 2){%>
     <div class="jzoom" id="bigimg2">
 
 
-        <img src="<%=product.getMedias().get(1).getMediaPath()%>" alt="cart image">
+        <img src="<%=medias.get(1).getMediaPath()%>" alt="cart image">
 
 
     </div>
     <div class="jzoom" id="bigimg1">
 
-        <img src="<%=product.getMedias().get(0).getMediaPath()%>" alt="cart image">
+        <img src="<%=medias.get(0).getMediaPath()%>" alt="cart image">
 
 
     </div>
+<%}
 
+    if(medias.size() == 1){%>
+
+    <div class="jzoom" id="bigimg1">
+
+        <img src="<%=medias.get(0).getMediaPath()%>" alt="cart image">
+
+
+    </div>
+    <%}
+        if(medias.size() == 0){%>
+
+    <div class="jzoom" id="bigimg1">
+
+        <img src="resources/image/index.png" alt="cart image">
+
+
+    </div>
+    <%} if(medias.size() == 3){%>
+    <div class="jzoom" id="bigimg2">
+
+
+        <img src="<%=medias.get(1).getMediaPath()%>" alt="cart image">
+
+
+    </div>
+    <div class="jzoom" id="bigimg1">
+
+        <img src="<%=medias.get(0).getMediaPath()%>" alt="cart image">
+
+
+    </div>
+    <div class="jzoom" id="bigimg3">
+
+
+        <img src="<%=medias.get(2).getMediaPath()%>" alt="cart image">
+
+
+    </div>
+   <%}
+    %>
     <!--   <div  >
 
            <img src="/image/girldress12.jpg"  alt="cart image"  id="bigimg2">
@@ -222,15 +266,32 @@
 
 
 <div class="productButtons">
+    <%if(medias.size() == 2){%>
     <button id="littleImage1" onclick="myFunction1()"><img src="<%=product.getMedias().get(0).getMediaPath()%>"
-                                                           style="height:90px" id="aaa"></button>
+                                                           style="height:90px" ></button>
 
     <button id="littleImage2" onclick="myFunction2()"><img src="<%=product.getMedias().get(1).getMediaPath()%>"
-                                                           style="height:90px" id="bbb"></button>
+                                                      style="height:90px" ></button>
+            <%} if(medias.size() == 1){%>
+    <button id="littleImage1" onclick="myFunction1()"><img src="<%=product.getMedias().get(0).getMediaPath()%>"
+                                                           style="height:90px"></button>
+<%}if(medias.size() == 0){%>
+    <button id="littleImage1" onclick="myFunction1()"><img src="/resources/image/index.png"
+                                                           style="height:90px"></button>
+    <%}if(medias.size() == 3){%>
+    <button id="littleImage1" onclick="myFunction1()"><img src="<%=product.getMedias().get(0).getMediaPath()%>"
+                                                           style="height:90px" ></button>
+
+    <button id="littleImage2" onclick="myFunction2()"><img src="<%=product.getMedias().get(1).getMediaPath()%>"
+                                                           style="height:90px" ></button>
+    <button id="littleImage2" onclick="myFunction3()"><img src="<%=product.getMedias().get(2).getMediaPath()%>"
+                                                           style="height:90px" ></button>
+    <%}%>
     <script>function myFunction2() {
         document.getElementById("bigimg1").style.display = "none";
 
         document.getElementById("bigimg2").style.display = "block";
+        document.getElementById("bigimg3").style.display = "none";
         // document.getElementById("bigimg").src = "/image/girldress12.jpg";
     }
 
@@ -238,6 +299,14 @@
 
         document.getElementById("bigimg1").style.display = "block";
         document.getElementById("bigimg2").style.display = "none";
+        document.getElementById("bigimg3").style.display = "none";
+        //document.getElementById("bigimg").src = "/image/girldress11.jpg";
+    }
+    function myFunction3() {
+
+        document.getElementById("bigimg1").style.display = "none";
+        document.getElementById("bigimg2").style.display = "none";
+        document.getElementById("bigimg3").style.display = "block";
         //document.getElementById("bigimg").src = "/image/girldress11.jpg";
     }
 

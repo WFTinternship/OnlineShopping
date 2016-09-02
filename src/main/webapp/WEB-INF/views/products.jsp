@@ -31,7 +31,6 @@
     <div class="buttons">
         <a href="/categories" id="categories">CATEGORIES</a>
         <a href="/products" id="products">PRODUCTS</a>
-        <a href="#" id="users">USERS</a>
         <a href="#" id="orders">ORDEERS</a>
     </div>
 
@@ -82,22 +81,56 @@
 </form>
 <script>
     function function1() {
-        alert("sdgsdg");
 
-        var $b = $('input[type=checkbox]');
-        alert($b.find(':checked').length); // gives 0
-        alert($b.filter(':checked').length); // works
+            var inputElems = document.getElementsByTagName("input"),
+                    count = 0;
 
-        alert($('input:checkbox:checked').length);
+            for (var i=0; i<inputElems.length; i++) {
+                if (inputElems[i].type == "checkbox" && inputElems[i].checked == true){
+                    count++;
+                }
+            }
+        if(count == 1) {
+            document.getElementById("form_id").submit();
 
-        if($('.checkBox:checked').size() > 1){
-            document.getElementById("form_id")
-        alert($('.checkBox:checked').size());}
-        else
+        }
+        if(count >= 2) {
+            alert("choose only one item");
+            document.getElementById("form_id").addEventListener("submit", function(event){
+                event.preventDefault()
+            });
+        }
+        if(count == 0) {
+            alert("choose an item");
+            document.getElementById("form_id").addEventListener("submit", function(event){
+                event.preventDefault()
+            });
+
+        }
+
         document.productForm.option.value = 'edit';
         return true;
     }
     function function2() {
+        var inputElems = document.getElementsByTagName("input"),
+                count = 0;
+
+        for (var i=0; i<inputElems.length; i++) {
+            if (inputElems[i].type == "checkbox" && inputElems[i].checked == true){
+                count++;
+            }
+        }
+        if(count >0) {
+            document.getElementById("form_id").submit();
+
+        }
+
+        if(count == 0) {
+            alert("choose an item");
+            document.getElementById("form_id").addEventListener("submit", function (event) {
+                event.preventDefault()
+            });
+        }
         document.productForm.option.value = 'delete';
         return true;
     }

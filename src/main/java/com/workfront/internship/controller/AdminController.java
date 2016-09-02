@@ -53,19 +53,22 @@ public class AdminController {
     @RequestMapping("/edit")
     public String getEditProductPage(HttpServletRequest request) {
         List<Category> categories = categoryManager.getAllCategories();
-        int productId = Integer.parseInt(request.getParameter("product"));
+        String[] checkedValues = (request.getParameterValues("product"));
         String option = (String)request.getParameter("option");
 
 
         if(option.equals("delete")){
-            productManager.deleteProduct(productId);
+            List<Product> products = (List<Product>) request.getSession().getAttribute("products");
+            for(int j=0; j<checkedValues.length; j++) {
+                productManager.deleteProduct(Integer.parseInt(checkedValues[j]));
 
-            List<Product> products = (List<Product>)request.getSession().getAttribute("products");
 
-            for (int i=0; i<products.size(); i++) {
-                if (products.get(i).getProductID() == productId) {
-                    products.remove(products.get(i));
 
+                for (int i = 0; i < products.size(); i++) {
+                    if (products.get(i).getProductID() == Integer.parseInt(checkedValues[j])) {
+                        products.remove(products.get(i));
+
+                    }
                 }
             }
 
@@ -73,7 +76,7 @@ public class AdminController {
             return "products";
         }
         else {
-            Product product = productManager.getProduct(productId);
+            Product product = productManager.getProduct(Integer.parseInt(checkedValues[0]));
             request.getSession().setAttribute("product", product);
             request.getSession().setAttribute("categories", categories);
             request.getSession().setAttribute("option", option);
@@ -84,7 +87,7 @@ public class AdminController {
     public String saveProduct(HttpServletResponse response, HttpServletRequest request) throws IOException {
 
         String filePath = "C:\\Users\\Workfront\\IdeaProjects\\OnlineShop\\OnlineShop\\src\\main\\webapp\\resources\\image";
-        int maxFileSize = 140 * 1024;
+        int maxFileSize = 200 * 1024;
 
         File file;
 
@@ -154,12 +157,16 @@ public class AdminController {
         product.setName(name).setPrice(price).setShippingPrice(shippingPrice).setDescription(color).setCategory(category);
         if(request.getSession().getAttribute("option").equals("edit")){
             formSubmissionEditMode(request, product);
-            return "admin";
+            List<Product> products = productManager.getAllProducts();
+            request.getSession().setAttribute("products", products);
+            return "products";
 
         }
         else {
             formSubmissionAddMode(product, fileName);
-            return "admin";
+            List<Product> products = productManager.getAllProducts();
+            request.getSession().setAttribute("products", products);
+            return "products";
         }
 
     }

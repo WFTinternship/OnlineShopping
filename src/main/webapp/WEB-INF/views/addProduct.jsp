@@ -29,10 +29,9 @@
 <div class="wrapper">
     <img src="/resources/image/logo3.PNG" width="140px;" alt="logo" id="logo">
     <div class="buttons">
-        <a href="#" id="categories">CATEGORIES</a>
-        <a href="#" id="products">PRODUCTS</a>
-        <a href="#" id="users">USERS</a>
-        <a href="#" id="orders">ORDEERS</a>
+        <a href="/categories" id="categories">CATEGORIES</a>
+        <a href="/products" id="products">PRODUCTS</a>
+        <a href="/orders" id="orders">ORDEERS</a>
     </div>
 
 </div>
@@ -49,13 +48,13 @@
           enctype="multipart/form-data" id="addProductForm" onsubmit = "return validateForm()">
 
         Product name<br>
-        <input type="text" name="productName"  value="<%=product.getName()%>" required><br><br>
+        <input type="text" name="productName"  value="<%=product.getName()%>" id = "pName" required><br><br>
         Price<br>
-        <input type="text" name="price"  value="<%=product.getPrice()%>" required><br><br>
+        <input type="text" name="price" id = "pPrice" value="<%=product.getPrice()%>" required><br><br>
         Shipping price<br>
-        <input type="text" name="shippingPrice"  value="<%=product.getShippingPrice()%>" required><br><br>
+        <input type="text" name="shippingPrice" id = "pshippingPrice" value="<%=product.getShippingPrice()%>" required><br><br>
         Color<br><br>
-        <input type="text" name="color"  value="<%=product.getDescription()%>" required><br><br>
+        <input type="text" name="color" id = "pColor" value="<%=product.getDescription()%>" required><br><br>
         Category<br>
 
             <%List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
@@ -180,21 +179,21 @@
             }
         }
             function validateForm(){
-                alert("kjaglglkgougv")
-                var x = document.forms["myForm"]["productName"].value;
-                if (x == null || x == "") {
-                    alert("Name must be filled out");
+
+                if(document.getElementById("pName").value == " "){
+
+                        alert("Name must be filled out");
                     return false;}
-                    var x = document.forms["myForm"]["price"].value;
-                    if (x == null || x == "") {
+
+                if(document.getElementById("pPrice").value == "0.0") {
                         alert("Price must be filled out");
                         return false;}
-                        var x = document.forms["myForm"]["shippingPrice"].value;
-                        if (x == null || x == "") {
+
+                if(document.getElementById("pshippingPrice").value == " ") {
                             alert("ShippingPrice must be filled out");
                             return false;}
-                            var x = document.forms["myForm"]["color"].value;
-                            if (x == null || x == "") {
+
+                if(document.getElementById("pColor").value == " "){
                                 alert("Color must be filled out");
                                 return false;}
             }

@@ -154,11 +154,21 @@
 
     <a href="/productPage?id=<%=productId %>" id="productHref">
         <img src="/resources/image/index.png" alt="index" class="index" style="width:80px;">
-
+        <%if(medias.size() == 2){%>
         <img src="<%=medias.get(0).getMediaPath()%>" class="img1" alt="cart image">
-        <img src="<%=medias.get(1).getMediaPath()%>" class=img2 alt="cart image">
-
-
+        <img src="<%=medias.get(1).getMediaPath()%>" class="img2" alt="cart image">
+<%}%>
+        <%if(medias.size() == 3){%>
+        <img src="<%=medias.get(0).getMediaPath()%>" class="img1" alt="cart image">
+        <img src="<%=medias.get(1).getMediaPath()%>" class="img2" alt="cart image">
+        <img src="<%=medias.get(2).getMediaPath()%>" class="img3" alt="cart image">
+        <%}%>
+        <%if(medias.size() == 1){%>
+        <img src="<%=medias.get(0).getMediaPath()%>"alt="cart image">
+        <%}%>
+        <%if(medias.size() == 0){%>
+        <img src="/resources/image/index.png" alt="cart image">
+        <%}%>
     </a>
 
     <%-- <script>var img1 = document.getElementById("productImage");</script>

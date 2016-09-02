@@ -255,6 +255,10 @@
 	display: none;
 
 }
+.image .img3{
+	display: none;
+
+}
 .image .img1{
 	display: block;
 
@@ -274,6 +278,11 @@
 
 .bigproductImage #bigimg2{
 display: none;
+	width: 470px !important;
+	height: 594px !important;
+}
+.bigproductImage #bigimg3{
+	display: none;
 	width: 470px !important;
 	height: 594px !important;
 }
