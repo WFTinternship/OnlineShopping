@@ -7,10 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,15 +18,6 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
 
     @Autowired
     private DataSource dataSource;
-
- /*   public AddressDaoImpl() {
-
-    }
-
-    public AddressDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
-        this.dataSource = dataSource.getDataSource();
-
-    }*/
 
     @Override
     public List<Address> getShippingAddressByUserID(int userid) {
@@ -58,7 +46,7 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
         return addresses;
     }
     public Address getAddressByID(int id){
-        Address basket = null;
+        Address address = null;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -70,7 +58,7 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            basket = createAddress(resultSet);
+            address = createAddress(resultSet);
 
         }  catch (SQLException e) {
             e.printStackTrace();
@@ -81,16 +69,19 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
         }
 
 
-        return basket;
+        return address;
     }
     private List<Address> createListOfAddresses(ResultSet resultSet) throws SQLException {
         List<Address> addresses = new ArrayList<Address>();
         while (resultSet.next()) {
-            int addressId = resultSet.getInt("address_id");
-            String shippingAddress = resultSet.getString("shipping_address");
-            int userId = resultSet.getInt("user_id");
             Address address = new Address();
-            address.setAddressID(addressId).setAddress(shippingAddress).setUserID(userId);
+            //setting values from resultset...
+            address.setAddressID(resultSet.getInt("address_id")).
+                    setAddress(resultSet.getString("shipping_address")).
+                    setUserID(resultSet.getInt("user_id")).
+                    setCity(resultSet.getString("city")).
+                    setCountry(resultSet.getString("country")).
+                    setZipCode(resultSet.getInt("zip_code"));
             addresses.add(address);
         }
         return addresses;
@@ -99,9 +90,13 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
         Address address = null;
         while (resultSet.next()) {
             address = new Address();
+            //setting values from resultset...
             address.setAddressID(resultSet.getInt("address_id")).
                     setAddress(resultSet.getString("shipping_address")).
-                    setUserID(resultSet.getInt("user_id"));
+                    setUserID(resultSet.getInt("user_id")).
+                    setCity(resultSet.getString("city")).
+                    setCountry(resultSet.getString("country")).
+                    setZipCode(resultSet.getInt("zip_code"));
         }
         return address;
     }
@@ -160,19 +155,25 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-
-            String sql = "INSERT into addresses(shipping_address, user_id) VALUES (?, ?)";
+            //inserting into db...
+            String sql = "INSERT into addresses(shipping_address, user_id, city, country, zip_code) VALUES (?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, address.getAddress());
             preparedStatement.setInt(2, address.getUserID());
+            preparedStatement.setString(3, address.getCity());
+            preparedStatement.setString(4, address.getCountry());
+            preparedStatement.setInt(5, address.getZipCode());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
+
             while(resultSet.next()){
                 lastId = resultSet.getInt(1);
                 address.setAddressID(lastId);
             }
-
-
+        }catch(SQLIntegrityConstraintViolationException e){
+            e.printStackTrace();
+            LOGGER.error("Duplicate entry!");
+            throw new RuntimeException("Duplicate entry!");
         } catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
@@ -189,12 +190,15 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-
-            String sql = "UPDATE addresses SET shipping_address = ?, user_id=? where address_id = ?";
+            //updateing address in stored in db...
+            String sql = "UPDATE addresses SET shipping_address = ?, user_id=?, city=?, country=?, zip_code=? where address_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, address.getAddress());
             preparedStatement.setInt(2, address.getUserID());
             preparedStatement.setInt(3, address.getAddressID());
+            preparedStatement.setString(3, address.getCity());
+            preparedStatement.setString(4, address.getCountry());
+            preparedStatement.setInt(5, address.getZipCode());
 
             preparedStatement.executeUpdate();
 
@@ -215,6 +219,7 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
+            //deleteing all addresses from db...
             String sql = "DELETE from addresses";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.executeUpdate();
@@ -236,10 +241,12 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
         List<Address> addresses = new ArrayList<>();
         try {
             connection = dataSource.getConnection();
-            String sql = "SELECT * FROM baskets";
+            //getting all addresses from db...
+            String sql = "SELECT * FROM addresses";
             preparedStatement = connection.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
             addresses = createListOfAddresses(resultSet);
+
         }catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");

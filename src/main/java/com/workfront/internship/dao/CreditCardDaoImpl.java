@@ -22,10 +22,6 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
     @Autowired
     private DataSource dataSource;
 
-   /* public CreditCardDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
-        this.dataSource = dataSource;
-    }
-*/
     @Override
     public CreditCard getCreditCardByCardID(int cardId) {
         CreditCard creditCard = null;
@@ -35,16 +31,19 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
         try {
             connection = dataSource.getConnection();
             creditCard = new CreditCard();
+
             String sql = "SELECT * from creditcards where card_id =?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, cardId);
+
             resultSet = preparedStatement.executeQuery();
             creditCard = createCreditCard(resultSet);
-        } catch (SQLException e) {
+
+        }catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
             throw new RuntimeException(e);
-        } finally {
+        }finally {
             close(resultSet, preparedStatement, connection);
         }
         return creditCard;
@@ -54,6 +53,7 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
         CreditCard creditCard = null;
         while (resultSet.next()) {
             creditCard = new CreditCard();
+
             creditCard.setCardID(resultSet.getInt("card_id")).
                     setBillingAddress(resultSet.getString("billing_address")).
                     setBalance(resultSet.getDouble("balance"));
@@ -72,10 +72,13 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
 
             String sql = "INSERT into creditcards(billing_address, balance) VALUES (?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
+
             preparedStatement.setString(1, creditCard.getBillingAddress());
             preparedStatement.setDouble(2, creditCard.getBalance());
             preparedStatement.executeUpdate();
+
             resultSet = preparedStatement.getGeneratedKeys();
+
             while (resultSet.next()) {
                 lastId = resultSet.getInt(1);
                 creditCard.setCardID(lastId);
@@ -112,6 +115,7 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
 
             String sql = "UPDATE creditcards SET balance = ?, billing_address = ? where card_id = ?";
             preparedStatement = connection.prepareStatement(sql);
+
             preparedStatement.setDouble(1, creditCard.getBalance());
             preparedStatement.setString(2, creditCard.getBillingAddress());
             preparedStatement.setInt(3, creditCard.getCardID());

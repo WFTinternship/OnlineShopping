@@ -3,9 +3,11 @@ package com.workfront.internship.controller;
 import com.workfront.internship.business.CategoryManager;
 import com.workfront.internship.business.MediaManager;
 import com.workfront.internship.business.ProductManager;
+import com.workfront.internship.business.SizeManager;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
+import com.workfront.internship.common.Size;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -17,9 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Anna Asmangulyan on 8/30/2016.
@@ -32,6 +32,8 @@ public class AdminController {
     private ProductManager productManager;
     @Autowired
     private MediaManager mediaManager;
+    @Autowired
+    private SizeManager sizeManager;
 
     @RequestMapping("/admin")
     public String getAdminPage() {
@@ -41,12 +43,39 @@ public class AdminController {
     @RequestMapping("/add")
     public String getaddProductPage(HttpServletRequest request) {
         List<Category> categories = categoryManager.getAllCategories();
+        Map categoryMap = new HashMap();
+        Map sizeMap = new HashMap();
+
+
+        for(Category category : categories){
+            if(category.getParentID()==0){
+                List<Size> sizes= sizeManager.getSizesByCategoryId(category.getCategoryID());
+                sizeMap.put(category.getCategoryID(), sizes);
+            }
+
+        }
+        for(Category category : categories){
+            Category category1;
+            if(category.getParentID()==0){
+                categoryMap.put(category, category.getCategoryID());
+
+            }
+            else {
+                category1 = categoryManager.getCategoryByID(category.getParentID());
+                categoryMap.put(category.getCategoryID(), category1.getCategoryID());
+
+            }
+        }
+
+
         Product product = new Product();
         Category category = new Category();
         String option = (String)request.getParameter("option");
         product.setName(" ").setPrice(0.0).setShippingPrice(0.0).setDescription(" ").setCategory(category);
         request.getSession().setAttribute("product", product);
         request.getSession().setAttribute("categories", categories);
+        request.getSession().setAttribute("categoryMap", categoryMap);
+        request.getSession().setAttribute("sizeMap", sizeMap);
         request.getSession().setAttribute("option", option);
         return "addProduct";
     }

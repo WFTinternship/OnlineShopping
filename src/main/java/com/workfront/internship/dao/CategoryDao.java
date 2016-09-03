@@ -10,10 +10,16 @@ import java.util.List;
 public interface CategoryDao {
 
     Category getCategoryByID(int catId);
+
     int insertCategory(Category category);
+
     void deleteCategoryByID(int id);
+
     void updateCategory(Category category);
+
     void deleteAllCategories();
+
     List<Category> getAllCategories();
+
     List<Category> getCategoriesByParentID(int id);
 }

@@ -10,10 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +27,6 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
     private ProductDao productDao;
     @Autowired
     private BasketDao basketDao;
-
-   /* public OrderItemDaoImpl(LegacyDataSource dataSource) throws IOException, SQLException {
-        this.dataSource = dataSource;
-    }*/
 
     @Override
     public List<OrderItem> getOrderItemByBasketID(int basketid) {
@@ -250,10 +243,12 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
 
             String sql = "UPDATE orderitems SET quantity = ?, basket_id = ?, product_id = ? where orderitem_id = ?";
             preparedStatement = connection.prepareStatement(sql);
+
             preparedStatement.setInt(1, orderItem.getQuantity());
             preparedStatement.setInt(2, orderItem.getBasketID());
             preparedStatement.setInt(3, orderItem.getProduct().getProductID());
             preparedStatement.setInt(4, orderItem.getOrderItemID());
+
             preparedStatement.executeUpdate();
             connection.commit();
 
@@ -271,10 +266,7 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         } finally {
             close(resultSet, preparedStatement, connection);
         }
-
     }
-
-
     @Override
     public int insertOrderItem(OrderItem orderItem) {
         Connection connection = null;
@@ -309,6 +301,10 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
                 lastId = resultSet1.getInt(1);
                 orderItem.setOrderItemID(lastId);
             }
+        } catch (SQLIntegrityConstraintViolationException e) {
+            e.printStackTrace();
+            LOGGER.error("Duplicate entry!");
+            throw new RuntimeException("Duplicate entry!");
 
         } catch (SQLException e) {
             e.printStackTrace();

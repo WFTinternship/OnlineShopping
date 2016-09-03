@@ -7,6 +7,37 @@ public class Address {
     private int addressID;
     private String address;
     private int userID;
+    private String city;
+    private String country;
+    private int zipCode;
+
+    public String getCity() {
+        return city;
+    }
+
+    public Address setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public Address setCountry(String country) {
+        this.country = country;
+        return this;
+    }
+
+    public int getZipCode() {
+        return zipCode;
+    }
+
+    public Address setZipCode(int zipCode) {
+        this.zipCode = zipCode;
+        return this;
+    }
+
 
     public int getAddressID() {
         return addressID;
@@ -34,6 +65,7 @@ public class Address {
         this.userID = userID;
         return this;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -42,11 +74,14 @@ public class Address {
         Address address = (Address) obj;
 
         if (getAddressID() != address.getAddressID()) return false;
-        if (getAddress() != null ? !getAddress().equals(address.getAddress()) : address.getAddress() != null) return false;
-        if (getUserID()!= address.getUserID()) return false;
+        if (getAddress() != null ? !getAddress().equals(address.getAddress()) : address.getAddress() != null)
+            return false;
+        if (getCity() != null ? !getCity().equals(address.getCity()) : address.getCity() != null) return false;
+        if (getCountry() != null ? !getCountry().equals(address.getCountry()) : address.getCountry() != null)
+            return false;
+        if (getUserID() != address.getUserID()) return false;
+        if (getZipCode() != address.getZipCode()) return false;
 
         return true;
     }
-
-
 }

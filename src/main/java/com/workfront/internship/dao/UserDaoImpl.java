@@ -28,13 +28,6 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
     @Autowired
     private SaleDao saleDao;
 
-   /* public UserDaoImpl() {
-
-    }
-
-    public UserDaoImpl(LegacyDataSource dataSource) throws SQLException, IOException {
-        this.dataSource = dataSource;
-    }*/
     @Override
     public int insertUser(User user){
         int lastId = 0;
@@ -43,10 +36,11 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-
+            //inserting a new user into a db...
             String sql = "INSERT into users(firstname, lastname, username, password, phone, email, confirmation_status, access_privilege)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
+
             preparedStatement.setString(1, user.getFirstname());
             preparedStatement.setString(2, user.getLastname());
             preparedStatement.setString(3, user.getUsername());
@@ -55,8 +49,8 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             preparedStatement.setString(6, user.getEmail());
             preparedStatement.setBoolean(7, user.getConfirmationStatus());
             preparedStatement.setString(8, user.getAccessPrivilege());
-            preparedStatement.executeUpdate();
 
+            preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
 
             while (resultSet.next()) {
@@ -86,11 +80,14 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         User user = null;
         try {
             connection = dataSource.getConnection();
+            //getting a user by userId...
             String sql = "SELECT * FROM users where user_id =?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, userid);
+
             resultSet = preparedStatement.executeQuery();
             user = createUser(resultSet);
+
         }catch (SQLException | IOException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
@@ -108,11 +105,14 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         Boolean result = false;
         try {
             connection = dataSource.getConnection();
+            //checks if a given product is in the wishlist of a given user...
             String sql = "SELECT * FROM wishlist where user_id =? and product_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, userID);
             preparedStatement.setInt(2, productID);
+
             resultSet = preparedStatement.executeQuery();
+
             if(resultSet.next())
                 result = true;
         }catch (SQLException e) {
@@ -132,12 +132,14 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         User user = null;
         try {
             connection = dataSource.getConnection();
-
+            //getting a user from db given a username...
             String sql = "SELECT * FROM users where username = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, uname);
+
             resultSet = preparedStatement.executeQuery();
             user = createUser(resultSet);
+
         }  catch (SQLException |IOException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
@@ -155,10 +157,13 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         List<User> users = new ArrayList<User>();
         try {
             connection = dataSource.getConnection();
+            //getting all users from db...
             String sql = "SELECT * FROM users";
             preparedStatement = connection.prepareStatement(sql);
+
             resultSet = preparedStatement.executeQuery();
             users = createUserList(resultSet);
+
         }catch (SQLException |IOException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
@@ -175,7 +180,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-
+            //updates user status after he/she gets a confirmation email...
             String sql = "UPDATE users SET confirmation_status = ? where user_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setBoolean(1, true);
@@ -213,6 +218,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
 */
             String sql = "UPDATE users SET firstname = ?, lastname = ?, username = ?, password = ?, phone = ?, email = ? where user_id = ?";
             preparedStatement = connection.prepareStatement(sql);
+
             preparedStatement.setString(1, user.getFirstname());
             preparedStatement.setString(2, user.getLastname());
             preparedStatement.setString(3, user.getUsername());
@@ -220,11 +226,9 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             preparedStatement.setString(5, user.getPhone());
             preparedStatement.setString(6, user.getEmail());
             preparedStatement.setInt(7, user.getUserID());
+
             preparedStatement.executeUpdate();
            // connection.commit();
-
-
-
         }catch(SQLIntegrityConstraintViolationException e){
             e.printStackTrace();
             LOGGER.error("Duplicate entry!");
@@ -365,15 +369,13 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-
+            //getting the wishlist of a given user...
             String sql = "SELECT * FROM wishlist where user_id =?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, userid);
-            System.out.println("trying to get wishlist.....");
-            resultSet = preparedStatement.executeQuery();
-            System.out.println("already have wishlist.....");
-            products = createWishlist(resultSet);
 
+            resultSet = preparedStatement.executeQuery();
+            products = createWishlist(resultSet);
 
         }  catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -390,9 +392,8 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
     private User createUser(ResultSet resultSet) throws SQLException, IOException {
         User user = null;
         while (resultSet.next()) {
-
-
             user = new User();
+            //Retrieve by column name and set to user...
             user.setUserID(resultSet.getInt("user_id")).
                     setFirstname(resultSet.getString("firstname")).
                     setLastname(resultSet.getString("lastname")).
@@ -410,7 +411,6 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
 
     private List<Product> createWishlist(ResultSet resultSet) throws SQLException, IOException {
         List<Product> wishlist = new ArrayList<Product>();
-
         while (resultSet.next()) {
             //Retrieve by column name
             int uid = resultSet.getInt("user_id");
@@ -428,9 +428,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             userId = resultSet.getInt("user_id");
             user.setUserID(userId).setFirstname(resultSet.getString("firstname")).setLastname(resultSet.getString("lastname")).setUsername(resultSet.getString("username")).setPassword(resultSet.getString("password")).setPhone(resultSet.getString("phone")).setEmail(resultSet.getString("email")).setBasket(basketDao.getCurrentBasket(userId)).setShippingAddresses(addressDao.getShippingAddressByUserID(userId)).setRecords(saleDao.getSales(userId)).setAccessPrivilege(resultSet.getString("access_privilege")).setConfirmationStatus(resultSet.getBoolean("confirmation_status"));
             users.add(user);
-
         }
-
         return users;
     }
 

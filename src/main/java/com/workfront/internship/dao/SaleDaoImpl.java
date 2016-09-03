@@ -25,15 +25,9 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
     private ProductDao productDao;
     @Autowired
     private CreditCardDao creditCardDao;
-    /*public SaleDaoImpl(){
 
-    }
-    public SaleDaoImpl(LegacyDataSource dataSource) throws SQLException, IOException {
-        this.dataSource = dataSource;
-    }
-*/
     @Override
-    public Sale getSaleBySaleID(int id){
+    public Sale getSaleBySaleID(int id) {
         Sale sale = null;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -48,7 +42,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
             resultSet = preparedStatement.executeQuery();
             sale = createSale(resultSet);
 
-        }  catch (SQLException | IOException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
             throw new RuntimeException(e);
@@ -58,6 +52,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         return sale;
 
     }
+
     @Override
     public List<Sale> getSales(int userId) {
         List<Sale> sales = new ArrayList<Sale>();
@@ -67,14 +62,14 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         try {
 
             connection = dataSource.getConnection();
-
+            //getting all orders of the given user...
             String sql = "SELECT * from sales where user_id =?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
             sales = createListOfSales(resultSet);
 
-        }  catch (SQLException | IOException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
             throw new RuntimeException(e);
@@ -83,15 +78,17 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         }
         return sales;
     }
-    private Sale createSale(ResultSet resultSet)throws SQLException, IOException{
+
+    private Sale createSale(ResultSet resultSet) throws SQLException, IOException {
         Sale sale = null;
         Basket basket = new Basket();
         //BasketDao basketDao = new BasketDaoImpl(dataSource);
         while (resultSet.next()) {
-           // basket = basketDao.getBasket(resultSet.getInt("basket_id"));
+            // basket = basketDao.getBasket(resultSet.getInt("basket_id"));
             basket.setBasketID(resultSet.getInt("basket_id"));
             sale = new Sale();
-            sale =  sale.setSaleID(resultSet.getInt("sale_id")).
+            //Retrieve by column name and set to sale...
+            sale = sale.setSaleID(resultSet.getInt("sale_id")).
                     setAddressID(resultSet.getInt("address_id")).
                     setBasket(basket).
                     setCreditCard(resultSet.getInt("card_id")).
@@ -100,15 +97,17 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         }
         return sale;
     }
-    private List<Sale> createListOfSales(ResultSet resultSet) throws SQLException, IOException{
+
+    private List<Sale> createListOfSales(ResultSet resultSet) throws SQLException, IOException {
         List<Sale> sales = new ArrayList<Sale>();
         Sale sale = null;
         Basket basket = new Basket();
         //BasketDao basketDao = new BasketDaoImpl(dataSource);
         while (resultSet.next()) {
-           // basket = basketDao.getBasket(resultSet.getInt("basket_id"));
+            // basket = basketDao.getBasket(resultSet.getInt("basket_id"));
             basket.setBasketID(resultSet.getInt("basket_id"));
             sale = new Sale();
+            //Retrieve by column name and set to a sale...
             sale = sale.setSaleID(resultSet.getInt("sale_id")).
                     setAddressID(resultSet.getInt("address_id")).
                     setBasket(basket).
@@ -119,6 +118,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         }
         return sales;
     }
+
     @Override
     public void deletSaleByUserID(int userid) {
         Connection connection = null;
@@ -126,21 +126,22 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-
+            //deleteing all orders of the given user...
             String sql = "DELETE from sales where user_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, userid);
             preparedStatement.executeUpdate();
 
-        }  catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             close(resultSet, preparedStatement, connection);
         }
 
     }
+
     @Override
     public void deleteSaleBySaleID(int saleid) {
         Connection connection = null;
@@ -163,6 +164,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
             close(resultSet, preparedStatement, connection);
         }
     }
+
     @Override
     public int insertSale(Sale sale) {
         Connection connection = null;
@@ -174,17 +176,11 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         try {
             connection = dataSource.getConnection();
             connection.setAutoCommit(false);
-
-
-
-
-
-
-
+            //when sale is inserted, the basket status is updated to the "saled" from "current"
             basketDao.updateBasket(connection, sale.getBasket());
 
             List<OrderItem> orderItems = orderItemDao.getOrderItemByBasketID(sale.getBasket().getBasketID());
-            for(int i = 0; i<orderItems.size(); i++) {
+            for (int i = 0; i < orderItems.size(); i++) {
 
                 product = orderItems.get(i).getProduct();
                 product.setQuantity(product.getQuantity() - orderItems.get(i).getQuantity());
@@ -198,6 +194,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
 
             String sql = "INSERT into sales(user_id, card_id, address_id, basket_id) VALUES (?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
+
             preparedStatement.setInt(1, sale.getUserID());
 //            preparedStatement.setTimestamp(2, new Timestamp(sale.getDate().getTime()));
             preparedStatement.setInt(2, sale.getCreditCardID());
@@ -205,13 +202,14 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
             preparedStatement.setInt(4, sale.getBasket().getBasketID());
             preparedStatement.executeUpdate();
             connection.commit();
+
             resultSet = preparedStatement.getGeneratedKeys();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 lastId = resultSet.getInt(1);
                 sale.setSaleID(lastId);
             }
 
-        } catch (SQLException  e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             try {
                 connection.rollback();
@@ -225,12 +223,14 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         }
         return lastId;
     }
+
     @Override
-    public void deleteAllSales(){
+    public void deleteAllSales() {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = dataSource.getConnection();
+            //deleting all users...
             String sql = "DELETE from sales";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.executeUpdate();
@@ -238,34 +238,38 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         } catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
-        }  finally {
+        } finally {
             close(null, preparedStatement, connection);
         }
-
     }
+
     @Override
-    public List<Sale> getAllSales(){
+    public List<Sale> getAllSales() {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<Sale> sales = new ArrayList<>();
         try {
             connection = dataSource.getConnection();
+            //getting all users from db...
             String sql = "SELECT * FROM sales";
             preparedStatement = connection.prepareStatement(sql);
+
             resultSet = preparedStatement.executeQuery();
             sales = createListOfSales(resultSet);
-        }catch (SQLException | IOException e) {
+
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
             throw new RuntimeException(e);
-        }  finally {
+        } finally {
             close(resultSet, preparedStatement, connection);
         }
         return sales;
     }
+
     @Override
-    public void updateSale(Sale sale){
+    public void updateSale(Sale sale) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -275,6 +279,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
             String sql = "UPDATE sales SET user_id = ?, date_of_purchuase = ?, card_id = ?, address_id = ?," +
                     " basket_id = ? where sale_id = ?";
             preparedStatement = connection.prepareStatement(sql);
+
             preparedStatement.setInt(1, sale.getUserID());
             preparedStatement.setTimestamp(2, new Timestamp(sale.getDate().getTime()));
             preparedStatement.setInt(3, sale.getCreditCardID());
@@ -283,7 +288,6 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
             preparedStatement.setInt(6, sale.getSaleID());
 
             preparedStatement.executeUpdate();
-
 
         } catch (SQLException e) {
             e.printStackTrace();
