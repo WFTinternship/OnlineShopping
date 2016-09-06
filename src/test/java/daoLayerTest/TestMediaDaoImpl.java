@@ -183,7 +183,7 @@ public class TestMediaDaoImpl {
     }
     private Product getRandomProduct() {
         product = new Product();
-        product.setName("randomName").setPrice(50).setDescription("blablabla").setShippingPrice(1).setQuantity(100).setCategory(category);
+        product.setName("randomName").setPrice(50).setDescription("blablabla").setShippingPrice(1).setCategory(category);
         return product;
     }
     private void doAssertion(Media media, Media media1){

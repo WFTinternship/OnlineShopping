@@ -19,5 +19,8 @@ public class SizeManagerImpl implements SizeManager {
     public List<Size> getSizesByCategoryId(int categoryId){
         return sizeDao.getSizesByCategoryId(categoryId);
     }
+    public int getSizeIdBySizeOptionAndQuantity(String sizeOption, int quantity){
+        return sizeDao.getSizeIdBySizeOptionAndQuantity(sizeOption, quantity);
+    }
 
 }

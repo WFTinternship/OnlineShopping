@@ -8,5 +8,6 @@ import java.util.List;
  */
 public interface SizeDao {
    List<Size> getSizesByCategoryId(int categoryId);
+   int getSizeIdBySizeOptionAndQuantity(String sizeOption, int quantity);
 
 }

@@ -35,7 +35,7 @@ public class TestHelper {
                 setPrice(50).
                 setDescription("color:white").
                 setShippingPrice(1).
-                setQuantity(50).
+               // setQuantity(50).
                 setCategory(getTestCategory()).
                 setProductID(1);
         return product;

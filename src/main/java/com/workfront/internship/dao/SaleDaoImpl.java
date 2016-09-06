@@ -183,7 +183,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
             for (int i = 0; i < orderItems.size(); i++) {
 
                 product = orderItems.get(i).getProduct();
-                product.setQuantity(product.getQuantity() - orderItems.get(i).getQuantity());
+             //   product.setQuantity(product.getQuantity() - orderItems.get(i).getQuantity());
                 productDao.updateProduct(connection, product);
             }
 

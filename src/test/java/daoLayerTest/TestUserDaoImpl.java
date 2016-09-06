@@ -184,7 +184,7 @@ public class TestUserDaoImpl{
 
     private Product getRandomProduct(){
         product = new Product();
-        product.setName("baby hat").setPrice(50).setDescription("color:white").setShippingPrice(1).setQuantity(50).setCategory(category);
+        product.setName("baby hat").setPrice(50).setDescription("color:white").setShippingPrice(1).setCategory(category);
         return product;
     }
     private void doAssertion(User user, User user1){

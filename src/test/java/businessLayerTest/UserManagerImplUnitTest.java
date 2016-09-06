@@ -274,7 +274,7 @@ public class UserManagerImplUnitTest {
         product.setProductID(10).
                 setName("baby hat").
                 setPrice(50).setDescription("color:white").
-                setShippingPrice(1).setQuantity(50).
+             //   setShippingPrice(1).setQuantity(50).
                 setCategory(category);
 
         return product;

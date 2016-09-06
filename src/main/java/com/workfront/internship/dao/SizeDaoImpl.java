@@ -65,7 +65,43 @@ public class SizeDaoImpl extends GeneralDao implements SizeDao{
         }
         return sizes;
     }
+    public int getSizeIdBySizeOptionAndQuantity(String sizeOption, int categoryId){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Size size = null;
+        try {
 
+            connection = dataSource.getConnection();
 
+            String sql = "SELECT * from sizes where category_id =? AND size_option = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, categoryId);
+            preparedStatement.setString(2, sizeOption);
+            resultSet = preparedStatement.executeQuery();
+            size = createSize(resultSet);
+
+        }  catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return size.getSizeId();
+    }
+
+    private Size createSize(ResultSet resultSet) throws SQLException {
+
+        Size size = null;
+        while (resultSet.next()) {
+            //setting values from resultset...
+            size.setCategoryId(resultSet.getInt("category_id")).
+                    setSizeOption(resultSet.getString("size_option")).setSizeId(resultSet.getInt("id"));
+
+        }
+        return size;
+    }
 
 }

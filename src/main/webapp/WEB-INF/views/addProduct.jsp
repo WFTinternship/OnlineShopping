@@ -1,10 +1,8 @@
 <%@ page import="com.workfront.internship.common.Category" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="com.workfront.internship.common.Product" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.*" %>
+<%@ page import="com.workfront.internship.common.Size" %>
 <%--
   Created by IntelliJ IDEA.
   User: Workfront
@@ -21,6 +19,7 @@
 
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/reset.css" />">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/adminMain.css" />">
+    <script src="<c:url value="/resources/js/jquery-1.12.1.min.js" />"></script>
 
 
 </head>
@@ -38,7 +37,7 @@
 </div>
 <div class="clear"></div>
 
-<div class="clear"></div>
+
 <div>
     <% List<Category> categories = (List<Category>)request.getSession().getAttribute("categories");
         Product product = (Product)request.getSession().getAttribute("product");
@@ -68,7 +67,7 @@
 
         if (category.getParentID() == 0) {
         for(Category category1 : categories){
-        if(category1.getParentID == category.getCategoryID){
+        if(category1.getParentID() == category.getCategoryID()){
 
             List<Category> list = new ArrayList<Category>();
             list.add(category1);
@@ -84,7 +83,7 @@
         }
     }
     %>
-        <select name="category" id="currentCategory" onchange="getSizeOptions();">
+        <select name="category" id="currentCategory" onchange="getSizeOptions()" >
 
 <% Map map = new HashMap();
     int optionNumber = 0;
@@ -104,13 +103,41 @@
         <%}
 
         %>
-        </select>
+        </select><br>
+
+       <%
+       List<List<Size>> listOfSizeLists= new ArrayList();
+
+       Set<Map.Entry<Integer, List<Size>>> set = sizeMap.entrySet();
+       for (Map.Entry<Integer, List<Size>> entry : set)  {
+       List<Size> list = new ArrayList<Size>();
+            list = ((List<Size>)entry.getValue());
+            listOfSizeLists.add(list);
+       } %>
+        <%for(int k = 0; k< listOfSizeLists.size(); k++){%>
+        <div id="sizeVersion<%=k%>" style="display: none;" class="size">
+        <%for(int l = 0; l<listOfSizeLists.get(k).size(); l++){%>
+
+
+            Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Quantity<br>
+
+            <select id="sizeOption" >
+               <% for(int m = 0; m < listOfSizeLists.get(k).size(); m++){%>
+                <option value="<%= listOfSizeLists.get(k).get(m).getSizeId()%>" name = "<%=l +","+listOfSizeLists.get(k).get(m).getSizeOption()%>"><%=listOfSizeLists.get(k).get(m).getSizeOption()%></option>
+
+                <%}%>
+            </select>&nbsp;&nbsp;&nbsp;<input id="quantityOption" name="quantity<%=l%>">
+
+                    </input><br>
+            <%}%>
+        </div>
+<%}%>
         <script>
            <%
            if(!option.equals("add")){
            optionNumber=(Integer)map.get(product.getCategory().getCategoryID());
           %>
-            document.getElementById('currentCategory').getElementsByTagName('option')[<%=optionNumber%>].selected='selected';
+             document.getElementById('currentCategory').getElementsByTagName('option')[<%=optionNumber%>].selected='selected';
        <%}
        %>
         </script><br><br>
@@ -118,38 +145,38 @@
 
 
         </div>
-
-        <input type="file" name="file" size="50" multiple id = "choosefile"/>
+<div class="uploadImage">
+        <input type="file" name="file" value = "image" size="50" multiple id = "choosefile"/>
         <br />
         <input type="submit" value="Save" id = "uploadfile"/>
-
+</div>
         <script>function getSizeOptions() {
-            <%for(Map.Entry<Category, Integer> entry : categoryMap.entrySet()){%>
-            if(document.getElementById("currentCategory").value == "<%=entry.getKey()%>"){
-            <%int mainParentId = (Integer)entry().getValue();
-             List<String> sizes = List<String>sizeMap.getValue(mainParentId);%>
-             <%for(int i=0; i <sizes.size(); i++){%>
-             <div>
-                             <select id="3">
-                             <%for(int i=0; i<sizes.size(); i++){%>
-                                 <option value="ss1" selected><%=sizes.get(i)%></option>
-             <%}
-             %>
-                         </select><select id="4">
-                         <%for(int i=0; i<20; i++){%>
-                                 <option value="ss1" selected><%=i%></option>
-             <%}
-                          %>
-                           </select>
-       </div>
-               <%}
-               %>
+            document.getElementById("sizeVersion0").style.display = "none";
+            document.getElementById("sizeVersion1").style.display = "none";
+            document.getElementById("sizeVersion2").style.display = "none";
+            document.getElementById("sizeVersion3").style.display = "none";
+           <%
+            Set<Map.Entry<Integer, Integer>> set1 = categoryMap.entrySet();
+            for (Map.Entry<Integer, Integer> entry1 : set1)  {%>
 
+            if(document.getElementById("currentCategory").value == "<%=entry1.getKey()%>"){
+
+                <% int versionNum = 0;
+                for (Map.Entry<Integer, List<Size>> entry2 : set)  {%>
+
+                <%if(entry1.getValue() == entry2.getKey()){%>
+
+                document.getElementById("sizeVersion<%=versionNum%>").style.display = "block";
+                <%}
+                versionNum++;}%>
             }
-<%}
-             %>
+
+            <%}%>
+
+
 
         }
+
             function validateForm(){
 
                 if(document.getElementById("pName").value == " "){

@@ -111,8 +111,8 @@ public class BasketManagerImplTest {
                 setShippingPrice(1).
                 setPrice(20).
                 setDescription("color: white, size: 1").
-                setCategory(category).
-                setQuantity(50);
+                setCategory(category);
+              //  setQuantity(50);
         return product;
     }
 }

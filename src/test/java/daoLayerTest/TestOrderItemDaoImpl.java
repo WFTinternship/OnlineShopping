@@ -212,7 +212,7 @@ public class TestOrderItemDaoImpl {
         Random random = new Random();
         int x = random.nextInt(100000);
         product = new Product();
-        product.setName("baby hat" + x).setPrice(50).setDescription("color:white").setShippingPrice(1).setQuantity(50).setCategory(category);
+        product.setName("baby hat" + x).setPrice(50).setDescription("color:white").setShippingPrice(1).setCategory(category);
         return product;
     }
     private void doAssertion(OrderItem orderItem, OrderItem orderItem1){

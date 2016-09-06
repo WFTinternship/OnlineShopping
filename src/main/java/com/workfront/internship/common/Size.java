@@ -35,6 +35,4 @@ public class Size {
         this.sizeOption = sizeOption;
         return this;
     }
-
-
 }

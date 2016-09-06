@@ -16,5 +16,6 @@ public interface ProductManager {
     List<Product> getProdactsByCategoryID(int id);
     List<Product> getLimitedNumberOfProducts();
     List<Product> getAllProducts();
+    int setSizes(Product product, int sizeId, int quantity);
 
 }

@@ -37,10 +37,11 @@
 #addProductForm {
     float: left;
     background-color:white;
-    width: 300px;
+
 
     margin-left: 500px;
     margin-top: 100px;
+    width: 100%;
 }
 #addProductForm input{
     width: 250px;
@@ -54,27 +55,25 @@
     border-radius: 5px;
     font-size: 14px;
 }
-#sizeVersion1{
-    display: none;
+.uploadImage{
+    margin-left: 500px;
 }
-#sizeVersion2{
-    display: none;
 
+.size select{
+    width:50px !important;
+    margin-bottom: 20px !important;
+    margin-right: 40px !important;
 }
-#sizeVersion1 select{
-    width:50px;
-    margin-bottom: 20px;
+.size input{
+    width:50px !important;
+    margin-bottom: 20px !important;
+    margin-right: 40px !important;
 }
-#sizeVersion2 select{
-    width:50px;
-    margin-bottom: 20px;
-}
+
 #upload{
     padding-top: 20px;
 }
-#uploadfile{
 
-}
 #uploadfile {
     margin: 0px;
     padding: 5px 15px;
@@ -88,10 +87,12 @@
     border: solid 1px #0076a3;
     background: -webkit-gradient(linear, left top, left bottom, from(#D6E240), to(#B9C710));
     background: -moz-linear-gradient(top,  #D6E240,  #B9C710);
-    border-top-right-radius: 5px 5px;
-    border-bottom-right-radius: 5px 5px;
+
+
     border-color: grey;
     color: black;
+    border-radius: 5px;
+    margin-top: 10px;
 
 
 

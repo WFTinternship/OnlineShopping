@@ -143,7 +143,7 @@ public class MediaManagerImplUnitTest {
                 setPrice(50).
                 setDescription("color:white").
                 setShippingPrice(1).
-                setQuantity(50).
+                //setQuantity(50).
                 setCategory(category).
                 setMedias(medias);
         return product;

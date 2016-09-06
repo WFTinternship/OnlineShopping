@@ -191,7 +191,7 @@ public class ProductManagerUnitTest {
                 setPrice(50).
                 setDescription("color:white").
                 setShippingPrice(1).
-                setQuantity(50).
+              //  setQuantity(50).
                 setCategory(category).
                 setMedias(medias).setProductID(1);
         return product;
@@ -201,7 +201,7 @@ public class ProductManagerUnitTest {
         assertEquals(product.getName(), product1.getName());
         assertEquals(product.getPrice(), product1.getPrice());
         assertEquals(product.getShippingPrice(), product1.getShippingPrice());
-        assertEquals(product.getQuantity(), product1.getQuantity());
+       // assertEquals(product.getQuantity(), product1.getQuantity());
         assertEquals(product.getCategory().getCategoryID(), product1.getCategory().getCategoryID());
         assertEquals(product.getDescription(), product1.getDescription());
     }

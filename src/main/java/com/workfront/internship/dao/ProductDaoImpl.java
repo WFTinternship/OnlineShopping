@@ -95,8 +95,8 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
                     setDescription(resultSet.getString("description")).
                     setShippingPrice(resultSet.getDouble("shipping_price")).
                     setCategory(category).
-                    setMedias(medias).
-                    setQuantity(resultSet.getInt("quantity"));
+                    setMedias(medias);
+
 
         }
         return product;
@@ -111,15 +111,14 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         try {
             connection = dataSource.getConnection();
 
-            String sql = "INSERT into products(name, price, description, shipping_price, quantity, category_id)" +
+            String sql = "INSERT into products(name, price, description, shipping_price, category_id)" +
                     " VALUES (?, ?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, product.getName());
             preparedStatement.setDouble(2, product.getPrice());
             preparedStatement.setString(3, product.getDescription());
             preparedStatement.setDouble(4, product.getShippingPrice());
-            preparedStatement.setInt(5, product.getQuantity());
-            preparedStatement.setInt(6, product.getCategory().getCategoryID());
+            preparedStatement.setInt(5, product.getCategory().getCategoryID());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {
@@ -158,15 +157,14 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         try {
 
             String sql = "UPDATE products SET name = ?, price = ?, description = ?," +
-                    " shipping_price = ?, quantity = ?, category_id = ? where product_id = ?";
+                    " shipping_price = ?, category_id = ? where product_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, product.getName());
             preparedStatement.setDouble(2, product.getPrice());
             preparedStatement.setString(3, product.getDescription());
             preparedStatement.setDouble(4, product.getShippingPrice());
-            preparedStatement.setInt(5, product.getQuantity());
-            preparedStatement.setInt(6, product.getCategory().getCategoryID());
-            preparedStatement.setInt(7, product.getProductID());
+            preparedStatement.setInt(5, product.getCategory().getCategoryID());
+            preparedStatement.setInt(6, product.getProductID());
 
             preparedStatement.executeUpdate();
 
@@ -294,6 +292,38 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         return products;
 
     }
+    public int setSizes(Product product, int sizeId, int quantity){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        int lastId = 0;
+        try {
+            connection = dataSource.getConnection();
+
+            String sql = "INSERT into product_size(product_id, size_id, quantity)" +
+                    " VALUES (?, ?, ?)";
+            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, product.getProductID());
+            preparedStatement.setInt(2, sizeId);
+            preparedStatement.setInt(3, quantity);
+
+            preparedStatement.executeUpdate();
+            resultSet = preparedStatement.getGeneratedKeys();
+            while (resultSet.next()) {
+                lastId = resultSet.getInt(1);
+                product.setProductID(lastId);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return lastId;
+
+    }
 
     private List<Product> createProductList(ResultSet resultSet) throws SQLException, IOException {
         List<Product> products = new ArrayList<>();
@@ -304,7 +334,6 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
             category = categoryDao.getCategoryByID(resultSet.getInt("category_id"));
             product.setProductID(resultSet.getInt("product_id")).
                     setName(resultSet.getString("name")).
-                    setQuantity(resultSet.getInt("quantity")).
                     setCategory(category).
                     setDescription(resultSet.getString("description")).
                     setPrice(resultSet.getDouble("price")).

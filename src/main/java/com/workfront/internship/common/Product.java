@@ -16,8 +16,19 @@ public class Product {
     private double price;
     private double shippingPrice;
     private String description;
-    private int quantity;
     private List<Media> medias;
+    private List<String> sizeId;
+
+    public List<String> getSizeId() {
+        return sizeId;
+    }
+
+    public Product setSizeId(List<String> sizeId) {
+        this.sizeId = sizeId;
+        return this;
+    }
+
+
 
     public int getProductID() {
 
@@ -82,17 +93,6 @@ public class Product {
         return this;
     }
 
-    public int getQuantity() {
-
-        return quantity;
-    }
-
-    public Product setQuantity(int quantity) {
-
-        this.quantity = quantity;
-        return this;
-    }
-
     public List<Media> getMedias() {
 
         return medias;
@@ -113,7 +113,6 @@ public class Product {
 
         if (getProductID() != product.getProductID()) return false;
         if (getName() != product.getName()) return false;
-        if (getQuantity() != product.getQuantity()) return false;
         if (getDescription() != product.getDescription()) return false;
         if (getPrice() != product.getPrice()) return false;
         if (getShippingPrice() != product.getShippingPrice()) return false;
