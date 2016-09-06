@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -31,4 +32,10 @@ public class DevelopmentConfiguration {
 
         return dataSource;
     }
+    @Bean(name = "multipartResolver")
+        public CommonsMultipartResolver multipartResolver() {
+                CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+                multipartResolver.setMaxUploadSize(100000);
+                return new CommonsMultipartResolver();
+            }
 }
