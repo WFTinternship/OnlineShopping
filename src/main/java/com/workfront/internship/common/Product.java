@@ -5,6 +5,7 @@ package com.workfront.internship.common;
  */
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 29.06.2016.
@@ -17,14 +18,14 @@ public class Product {
     private double shippingPrice;
     private String description;
     private List<Media> medias;
-    private List<String> sizeId;
+    private Map<Integer, Integer> sizeIdQuantity;
 
-    public List<String> getSizeId() {
-        return sizeId;
+    public Map<Integer, Integer> getSizeIdQuantity() {
+        return sizeIdQuantity;
     }
 
-    public Product setSizeId(List<String> sizeId) {
-        this.sizeId = sizeId;
+    public Product setSizeIdQuantity( Map<Integer, Integer> sizeIdQuantity) {
+        this.sizeIdQuantity = sizeIdQuantity;
         return this;
     }
 

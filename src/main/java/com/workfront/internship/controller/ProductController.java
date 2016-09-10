@@ -1,13 +1,7 @@
 package com.workfront.internship.controller;
 
-import com.workfront.internship.business.CategoryManager;
-import com.workfront.internship.business.MediaManager;
-import com.workfront.internship.business.ProductManager;
-import com.workfront.internship.business.UserManager;
-import com.workfront.internship.common.Category;
-import com.workfront.internship.common.Media;
-import com.workfront.internship.common.Product;
-import com.workfront.internship.common.User;
+import com.workfront.internship.business.*;
+import com.workfront.internship.common.*;
 import org.apache.commons.codec.language.DoubleMetaphone;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -41,6 +35,8 @@ public class ProductController {
     private ProductManager productManager;
     @Autowired
     private MediaManager mediaManager;
+    @Autowired
+    private SizeManager sizeManager;
 
 
 
@@ -49,7 +45,10 @@ public class ProductController {
     public String getProductDescription(HttpServletRequest request) {
         int productId = Integer.parseInt(request.getParameter("id"));
         Product product = productManager.getProduct(productId);
-
+        //getting sizeOptions for the given category...
+        Category category = categoryManager.getCategoryByID(product.getCategory().getParentID());
+        List<Size> sizes = sizeManager.getSizesByCategoryId(category.getParentID());
+        //setting request attributes...
         request.setAttribute("product", product);
         return "productPage";
     }

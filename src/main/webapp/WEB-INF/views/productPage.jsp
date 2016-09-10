@@ -8,7 +8,9 @@
 <%@ page import="com.workfront.internship.business.ProductManager" %>
 <%@ page import="com.workfront.internship.business.ProductManagerImpl" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.workfront.internship.common.Media" %><%--
+<%@ page import="com.workfront.internship.common.Media" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %><%--
   Created by IntelliJ IDEA.
   User: Workfront
   Date: 8/15/2016
@@ -245,7 +247,9 @@
     <h1 class="productName">2-Piece dress & Cardigan Set</h1>
     <p class="price">Price: $20</p>
     <p class="size">Size:&nbsp; &nbsp; &nbsp; <a href="#">NB</a>
-        <a href="#">3M</a>
+        <%Set<Map.Entry<Integer, Integer>> set = product.getSizeIdQuantity().entrySet();
+        for (Map.Entry<Integer, Integer> entry : set) {%>
+        <a href="#"><%entry.getKey()%></a>
         <a href="#">6M</a>
         <a href="#">9M</a>
         <a href="#">12M</a>

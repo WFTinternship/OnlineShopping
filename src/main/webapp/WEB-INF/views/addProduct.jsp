@@ -121,9 +121,10 @@
 
             Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Quantity<br>
 
-            <select id="sizeOption" >
-               <% for(int m = 0; m < listOfSizeLists.get(k).size(); m++){%>
-                <option value="<%= listOfSizeLists.get(k).get(m).getSizeId()%>" name = "<%=l +","+listOfSizeLists.get(k).get(m).getSizeOption()%>"><%=listOfSizeLists.get(k).get(m).getSizeOption()%></option>
+            <select id="sizeOption" name = "sizeoption<%=l%>">
+               <% for(int m = 0; m < listOfSizeLists.get(k).size(); m++){
+                   System.out.println("aaaaaaaaaaaaaaaaaaa" + l+listOfSizeLists.get(k).get(m).getSizeOption());%>
+                <option value="<%= listOfSizeLists.get(k).get(m).getSizeId()%>" name = "<%=l+listOfSizeLists.get(k).get(m).getSizeOption()%>"><%=listOfSizeLists.get(k).get(m).getSizeOption()%></option>
 
                 <%}%>
             </select>&nbsp;&nbsp;&nbsp;<input id="quantityOption" name="quantity<%=l%>">

@@ -119,7 +119,7 @@ public class AdminController {
 
     @RequestMapping("/saveProduct")
     public String saveProduct(HttpServletRequest request,
-                              @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
+                              @RequestParam(value = "file", required = false) MultipartFile image) throws IOException {
 
         String filePath = "C:\\Users\\Workfront\\IdeaProjects\\OnlineShop\\OnlineShop\\src\\main\\webapp\\resources\\image";
 
@@ -165,7 +165,7 @@ public class AdminController {
 
 
         //create file path
-        filePath = uploadPath + fileName;
+        filePath = uploadPath + "\\" + fileName;
         File storeFile = new File(filePath);
 
         // saves the file on disk
@@ -180,14 +180,30 @@ public class AdminController {
         String color = request.getParameter("color");
         int categoryId = Integer.parseInt(request.getParameter("category"));
 
-        List<Size> sizes = sizeManager.getSizesByCategoryId(categoryId);
+        product.setName(name).setDescription(color).
+                setPrice(price).setCategory(categoryManager.getCategoryByID(categoryId)).
+                setShippingPrice(shippingPrice);
+
+        //finding the main parrent categoryid of the selected category...
+        Category category = categoryManager.getCategoryByID(categoryId);
+        category = categoryManager.getCategoryByID(category.getParentID());
+
+        //getting all size options that correspond to the given parent id...
+        List<Size> sizes = sizeManager.getSizesByCategoryId(category.getParentID());
+        //creating sizeId list for seeting to product's size list...
+        Map<Integer, Integer> sizeIdQuantity = new HashMap<>();
         for (int i = 0; i < sizes.size(); i++) {
-            String sizeOption = request.getParameter(i + sizes.get(i).getSizeOption());
+            System.out.println("bbbbbbbbbbbbb" + i + sizes.get(i).getSizeOption());
+          //  String str = i + sizes.get(i).getSizeOption();
+            String sizeOptionId = request.getParameter("sizeoption" + i);
             int quantity = Integer.parseInt(request.getParameter("quantity" + i));
 
-            int sizeId = sizeManager.getSizeIdBySizeOptionAndQuantity(sizeOption, quantity);
-            productManager.setSizes(product, sizeId, quantity);
+            sizeIdQuantity.put(Integer.parseInt(sizeOptionId), quantity);
+           // product.getSizeId().add(Integer.parseInt(sizeOptionId));
+          //  int sizeId = sizeManager.getSizeIdBySizeOptionAndQuantity(sizeOption, quantity);
+
         }
+        product.setSizeIdQuantity(sizeIdQuantity);
     }
 
 
@@ -203,11 +219,16 @@ public class AdminController {
 
     private void formSubmissionAddMode(Product product, String filePath) {
         int id = productManager.createNewProduct(product);
+        Set<Map.Entry<Integer, Integer>> set = product.getSizeIdQuantity().entrySet();
+        for (Map.Entry<Integer, Integer> entry : set) {
+            productManager.setSizes(product.getProductID(), entry.getKey(), entry.getValue());
+        }
         Media media;
         // for(int i=0; i<fileNames.size(); i++) {
         media = new Media();
-        media.setProductID(id).setMediaPath("/resources/image/" + filePath);
+        media.setProductID(id).setMediaPath(filePath);
         mediaManager.insertMedia(media);
+
         //   }
     }
 

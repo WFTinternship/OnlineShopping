@@ -112,7 +112,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
             connection = dataSource.getConnection();
 
             String sql = "INSERT into products(name, price, description, shipping_price, category_id)" +
-                    " VALUES (?, ?, ?, ?, ?, ?)";
+                    " VALUES (?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, product.getName());
             preparedStatement.setDouble(2, product.getPrice());
@@ -292,7 +292,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         return products;
 
     }
-    public int setSizes(Product product, int sizeId, int quantity){
+    public void setSizes(int productid, int sizeId, int quantity){
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -303,7 +303,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
             String sql = "INSERT into product_size(product_id, size_id, quantity)" +
                     " VALUES (?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, product.getProductID());
+            preparedStatement.setInt(1, productid);
             preparedStatement.setInt(2, sizeId);
             preparedStatement.setInt(3, quantity);
 
@@ -311,7 +311,6 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
             resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {
                 lastId = resultSet.getInt(1);
-                product.setProductID(lastId);
             }
 
         } catch (SQLException e) {
@@ -321,8 +320,6 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         } finally {
             close(resultSet, preparedStatement, connection);
         }
-        return lastId;
-
     }
 
     private List<Product> createProductList(ResultSet resultSet) throws SQLException, IOException {

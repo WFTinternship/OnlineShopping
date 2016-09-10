@@ -74,8 +74,8 @@ public class ProductManagerImpl implements ProductManager{
         return products;
 
     }
-   public int setSizes(Product product, int sizeId, int quantity){
-       return productDao.setSizes(product, sizeId, quantity);
+   public void setSizes(int productId, int sizeId, int quantity){
+        productDao.setSizes(productId, sizeId, quantity);
    }
    private boolean validateProduct(Product product){
        if(product!=null && product.getName() != null && product.getCategory() != null)

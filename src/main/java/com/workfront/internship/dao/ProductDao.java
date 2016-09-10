@@ -21,6 +21,6 @@ public interface ProductDao {
      List<Product> getAllProducts();
      List<Product> getProdactsByCategoryID(int id);
      List<Product> getLimitedNumberOfProducts();
-     int setSizes(Product product, int sizeId, int quantity);
+     void setSizes(int productId, int sizeId, int quantity);
 
 }
