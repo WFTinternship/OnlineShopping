@@ -67,7 +67,7 @@ public class BasketManagerImplTest {
     public void addToBasket(){
         System.out.println(user.getUsername() + "  " + product.getName());
         int result = 0;
-        result = basketManager.addToBasket(user, product, 3);
+      //  result = basketManager.addToBasket(user, product, 3);
 
 
         assertFalse(result == 0);

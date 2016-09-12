@@ -3,6 +3,7 @@ package com.workfront.internship.controller;
 import com.workfront.internship.business.CategoryManager;
 import com.workfront.internship.business.MediaManager;
 import com.workfront.internship.business.ProductManager;
+import com.workfront.internship.business.SizeManager;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Anna Asmangulyan on 8/30/2016.
@@ -26,6 +29,8 @@ public class HomePageController {
     private ProductManager productManager;
     @Autowired
     private MediaManager mediaManager;
+    @Autowired
+    private SizeManager sizeManager;
 
     @RequestMapping("/")
     public String getHomePage(HttpServletRequest request) {
@@ -41,6 +46,9 @@ public class HomePageController {
         int productId = 0;
 
         List<Product> products = productManager.getLimitedNumberOfProducts();
+
+
+
         request.getSession().setAttribute("products", products);
 
         List<List<Media>> medias = new ArrayList<List<Media>>();
@@ -56,15 +64,9 @@ public class HomePageController {
     }
 
     public void getCategories(HttpServletRequest request) {
-        List<List<Category>> categories = new ArrayList<List<Category>>();
-        List<Category> mainCategories = categoryManager.getCategoriesByParentID(0);
-
-        for (int i = 0; i < mainCategories.size(); i++) {
-            categories.add(categoryManager.getCategoriesByParentID(mainCategories.get(i).getCategoryID()));
-
-            request.getSession().setAttribute("subcategories" + i, categories.get(i));
-        }
-        request.getSession().setAttribute("mainCategories", mainCategories);
+        //get all categories for menu...
+        List<Category> categories = categoryManager.getAllCategories();
+        request.getSession().setAttribute("categories", categories);
     }
 
 }

@@ -138,7 +138,8 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
             orderItem = orderItem.setOrderItemID(resultSet.getInt("orderitem_id")).
                     setProduct(product).
                     setQuantity(resultSet.getInt("quantity")).
-                    setBasketID(resultSet.getInt("basket_id"));
+                    setBasketID(resultSet.getInt("basket_id")).
+                    setSizeOption(resultSet.getString("size_option"));
             orderItems.add(orderItem);
 
         }
@@ -153,7 +154,8 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
             orderItem = new OrderItem();
             orderItem = orderItem.setOrderItemID(resultSet.getInt("orderitem_id")).
                     setProduct(product).setQuantity(resultSet.getInt("quantity")).
-                    setBasketID(resultSet.getInt("basket_id")).setProduct(product);
+                    setBasketID(resultSet.getInt("basket_id")).setProduct(product).
+                    setSizeOption(resultSet.getString("size_option"));
         }
         return orderItem;
     }
@@ -232,6 +234,7 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
+            connection.setAutoCommit(false);
 
             OrderItem oldOrderItem = getOrderItemByItemID(orderItem.getOrderItemID());
             int basketId = orderItem.getBasketID();
@@ -241,13 +244,14 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
             basket.setTotalPrice(basket.getTotalPrice() + orderItem.getProduct().getPrice()*(orderItem.getQuantity()-oldOrderItem.getQuantity()));
             basketDao.updateBasket(connection, basket);
 
-            String sql = "UPDATE orderitems SET quantity = ?, basket_id = ?, product_id = ? where orderitem_id = ?";
+            String sql = "UPDATE orderitems SET quantity = ?, basket_id = ?, product_id = ?, size_option = ? where orderitem_id = ?";
             preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setInt(1, orderItem.getQuantity());
             preparedStatement.setInt(2, orderItem.getBasketID());
             preparedStatement.setInt(3, orderItem.getProduct().getProductID());
-            preparedStatement.setInt(4, orderItem.getOrderItemID());
+            preparedStatement.setInt(5, orderItem.getOrderItemID());
+            preparedStatement.setString(4, orderItem.getSizeOption());
 
             preparedStatement.executeUpdate();
             connection.commit();
@@ -289,11 +293,12 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
           //  ProductDao productDao = new ProductDaoImpl(dataSource);
           //  productDao.updateProduct(connection, product);
 
-            String sql = "INSERT into orderitems(basket_id, product_id, quantity) VALUES (?, ?, ?)";
+            String sql = "INSERT into orderitems(basket_id, product_id, quantity, size_option) VALUES (?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, orderItem.getBasketID());
             preparedStatement.setInt(2, orderItem.getProduct().getProductID());
             preparedStatement.setInt(3, orderItem.getQuantity());
+            preparedStatement.setString(4, orderItem.getSizeOption());
             preparedStatement.executeUpdate();
             connection.commit();
             ResultSet resultSet1 = preparedStatement.getGeneratedKeys();

@@ -190,20 +190,20 @@ public class AdminController {
 
         //getting all size options that correspond to the given parent id...
         List<Size> sizes = sizeManager.getSizesByCategoryId(category.getParentID());
-        //creating sizeId list for seeting to product's size list...
-        Map<Integer, Integer> sizeIdQuantity = new HashMap<>();
+        //creating sizeId list for setting to product's size list...
+        Map<String, Integer> sizeOptionQuantity = new HashMap<>();
         for (int i = 0; i < sizes.size(); i++) {
             System.out.println("bbbbbbbbbbbbb" + i + sizes.get(i).getSizeOption());
           //  String str = i + sizes.get(i).getSizeOption();
-            String sizeOptionId = request.getParameter("sizeoption" + i);
+            String sizeOption = request.getParameter("sizeoption" + i);
             int quantity = Integer.parseInt(request.getParameter("quantity" + i));
 
-            sizeIdQuantity.put(Integer.parseInt(sizeOptionId), quantity);
+            sizeOptionQuantity.put(sizeOption, quantity);
            // product.getSizeId().add(Integer.parseInt(sizeOptionId));
           //  int sizeId = sizeManager.getSizeIdBySizeOptionAndQuantity(sizeOption, quantity);
 
         }
-        product.setSizeIdQuantity(sizeIdQuantity);
+        product.setSizeOptionQuantity(sizeOptionQuantity);
     }
 
 
@@ -219,8 +219,8 @@ public class AdminController {
 
     private void formSubmissionAddMode(Product product, String filePath) {
         int id = productManager.createNewProduct(product);
-        Set<Map.Entry<Integer, Integer>> set = product.getSizeIdQuantity().entrySet();
-        for (Map.Entry<Integer, Integer> entry : set) {
+        Set<Map.Entry<String, Integer>> set = product.getSizeOptionQuantity().entrySet();
+        for (Map.Entry<String, Integer> entry : set) {
             productManager.setSizes(product.getProductID(), entry.getKey(), entry.getValue());
         }
         Media media;

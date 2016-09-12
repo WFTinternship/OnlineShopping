@@ -92,7 +92,7 @@
     <option value="<%=listofCategoriesList.get(i).get(0).getCategoryID()%>" selected><%=listofCategoriesList.get(i).get(0).getName()%></option>
 
          <%map.put(listofCategoriesList.get(i).get(0).getCategoryID(), optionNumber++);
-             System.out.println(listofCategoriesList.get(i).get(0).getCategoryID() +  "  "+ listofCategoriesList.get(i).get(0).getName());%>
+            %>
           <% for(int l=1; l<listofCategoriesList.get(i).size(); l++) {%>
             <option value="<%=listofCategoriesList.get(i).get(l).getCategoryID()%>"><%="-" + listofCategoriesList.get(i).get(l).getName()%></option>
             <%map.put(listofCategoriesList.get(i).get(l).getCategoryID(), optionNumber++);
@@ -124,7 +124,7 @@
             <select id="sizeOption" name = "sizeoption<%=l%>">
                <% for(int m = 0; m < listOfSizeLists.get(k).size(); m++){
                    System.out.println("aaaaaaaaaaaaaaaaaaa" + l+listOfSizeLists.get(k).get(m).getSizeOption());%>
-                <option value="<%= listOfSizeLists.get(k).get(m).getSizeId()%>" name = "<%=l+listOfSizeLists.get(k).get(m).getSizeOption()%>"><%=listOfSizeLists.get(k).get(m).getSizeOption()%></option>
+                <option value="<%= listOfSizeLists.get(k).get(m).getSizeOption()%>" name = "<%=l+listOfSizeLists.get(k).get(m).getSizeOption()%>"><%=listOfSizeLists.get(k).get(m).getSizeOption()%></option>
 
                 <%}%>
             </select>&nbsp;&nbsp;&nbsp;<input id="quantityOption" name="quantity<%=l%>">

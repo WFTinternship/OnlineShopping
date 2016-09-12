@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 23.07.2016.
@@ -74,15 +75,17 @@ public class ProductManagerImpl implements ProductManager{
         return products;
 
     }
-   public void setSizes(int productId, int sizeId, int quantity){
-        productDao.setSizes(productId, sizeId, quantity);
+   public void setSizes(int productId, String sizeOption, int quantity){
+        productDao.setSizes(productId, sizeOption, quantity);
    }
    private boolean validateProduct(Product product){
        if(product!=null && product.getName() != null && product.getCategory() != null)
            return true;
        return false;
    }
-
+   public Map<String, Integer> getSizeOptionQuantityMap(int productId){
+       return productDao.getSizeOptionQuantityMap(productId);
+   }
 
 
 }

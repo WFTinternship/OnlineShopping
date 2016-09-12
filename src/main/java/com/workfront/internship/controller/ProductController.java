@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Anna Asmangulyan on 8/23/2016.
@@ -45,11 +46,14 @@ public class ProductController {
     public String getProductDescription(HttpServletRequest request) {
         int productId = Integer.parseInt(request.getParameter("id"));
         Product product = productManager.getProduct(productId);
-        //getting sizeOptions for the given category...
-        Category category = categoryManager.getCategoryByID(product.getCategory().getParentID());
-        List<Size> sizes = sizeManager.getSizesByCategoryId(category.getParentID());
-        //setting request attributes...
+
+        //getting and setting sizes...
+            Map<String, Integer> sizeOptionQuantityMap = productManager.getSizeOptionQuantityMap(product.getProductID());
+            product.setSizeOptionQuantity(sizeOptionQuantityMap);
+
         request.setAttribute("product", product);
+        //request.getSession().setAttribute("categories", categories);
+
         return "productPage";
     }
 

@@ -15,7 +15,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ProductDaoImpl extends GeneralDao implements ProductDao {
@@ -78,6 +80,32 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         return products;
 
     }
+    public Map<String, Integer> getSizeOptionQuantityMap(int productId){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Map<String, Integer> sizeOptionQuantityMap = new HashMap<>();
+        try {
+            connection = dataSource.getConnection();
+            String sql = "SELECT * FROM product_size where product_id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, productId);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                sizeOptionQuantityMap.put(resultSet.getString("size_option"), resultSet.getInt("quantity"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return sizeOptionQuantityMap;
+
+    }
+
 
     private Product createProduct(ResultSet resultSet) throws SQLException, IOException {
         Product product = null;
@@ -292,7 +320,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         return products;
 
     }
-    public void setSizes(int productid, int sizeId, int quantity){
+    public void setSizes(int productid, String sizeOption, int quantity){
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -300,11 +328,11 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         try {
             connection = dataSource.getConnection();
 
-            String sql = "INSERT into product_size(product_id, size_id, quantity)" +
+            String sql = "INSERT into product_size(product_id, size_option, quantity)" +
                     " VALUES (?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, productid);
-            preparedStatement.setInt(2, sizeId);
+            preparedStatement.setString(2, sizeOption);
             preparedStatement.setInt(3, quantity);
 
             preparedStatement.executeUpdate();

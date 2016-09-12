@@ -6,6 +6,7 @@ import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductManager {
 
@@ -16,6 +17,7 @@ public interface ProductManager {
     List<Product> getProdactsByCategoryID(int id);
     List<Product> getLimitedNumberOfProducts();
     List<Product> getAllProducts();
-    void setSizes(int productId, int sizeId, int quantity);
+    void setSizes(int productId, String sizeOption, int quantity);
+    Map<String, Integer> getSizeOptionQuantityMap(int productId);
 
 }

@@ -8,6 +8,18 @@ public class OrderItem {
     private int orderItemID;
     private Product product;
     private int quantity;
+    private String sizeOption;
+
+    public String getSizeOption() {
+        return sizeOption;
+    }
+
+    public OrderItem setSizeOption(String sizeOption) {
+        this.sizeOption = sizeOption;
+        return this;
+    }
+
+
 
     public int getOrderItemID() {
         return orderItemID;

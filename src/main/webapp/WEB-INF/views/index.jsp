@@ -1,5 +1,5 @@
 <%@ page import="com.workfront.internship.common.User" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.workfront.internship.common.Product" %>
 <%@ page import="com.workfront.internship.dao.MediaDao" %>
@@ -34,19 +34,44 @@
 
         <%
 
-            List<Category> mainCategories = (List<Category>)request.getSession().getAttribute("mainCategories");
-            List<String> categoriesName = new ArrayList<>();
-            for(int i=0; i<mainCategories.size(); i++)
-                categoriesName.add(mainCategories.get(i).getName());
+            List<Category> categories = (List<Category>) request.getSession().getAttribute("categories");
+            List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
+
+
+            int j = 0;
+            for (Category category : categories) {
+
+                if (category.getParentID() == 0) {
+                    for (Category category1 : categories) {
+                        if (category1.getParentID() == category.getCategoryID()) {
+
+                            List<Category> list = new ArrayList<Category>();
+                            list.add(category1);
+                            listofCategoriesList.add(list);
+                        }
+                    }
+                }
+            }
+            for (int k = 0; k < listofCategoriesList.size(); k++) {
+                for (Category category1 : categories) {
+                    if (category1.getParentID() == listofCategoriesList.get(k).get(0).getCategoryID())
+                        listofCategoriesList.get(k).add(category1);
+                }
+            }
+
 
         %>
         <form method="get" action="http://www.google.com"><br><br><br><br>
             <select name="category">
                 <option value="all" selected>All</option>
-                <% for(int i=0; i<categoriesName.size(); i++){%>
-                <option value="cat1"><%=categoriesName.get(i)%>
+                <%for (int i = 0; i < listofCategoriesList.size(); i++) {%>
+
+                <option value="<%=listofCategoriesList.get(i).get(0).getCategoryID()%>"
+                        selected><%=listofCategoriesList.get(i).get(0).getName()%>
                 </option>
-                <%}
+
+                <%
+                    }
                 %>
 
             </select><input type="text" class="textinput" name="productName" size="60" maxlength="120"><input
@@ -58,28 +83,28 @@
     <div class="some">
         <div class="category">
 
-<%  List<Category> subCategories;
-    for(int j=0; j< mainCategories.size(); j++){%>
+            <%
+                for (int i = 0; i < listofCategoriesList.size(); i++) {%>
             <div class="dropdown">
 
-                <button class="dropbtn" id="dropdown1"><%=mainCategories.get(j).getName()%>
+                <button class="dropbtn" id="dropdown1"><%=listofCategoriesList.get(i).get(0).getName()%>
                 </button>
 
-
                 <div class="dropdown-content" id="dropdown-content1">
-                    <%
-                        subCategories = (List<Category>)request.getSession().getAttribute("subcategories" + j);
-                        for(int i=0;  i<subCategories.size(); i++ ){%>
 
-                    <a href="/productsPage?id=<%=subCategories.get(i).getCategoryID()%>"><%=subCategories.get(i).getName()%>
+                    <% for (int l = 1; l < listofCategoriesList.get(i).size(); l++) {%>
+
+                    <a href="/productsPage?id=<%=listofCategoriesList.get(i).get(l).getCategoryID()%>"><%=listofCategoriesList.get(i).get(l).getName()%>
                     </a>
-                    <%}
+                    <%
+                        }
                     %>
                 </div>
 
 
             </div>
-            <%}
+            <%
+                }
             %>
 
         </div>
@@ -143,10 +168,10 @@
 </div>
 <%
 
- List<Product> products = (List<Product>)request.getSession().getAttribute("products");
+    List<Product> products = (List<Product>) request.getSession().getAttribute("products");
     List<Media> medias;
-    for(int i=0; i<products.size(); i++){
-        medias = (List<Media>)request.getSession().getAttribute("medias" + i);
+    for (int i = 0; i < products.size(); i++) {
+        medias = (List<Media>) request.getSession().getAttribute("medias" + i);
         int productId = products.get(i).getProductID();
 
 %>
@@ -154,19 +179,19 @@
 
     <a href="/productPage?id=<%=productId %>" id="productHref">
         <img src="/resources/image/index.png" alt="index" class="index" style="width:80px;">
-        <%if(medias.size() == 2){%>
+        <%if (medias.size() == 2) {%>
         <img src="<%=medias.get(0).getMediaPath()%>" class="img1" alt="cart image">
         <img src="<%=medias.get(1).getMediaPath()%>" class="img2" alt="cart image">
-<%}%>
-        <%if(medias.size() == 3){%>
+        <%}%>
+        <%if (medias.size() == 3) {%>
         <img src="<%=medias.get(0).getMediaPath()%>" class="img1" alt="cart image">
         <img src="<%=medias.get(1).getMediaPath()%>" class="img2" alt="cart image">
         <img src="<%=medias.get(2).getMediaPath()%>" class="img3" alt="cart image">
         <%}%>
-        <%if(medias.size() == 1){%>
-        <img src="<%=medias.get(0).getMediaPath()%>"alt="cart image">
+        <%if (medias.size() == 1) {%>
+        <img src="<%=medias.get(0).getMediaPath()%>" alt="cart image">
         <%}%>
-        <%if(medias.size() == 0){%>
+        <%if (medias.size() == 0) {%>
         <img src="/resources/image/index.png" alt="cart image">
         <%}%>
     </a>

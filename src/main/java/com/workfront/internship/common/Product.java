@@ -18,14 +18,14 @@ public class Product {
     private double shippingPrice;
     private String description;
     private List<Media> medias;
-    private Map<Integer, Integer> sizeIdQuantity;
+    private Map<String, Integer> sizeOptionQuantity;
 
-    public Map<Integer, Integer> getSizeIdQuantity() {
-        return sizeIdQuantity;
+    public Map<String, Integer> getSizeOptionQuantity() {
+        return sizeOptionQuantity;
     }
 
-    public Product setSizeIdQuantity( Map<Integer, Integer> sizeIdQuantity) {
-        this.sizeIdQuantity = sizeIdQuantity;
+    public Product setSizeOptionQuantity( Map<String, Integer> sizeOptionQuantity) {
+        this.sizeOptionQuantity = sizeOptionQuantity;
         return this;
     }
 

@@ -35,20 +35,22 @@ public class BasketManagerImpl implements BasketManager {
     }
 
     @Override
-    public int addToBasket(User user, Product product, int quantity) {
-        if (user == null || product == null || quantity <= 0)
+    public int addToBasket(User user, Product product, String sizeOption, int quantity) {
+        if (user == null || product == null || quantity <= 0 || sizeOption == null || sizeOption == "")
             throw new RuntimeException("invalid entry!");
         if (user.getBasket() == null) {
             Basket basket = getCurrentBasket(user);
             user.setBasket(basket);
         }
         OrderItem newOrderItem = new OrderItem();
-        newOrderItem.setProduct(product).setBasketID(user.getBasket().getBasketID()).setQuantity(quantity);
+        newOrderItem.setProduct(product).setBasketID(user.getBasket().getBasketID()).setQuantity(quantity).setSizeOption(sizeOption);
         OrderItem oldOrderItem = orderItemDao.getOrderItemByProductAndBasketID(product.getProductID(), user.getBasket().getBasketID());
         if (oldOrderItem == null)
             orderItemDao.insertOrderItem(newOrderItem);
-        else
-            orderItemDao.updateOrderItem(newOrderItem);
+        else {
+            oldOrderItem.setQuantity(oldOrderItem.getQuantity()+quantity);
+            orderItemDao.updateOrderItem(oldOrderItem);
+        }
 return newOrderItem.getOrderItemID();
     }
 
