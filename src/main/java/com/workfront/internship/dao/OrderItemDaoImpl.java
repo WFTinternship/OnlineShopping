@@ -104,7 +104,7 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
 
     }
     @Override
-    public OrderItem getOrderItemByProductAndBasketID(int productid, int basketId) {
+    public OrderItem getOrderItemByProductIDBasketIDSizeOption(int productid, int basketId, String sizeOption) {
         OrderItem orderItem = null;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -112,10 +112,11 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         try {
             connection = dataSource.getConnection();
             orderItem = new OrderItem();
-            String sql = "SELECT * from orderitems where product_id =? and basket_id = ?";
+            String sql = "SELECT * from orderitems where product_id =? AND basket_id = ? AND size_option = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, productid);
             preparedStatement.setInt(2, basketId);
+            preparedStatement.setString(3, sizeOption);
             resultSet = preparedStatement.executeQuery();
             orderItem = createOrderItem(resultSet);
 

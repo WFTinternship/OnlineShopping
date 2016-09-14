@@ -1,18 +1,19 @@
-<%@ page import="com.workfront.internship.common.User" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.workfront.internship.common.Category" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.workfront.internship.common.Product" %>
-<%@ page import="com.workfront.internship.dao.MediaDao" %>
-<%@ page import="com.workfront.internship.common.Media" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.workfront.internship.business.*" %>
-<%@ page import="com.workfront.internship.common.Category" %><%--
+<%@ page import="com.workfront.internship.common.User" %>
+<%@ page import="com.workfront.internship.common.OrderItem" %>
+<%@ page import="com.workfront.internship.common.Media" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %><%--
   Created by IntelliJ IDEA.
   User: Workfront
-  Date: 8/10/2016
-  Time: 2:15 PM
+  Date: 9/13/2016
+  Time: 10:29 AM
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
@@ -32,9 +33,15 @@
 <div class="wrapper">
     <div class="wrapper1">
 
-        <%
-
+        <% Map<Integer, Media> productIdMedia= new HashMap();
+            int productId;
+            User user = (User) request.getSession().getAttribute("user");
+            List<OrderItem> orderItemList = (List<OrderItem>) request.getAttribute("orderItemList");
             List<Category> categories = (List<Category>) request.getSession().getAttribute("categories");
+            for(int i = 0; i<orderItemList.size(); i++){
+                productId = orderItemList.get(i).getProduct().getProductID();
+                productIdMedia.put(productId, (Media)request.getAttribute("media"+productId));
+            }
             List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
 
 
@@ -109,115 +116,61 @@
 
         </div>
 
-        <%
-            User user = (User) request.getSession().getAttribute("user");
-            if (user == null) {
+        <a href="/showCartContent" class="cart">
+            <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
+        </a>
+        <div class="dropdown">
+            <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
+            <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
+            <div class="dropdown-content">
+                <a href="#">edit account</a>
+                <a href="#">your orders</a>
+                <a href="#">your wish list</a>
 
-        %>
-
-        <div class="signinRegister">
-            <a href="/login" class="register" id="login_button">SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="/createaccount" class="register" id="registration_button">CREATE ACCOUNT</a>
+                <a href="/logout" id="logout_button">logout</a>
+            </div>
         </div>
 
         <div class="clear"></div>
+
+
     </div>
 </div>
-
-<%
-    }
-%>
-
-<%
-
-    if (user != null) {
-
-
-%>
-
-<a href="/showCartContent" class="cart">
-    <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
-</a>
-<div class="dropdown">
-    <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
-    <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
-    <div class="dropdown-content">
-        <a href="#">edit account</a>
-        <a href="#">your orders</a>
-        <a href="#">your wish list</a>
-
-        <a href="/logout" id="logout_button">logout</a>
-    </div>
-</div>
-
-<div class="clear"></div>
-
-
-</div>
-</div>
-<%
-    }
-%>
-
-
 <div>
-    <img src="/resources/image/pic4.jpg" alt="image1" class="backimg1">
+    <%int id = 0;
+        Media media;
+        for(OrderItem orderItem : orderItemList){%>
+    <div>
+<%  id = orderItem.getProduct().getProductID();
+    media = (Media)request.getAttribute("media"+id);%>
+        <div class="iconImage">
+    <img src="<%=media.getMediaPath()%>"  alt="image">
+        </div>
+        <div class = "productInfo">
+       <p style="font-size: 20px;">Name:&nbsp;<%= orderItem.getProduct().getName()%></p>
+       <p style="font-style: italic; ">Price:&nbsp;$&nbsp;<%= orderItem.getProduct().getPrice()%></p>
+       <p style="font-style: italic; ">Shipping Price:&nbsp;$&nbsp;<%= orderItem.getProduct().getShippingPrice()%></p>
+       <p >Size:&nbsp;<%= orderItem.getSizeOption()%></p>
 
 
-    <img src="/resources/image/pic1.jpg" alt="image2" class="backimg2">
+            <p class="quantity">Quantity: </p><select id = "q" name = "quantity">
+            <%for(int i =1; i< orderItem.getProduct().getSizeOptionQuantity().get(orderItem.getSizeOption())+1; i++){%>
+            <script>
+                var str = "<option ";
+               <% if(i==orderItem.getQuantity()){%>
+                    str += "selected";
+               <% }%>
+                str += " >" + <%=i%> + "</option>"
+
+                document.write(str);
+            </script>
+<%}%>
+        </select>
+        </div>
+    </div>
+    <%}%>
+    <div class = "clear"></div>
 </div>
-<%
-
-    List<Product> products = (List<Product>) request.getSession().getAttribute("products");
-    List<Media> medias;
-    for (int i = 0; i < products.size(); i++) {
-        medias = (List<Media>) request.getSession().getAttribute("medias" + i);
-        int productId = products.get(i).getProductID();
-
-%>
-<div class="image">
-
-    <a href="/productPage?id=<%=productId %>" id="productHref">
-        <img src="/resources/image/index.png" alt="index" class="index" style="width:80px;">
-        <%if (medias.size() == 2) {%>
-        <img src="<%=medias.get(0).getMediaPath()%>" class="img1" alt="cart image">
-        <img src="<%=medias.get(1).getMediaPath()%>" class="img2" alt="cart image">
-        <%}%>
-        <%if (medias.size() == 3) {%>
-        <img src="<%=medias.get(0).getMediaPath()%>" class="img1" alt="cart image">
-        <img src="<%=medias.get(1).getMediaPath()%>" class="img2" alt="cart image">
-        <img src="<%=medias.get(2).getMediaPath()%>" class="img3" alt="cart image">
-        <%}%>
-        <%if (medias.size() == 1) {%>
-        <img src="<%=medias.get(0).getMediaPath()%>" alt="cart image">
-        <%}%>
-        <%if (medias.size() == 0) {%>
-        <img src="/resources/image/index.png" alt="cart image">
-        <%}%>
-    </a>
-
-    <%-- <script>var img1 = document.getElementById("productImage");</script>
-     <img src="<%=medias.get(1).getMediaPath()%>" id="productImage2" alt="cart image">
-     <script>   img2 = document.getElementById("productImage2");
-
-         img1.onmouseover = function(){
-             img2.style.display = "block";
-         }
-
-         img1.onmouseout = function(){
-             img2.style.display = "none";
-         }
-     </script>--%>
-    <p><%=products.get(i).getName()%>
-    </p>
-    <p>$<%=products.get(i).getPrice()%>
-    </p>
-</div>
-
-<%
-    }
-%>
 
 </body>
 </html>
-

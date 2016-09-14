@@ -44,7 +44,7 @@ public class BasketManagerImpl implements BasketManager {
         }
         OrderItem newOrderItem = new OrderItem();
         newOrderItem.setProduct(product).setBasketID(user.getBasket().getBasketID()).setQuantity(quantity).setSizeOption(sizeOption);
-        OrderItem oldOrderItem = orderItemDao.getOrderItemByProductAndBasketID(product.getProductID(), user.getBasket().getBasketID());
+        OrderItem oldOrderItem = orderItemDao.getOrderItemByProductIDBasketIDSizeOption(product.getProductID(), user.getBasket().getBasketID(), sizeOption);
         if (oldOrderItem == null)
             orderItemDao.insertOrderItem(newOrderItem);
         else {

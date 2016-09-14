@@ -67,7 +67,7 @@ public class BasketManagerImplUnitTest {
     @Test
     public void addToBasket_already_exists(){
 
-        when(orderItemDao.getOrderItemByProductAndBasketID(product.getProductID(), user.getBasket().getBasketID())).thenReturn(orderItem);
+       // when(orderItemDao.getOrderItemByProductAndBasketID(product.getProductID(), user.getBasket().getBasketID())).thenReturn(orderItem);
 
       //  basketManager.addToBasket(user, product, 5);
         Mockito.verify(orderItemDao, Mockito.never()).insertOrderItem(any(OrderItem.class));
@@ -78,7 +78,7 @@ public class BasketManagerImplUnitTest {
     @Test
     public void addToBasket_does_not_exist(){
 
-        when(orderItemDao.getOrderItemByProductAndBasketID(product.getProductID(), user.getBasket().getBasketID())).thenReturn(null);
+     //   when(orderItemDao.getOrderItemByProductAndBasketID(product.getProductID(), user.getBasket().getBasketID())).thenReturn(null);
 
      //   basketManager.addToBasket(user, product, 5);
         Mockito.verify(orderItemDao).insertOrderItem(any(OrderItem.class));

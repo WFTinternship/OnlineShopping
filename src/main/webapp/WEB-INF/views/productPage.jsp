@@ -40,12 +40,6 @@
         var sizeOption = $('#sizeOptions').val();
         var quantity = $('#quantity').val();
 
-        alert(productId);
-        alert(sizeOption);
-        alert(quantity);
-
-
-
         $.get("/addToCart?productId=" + productId + "&sizeOption=" + sizeOption + "&quantity=" + quantity, function (data) {
             alert(data.firstName);
         });
@@ -244,7 +238,7 @@
 <div class="productdesc">
     <h1 class="productName"><%=product.getName()%></h1>
     <p class="price">Price: $<%=product.getPrice()%></p>
-    <p class="size">Size:&nbsp; &nbsp; &nbsp; <select id="sizeOptions" name = "sizeOption" onchange="chooseQuantity()">
+    <p class="size">Size:&nbsp; &nbsp; &nbsp; <select id="sizeOptions" name = "sizeOption"  onchange="chooseQuantity()">
         <option value=" ">Select</option>
         <%Set<Map.Entry<String, Integer>> set = product.getSizeOptionQuantity().entrySet();
         for (Map.Entry<String, Integer> entry : set) {%>

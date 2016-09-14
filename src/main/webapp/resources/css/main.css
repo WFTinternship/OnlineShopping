@@ -47,6 +47,24 @@
 #select_quantity{
 	padding-bottom: 30px;
 }
+.iconImage img{
+	width: 150px;
+}
+.iconImage{
+	width:40%;
+	padding-left: 200px;
+	padding-top: 30px;
+	float: left;
+}
+.productInfo{
+	width: 30%;
+	float: right;
+	padding-top: 40px;
+	padding-right: 250px;
+}
+.productInfo p{
+	padding: 5px;
+}
 .register{
 	color:  #DD127B;
 	text-decoration: none;

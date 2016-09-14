@@ -111,6 +111,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         Product product = null;
         Category category = null;
         List<Media> medias = new ArrayList<Media>();
+
         while (resultSet.next()) {
             category = new Category();
             category = category.setCategoryID(resultSet.getInt("category_id")).
@@ -123,7 +124,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
                     setDescription(resultSet.getString("description")).
                     setShippingPrice(resultSet.getDouble("shipping_price")).
                     setCategory(category).
-                    setMedias(medias);
+                    setMedias(medias).setSizeOptionQuantity(getSizeOptionQuantityMap(resultSet.getInt("product_id")));
 
 
         }

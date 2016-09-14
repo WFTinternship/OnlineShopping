@@ -20,7 +20,7 @@ public interface OrderItemDao {
 
     void deleteOrderItemByProductID(int productid);
 
-    OrderItem getOrderItemByProductAndBasketID(int productId, int basketId);
+    OrderItem getOrderItemByProductIDBasketIDSizeOption(int productId, int basketId, String sizeOption);
 
     void updateOrderItem(OrderItem orderItem);
 

@@ -9,4 +9,5 @@ import java.util.List;
 public interface SizeManager {
     List<Size> getSizesByCategoryId(int categoryId);
     int getSizeIdBySizeOptionAndQuantity(String sizeOption, int quantity);
+
 }
