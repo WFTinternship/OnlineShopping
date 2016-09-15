@@ -9,7 +9,7 @@ public class Address {
     private int userID;
     private String city;
     private String country;
-    private int zipCode;
+    private String zipCode;
 
     public String getCity() {
         return city;
@@ -29,11 +29,11 @@ public class Address {
         return this;
     }
 
-    public int getZipCode() {
+    public String getZipCode() {
         return zipCode;
     }
 
-    public Address setZipCode(int zipCode) {
+    public Address setZipCode(String zipCode) {
         this.zipCode = zipCode;
         return this;
     }

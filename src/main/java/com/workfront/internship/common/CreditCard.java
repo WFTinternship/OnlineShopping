@@ -7,6 +7,8 @@ public class CreditCard {
     private int cardID;
     private String billingAddress;
     private double balance;
+    private String cardNumber;
+    private int cvc;
 
     public double getBalance() {
         return balance;
@@ -36,4 +38,21 @@ public class CreditCard {
     }
 
 
+    public int getCvc() {
+        return cvc;
+    }
+
+    public CreditCard setCvc(int cvc) {
+        this.cvc = cvc;
+        return this;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public CreditCard setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+        return  this;
+    }
 }

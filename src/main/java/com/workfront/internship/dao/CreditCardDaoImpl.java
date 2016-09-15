@@ -49,6 +49,34 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
         return creditCard;
     }
 
+    @Override
+    public CreditCard getCreditCardByCardNumber(String cartNumber){
+        CreditCard creditCard = null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            creditCard = new CreditCard();
+
+            String sql = "SELECT * from creditcards where card_number =?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, cartNumber);
+
+            resultSet = preparedStatement.executeQuery();
+            creditCard = createCreditCard(resultSet);
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        }finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return creditCard;
+    }
+
+
     private CreditCard createCreditCard(ResultSet resultSet) throws SQLException {
         CreditCard creditCard = null;
         while (resultSet.next()) {
@@ -56,7 +84,9 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
 
             creditCard.setCardID(resultSet.getInt("card_id")).
                     setBillingAddress(resultSet.getString("billing_address")).
-                    setBalance(resultSet.getDouble("balance"));
+                    setBalance(resultSet.getDouble("balance")).
+            setCardNumber(resultSet.getString("card_number")).setCvc(resultSet.getInt("cvc"));
+
         }
         return creditCard;
     }

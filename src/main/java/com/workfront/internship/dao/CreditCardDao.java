@@ -12,6 +12,8 @@ public interface CreditCardDao {
 
     CreditCard getCreditCardByCardID(int cardid);
 
+    CreditCard getCreditCardByCardNumber(String cartNumber);
+
     int insertCreditCard(CreditCard creditCard);
 
     void updateCreditCard(CreditCard creditCard);

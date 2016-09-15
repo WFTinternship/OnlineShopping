@@ -23,6 +23,13 @@ public class CreditcardManagerImpl implements CreditcardManager {
         return creditCardDao.getCreditCardByCardID(cardid);
 
     }
+    //TODO test
+    public CreditCard getCreditCardByCardNumber(String cardNumber){
+        if(cardNumber == null)
+            throw new RuntimeException("invalid card number");
+        return creditCardDao.getCreditCardByCardNumber(cardNumber);
+
+    }
     public int createCreditCard(CreditCard creditCard){
         if(!validateCard(creditCard))
             throw new RuntimeException("invalid card");

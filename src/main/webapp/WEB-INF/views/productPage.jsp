@@ -103,7 +103,7 @@
         <br>
     </div>
     <div class="some">
-        <div class="category">
+        <div class="category" class = "searchCategory">
 
             <%
                 for (int i = 0; i < listofCategoriesList.size(); i++) {%>

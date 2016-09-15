@@ -136,7 +136,7 @@
 
     </div>
 </div>
-<div>
+<div id="basketContent">
     <%int id = 0;
         Media media;
         for(OrderItem orderItem : orderItemList){%>
@@ -169,8 +169,14 @@
         </div>
     </div>
     <%}%>
+
     <div class = "clear"></div>
 </div>
+<div id="checkout">
+    <p>Subtotal(items) :&nbsp;$<%=user.getBasket().getTotalPrice()%></p><br>
+    <a href="/infoForSale" class="button" role="button">Procced to checkout</a>
 
+</div>
+<div class = "clear"></div>
 </body>
 </html>

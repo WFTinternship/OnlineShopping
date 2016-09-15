@@ -1,23 +1,18 @@
-<%@ page import="com.workfront.internship.common.User" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.workfront.internship.common.Product" %>
-<%@ page import="com.workfront.internship.dao.MediaDao" %>
-<%@ page import="com.workfront.internship.common.Media" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.workfront.internship.common.Category" %>
+
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.workfront.internship.business.*" %>
-<%@ page import="com.workfront.internship.common.Category" %><%--
+<%@ page import="com.workfront.internship.common.User" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.workfront.internship.common.Address" %>
+<%--
   Created by IntelliJ IDEA.
-  User: Workfront
-  Date: 8/10/2016
-  Time: 2:15 PM
+  User: annaasmangulyan
+  Date: 9/15/16
+  Time: 1:53 PM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-
-<!DOCTYPE html>
-<html>
 <head>
     <title>Search Box</title>
 
@@ -33,8 +28,10 @@
     <div class="wrapper1">
 
         <%
+            User user = (User) request.getSession().getAttribute("user");
 
             List<Category> categories = (List<Category>) request.getSession().getAttribute("categories");
+
             List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
 
 
@@ -62,7 +59,7 @@
 
         %>
         <form method="get" action="http://www.google.com"><br><br><br><br>
-            <select name="category" class = "searchCategory">
+            <select name="category">
                 <option value="all" selected>All</option>
                 <%for (int i = 0; i < listofCategoriesList.size(); i++) {%>
 
@@ -109,106 +106,58 @@
 
         </div>
 
-        <%
-            User user = (User) request.getSession().getAttribute("user");
-            if (user == null) {
+        <a href="/showCartContent" class="cart">
+            <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
+        </a>
+        <div class="dropdown">
+            <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
+            <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
+            <div class="dropdown-content">
+                <a href="#">edit account</a>
+                <a href="#">your orders</a>
+                <a href="#">your wish list</a>
 
-        %>
-
-        <div class="signinRegister">
-            <a href="/login" class="register" id="login_button">SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="/createaccount" class="register" id="registration_button">CREATE ACCOUNT</a>
+                <a href="/logout" id="logout_button">logout</a>
+            </div>
         </div>
 
         <div class="clear"></div>
+
+
     </div>
 </div>
+<div id="checkoutForm">
+<form action="/checkout" method="post">
+    <p style="font-size:25px;">Fill required information to continue checkout</p><br>
 
-<%
-    }
-%>
-
-<%
-
-    if (user != null) {
-
-
-%>
-
-<a href="/showCartContent" class="cart">
-    <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
-</a>
-<div class="dropdown">
-    <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
-    <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
-    <div class="dropdown-content">
-        <a href="#">edit account</a>
-        <a href="#">your orders</a>
-        <a href="#">your wish list</a>
-
-        <a href="/logout" id="logout_button">logout</a>
-    </div>
-</div>
-
-<div class="clear"></div>
-
-
-</div>
-</div>
-<%
-    }
-%>
-
-
-<div>
-    <img src="/resources/image/pic4.jpg" alt="image1" class="backimg1">
-
-
-    <img src="/resources/image/pic1.jpg" alt="image2" class="backimg2">
-</div>
-<div id="productsForPage">
-<%
-
-    List<Product> products = (List<Product>) request.getSession().getAttribute("products");
-    List<Media> medias;
-    for (int i = 0; i < products.size(); i++) {
-        medias = (List<Media>) request.getSession().getAttribute("medias" + i);
-        int productId = products.get(i).getProductID();
-
-%>
-<div class="image">
-
-    <a href="/productPage?id=<%=productId %>" id="productHref">
-        <img src="/resources/image/index.png" alt="index" class="index" style="width:80px;">
-        <%for(int k = 0; k< medias.size(); k++) {%>
-        <img src="<%=medias.get(k).getMediaPath()%>" class="img<%=k+1%>" alt="cart image">
-
+    Full name:<br>
+    <input type="text" name="fullname" required><br><br>
+    <%if(!user.getShippingAddresses().isEmpty()){%>
+    Select from existing addresses:<br>
+    <select name="addressOption">
+        <%for(Address address : user.getShippingAddresses()){%>
+        <option><%=address.getAddress()%></option>
         <%}%>
+    </select>
+    Add new address:<br>
+    <input type="text" name="newAddress" required><br><br>
+    <%}
+    else{%>
+    Address:<br>
+    <input type="text" name="address" required><br><br>
+    <%}%>
+    City:<br>
+    <input type="text" name="city" required><br><br>
+    Country:<br>
+    <input type="text" name="country" required><br><br>
+    Zip:<br>
+    <input type="text" name="zip" required><br><br>
+    <button style="border-top-left-radius: 5px 5px;
+		border-bottom-left-radius: 5px 5px; width: 120px; height: 35px" class="button" id="signinButton">Continue
+    </button>
 
-    </a>
 
-    <%-- <script>var img1 = document.getElementById("productImage");</script>
-     <img src="<%=medias.get(1).getMediaPath()%>" id="productImage2" alt="cart image">
-     <script>   img2 = document.getElementById("productImage2");
-
-         img1.onmouseover = function(){
-             img2.style.display = "block";
-         }
-
-         img1.onmouseout = function(){
-             img2.style.display = "none";
-         }
-     </script>--%>
-    <p><%=products.get(i).getName()%>
-    </p>
-    <p>$<%=products.get(i).getPrice()%>
-    </p>
-</div>
-
-<%
-    }
-%>
+</form>
 </div>
 </body>
 </html>
-

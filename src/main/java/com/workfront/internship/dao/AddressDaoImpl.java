@@ -81,7 +81,7 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
                     setUserID(resultSet.getInt("user_id")).
                     setCity(resultSet.getString("city")).
                     setCountry(resultSet.getString("country")).
-                    setZipCode(resultSet.getInt("zip_code"));
+                    setZipCode(resultSet.getString("zip"));
             addresses.add(address);
         }
         return addresses;
@@ -96,7 +96,7 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
                     setUserID(resultSet.getInt("user_id")).
                     setCity(resultSet.getString("city")).
                     setCountry(resultSet.getString("country")).
-                    setZipCode(resultSet.getInt("zip_code"));
+                    setZipCode(resultSet.getString("zip"));
         }
         return address;
     }
@@ -156,13 +156,13 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
         try {
             connection = dataSource.getConnection();
             //inserting into db...
-            String sql = "INSERT into addresses(shipping_address, user_id, city, country, zip_code) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT into addresses(shipping_address, user_id, city, country, zip) VALUES (?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, address.getAddress());
             preparedStatement.setInt(2, address.getUserID());
             preparedStatement.setString(3, address.getCity());
             preparedStatement.setString(4, address.getCountry());
-            preparedStatement.setInt(5, address.getZipCode());
+            preparedStatement.setString(5, address.getZipCode());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
 
@@ -191,14 +191,14 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
         try {
             connection = dataSource.getConnection();
             //updateing address in stored in db...
-            String sql = "UPDATE addresses SET shipping_address = ?, user_id=?, city=?, country=?, zip_code=? where address_id = ?";
+            String sql = "UPDATE addresses SET shipping_address = ?, user_id=?, city=?, country=?, zip=? where address_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, address.getAddress());
             preparedStatement.setInt(2, address.getUserID());
             preparedStatement.setInt(3, address.getAddressID());
             preparedStatement.setString(3, address.getCity());
             preparedStatement.setString(4, address.getCountry());
-            preparedStatement.setInt(5, address.getZipCode());
+            preparedStatement.setString(5, address.getZipCode());
 
             preparedStatement.executeUpdate();
 

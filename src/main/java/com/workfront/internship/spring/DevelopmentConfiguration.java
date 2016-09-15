@@ -21,7 +21,7 @@ import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.
 @ComponentScan(basePackages = "com.workfront")
 @Profile("developer")
 public class DevelopmentConfiguration {
-/*    @Bean
+    @Bean
     public DataSource getDataSource() throws IOException {
         BasicDataSource dataSource = new BasicDataSource();
         Properties props = new Properties();
@@ -34,18 +34,18 @@ public class DevelopmentConfiguration {
         dataSource.setUrl(props.getProperty("jdbc.url"));
 
         return dataSource;
-    }*/
+    }
     @Bean(name = "multipartResolver")
         public CommonsMultipartResolver multipartResolver() {
                 CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
                 multipartResolver.setMaxUploadSize(100000);
                 return new CommonsMultipartResolver();
             }
-    @Bean
+    /*@Bean
     public DataSource dataSource() throws IOException {
         return new EmbeddedDatabaseBuilder()
                 .setType(H2)
                 .addScript("schema.sql")
                 .build();
-    }
+    }*/
 }
