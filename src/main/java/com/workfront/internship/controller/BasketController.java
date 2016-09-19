@@ -7,6 +7,7 @@ import com.workfront.internship.common.Media;
 import com.workfront.internship.common.OrderItem;
 import com.workfront.internship.common.Product;
 import com.workfront.internship.common.User;
+import org.apache.xpath.operations.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ public class BasketController {
     @Autowired
     private MediaManager mediaManager;
 
+
     @RequestMapping("/addToCart")
     @ResponseBody
     public String addToBasket(HttpServletRequest request) {
@@ -44,13 +46,50 @@ public class BasketController {
 
         basketManager.addToBasket(user, product, sizeOption, quantity);
 
+        List<OrderItem> orderItems =  basketManager.showItemsInCurrentBasket(user);
 
-        return "index";
+        int numberOfItemsInBasket = 0;
+
+        for(OrderItem orderItem : orderItems){
+
+            numberOfItemsInBasket += orderItem.getQuantity();
+
+        }
+        request.getSession().setAttribute("number", numberOfItemsInBasket);
+
+        String str = Integer.toString(numberOfItemsInBasket);
+        System.out.println("aaaaaaaaaaaaa" + str);
+
+
+        return str;
     }
 
     @RequestMapping("/showCartContent")
     public String showCartContent(HttpServletRequest request){
         //get items in basket...
+        List<OrderItem> orderItemList = basketManager.showItemsInCurrentBasket((User)request.getSession().getAttribute("user"));
+        //get one media for each product...
+        List<Media> medias = new ArrayList<>();
+        int productId;
+        for(int i = 0; i< orderItemList.size(); i++){
+            productId =orderItemList.get(i).getProduct().getProductID();
+            medias = mediaManager.getMediaByProductID(productId);
+            request.setAttribute("media"+productId, medias.get(0));
+        }
+        //set Attributes to request...
+        request.setAttribute("orderItemList", orderItemList);
+
+        return "basketContent";
+    }
+    @RequestMapping("/deleteItemFromBasket")
+        public String deleteItemFromBasket(HttpServletRequest request){
+
+        User user = (User) request.getSession().getAttribute("user");
+
+        int id = Integer.parseInt(request.getParameter("itemId"));
+
+        basketManager.deleteFromBasket(user, id);
+
         List<OrderItem> orderItemList = basketManager.showItemsInCurrentBasket((User)request.getSession().getAttribute("user"));
         //get one media for each product...
         List<Media> medias = new ArrayList<>();

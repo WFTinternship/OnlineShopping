@@ -30,10 +30,10 @@
 
     Password<br>
 
-    <input type="password" pattern=".{6,}" name="password" id="pass"><br><br>
+    <input type="password" pattern=".{6,}" name="password" id="pass" required><br><br>
 
     Repeat password<br>
-    <input type="password" pattern=".{6,}" name="repeatpassword" id="rePass"><br><br>
+    <input type="password" pattern=".{6,}" name="repeatpassword" id="rePass" required><br><br>
     <%--<% Boolean equal = true; %>
     <script>var fistInput = document.getElementsByName("password").value;
     var secondInput = document.getElementsByName("repeat password").value;

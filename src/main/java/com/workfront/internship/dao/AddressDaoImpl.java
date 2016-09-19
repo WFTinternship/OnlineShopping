@@ -71,6 +71,7 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
 
         return address;
     }
+
     private List<Address> createListOfAddresses(ResultSet resultSet) throws SQLException {
         List<Address> addresses = new ArrayList<Address>();
         while (resultSet.next()) {

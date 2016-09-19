@@ -1,12 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="com.workfront.internship.common.Category" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.workfront.internship.common.User" %>
-<%@ page import="com.workfront.internship.common.OrderItem" %>
-<%@ page import="com.workfront.internship.common.Media" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="java.util.HashMap" %><%--
+<%@ page import="java.util.HashMap" %>
+<%@ page import="com.workfront.internship.common.*" %><%--
   Created by IntelliJ IDEA.
   User: Workfront
   Date: 9/13/2016
@@ -23,10 +20,8 @@
     <title>Search Box</title>
 
     <!-- CSS styles for standard search box -->
-
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/reset.css" />">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />">
-    <script src="<c:url value="/resources/js/jquery-1.12.1.min.js" />"></script>
 
 </head>
 <body>
@@ -38,15 +33,19 @@
         <% Map<Integer, Media> productIdMedia= new HashMap();
             int productId;
             User user = (User) request.getSession().getAttribute("user");
-            List<OrderItem> orderItemList = (List<OrderItem>) request.getAttribute("orderItemList");
-            List<Category> categories = (List<Category>) request.getSession().getAttribute("categories");
+
+            Sale sale = (Sale)request.getAttribute("sale");
+
+            List<OrderItem> orderItemList = sale.getBasket().getOrderItems();
 
             int number = (Integer)request.getSession().getAttribute("number");
 
+            List<Category> categories = (List<Category>) request.getSession().getAttribute("categories");
             for(int i = 0; i<orderItemList.size(); i++){
                 productId = orderItemList.get(i).getProduct().getProductID();
                 productIdMedia.put(productId, (Media)request.getAttribute("media"+productId));
             }
+
             List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
 
 
@@ -120,12 +119,10 @@
             %>
 
         </div>
-        <div id="container">
         <a href="/showCartContent" class="cart" id="infoi">
             <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
         </a>
         <div id="navi"><%=number%></div>
-            </div>
         <div class="dropdown">
             <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
             <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
@@ -143,74 +140,33 @@
 
     </div>
 </div>
-<div id="basketContent">
+<div id="orderContent">
     <%int id = 0;
         Media media;
-        for(int k=0; k<orderItemList.size(); k++){%>
-    <div id="productdiv<%=(k+1)%>">
-<%  id = orderItemList.get(k).getProduct().getProductID();
-    media = (Media)request.getAttribute("media"+id);%>
+        for(OrderItem orderItem : orderItemList){%>
+    <div>
+        <p class="saleInfo">Sale ID:&nbsp;<%=sale.getSaleID()%></p>
+        <p class="saleInfo">Date:&nbsp;<%=sale.getDate()%></p>
+        <%  id = orderItem.getProduct().getProductID();
+            media = (Media)request.getAttribute("media"+id);%>
         <div class="iconImage">
-    <img src="<%=media.getMediaPath()%>"  alt="image">
+            <img src="<%=media.getMediaPath()%>"  alt="image">
         </div>
         <div class = "productInfo">
-       <p style="font-size: 20px;">Name:&nbsp;<%= orderItemList.get(k).getProduct().getName()%></p>
-       <p style="font-style: italic; ">Price:&nbsp;$&nbsp;<%= orderItemList.get(k).getProduct().getPrice()%></p>
-       <p style="font-style: italic; ">Shipping Price:&nbsp;$&nbsp;<%= orderItemList.get(k).getProduct().getShippingPrice()%></p>
-       <p >Size:&nbsp;<%= orderItemList.get(k).getSizeOption()%></p>
+            <p style="font-size: 20px;">Name:&nbsp;<%= orderItem.getProduct().getName()%></p>
+            <p style="font-style: italic; ">Price:&nbsp;$&nbsp;<%= orderItem.getProduct().getPrice()%></p>
+            <p style="font-style: italic; ">Shipping Price:&nbsp;$&nbsp;<%= orderItem.getProduct().getShippingPrice()%></p>
+            <p >Size:&nbsp;<%= orderItem.getSizeOption()%></p>
 
 
-            <p class="quantity">Quantity: </p><select id = "q" name = "quantity">
-            <%for(int i =1; i< orderItemList.get(k).getProduct().getSizeOptionQuantity().get(orderItemList.get(k).getSizeOption())+1; i++){%>
-            <script>
-                var str = "<option ";
-               <% if(i==orderItemList.get(k).getQuantity()){%>
-                    str += "selected";
-               <% }%>
-                str += " >" + <%=i%> + "</option>"
-
-                document.write(str);
-
-
-            </script>
-<%}%>
-        </select>
-        </div><br>
-        <a href="/deleteItemFromBasket?itemId=<%=orderItemList.get(k).getOrderItemID()%>" class="littleAnchor">delete</a><br><br>
-
+            <p class="quantity">Quantity:&nbsp;<%= orderItem.getQuantity()%> </p>
+        </div>
     </div>
     <%}%>
 
     <div class = "clear"></div>
 </div>
-<%if(!orderItemList.isEmpty()){%>
-<div id="checkout">
-    <p>Subtotal(items) :&nbsp;$<%=user.getBasket().getTotalPrice()%></p><br>
-    <a href="/infoForSale" class="button" role="button">Procced to checkout</a>
 
-</div>
-<%}%>
-<script>
-    <%for(int l =0; l<orderItemList.size(); l++){%>
-    function deleteItem<%=l+1%>(itemId) {
-        alert("kuku");
-        alert("kukula");
-        alert("kuku1");
-        alert("lala" + itemId);
-
-
-        $.get("/deleteItemFromBasket?itemId=" + itemId, function (data) {
-            alert(data);
-
-        });
-        $( "#productdiv<%=(l+1)%>" ).remove();
-
-
-
-    }
-    <%}%>
-
-</script>
-<div class = "clear"></div>
+    <div class = "clear"></div>
 </body>
 </html>

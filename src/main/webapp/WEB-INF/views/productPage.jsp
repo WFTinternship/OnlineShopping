@@ -38,10 +38,15 @@
 <script>
     function addToCart(productId) {
         var sizeOption = $('#sizeOptions').val();
+        if(sizeOption == "Select") {
+            alert("chose size");
+        }
         var quantity = $('#quantity').val();
 
         $.get("/addToCart?productId=" + productId + "&sizeOption=" + sizeOption + "&quantity=" + quantity, function (data) {
-            alert(data.firstName);
+            alert(data);
+            document.getElementById("navi").innerHTML = data;
+
         });
 
 
@@ -58,6 +63,8 @@
 
             List<Category> categories = (List<Category>) request.getSession().getAttribute("categories");
             List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
+
+
 
 
             int j = 0;
@@ -152,13 +159,16 @@
 <%
 
     if (user != null) {
+        int number = (Integer)request.getSession().getAttribute("number");
 
 
 %>
-
-<a href="./cart.jsp" class="cart">
+<div id="container">
+<a href="/showCartContent" class="cart" id="infoi">
     <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
 </a>
+<div id="navi"><%=number%></div>
+    </div>
 <div class="dropdown">
     <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
     <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
@@ -239,12 +249,13 @@
     <h1 class="productName"><%=product.getName()%></h1>
     <p class="price">Price: $<%=product.getPrice()%></p>
     <p class="size">Size:&nbsp; &nbsp; &nbsp; <select id="sizeOptions" name = "sizeOption"  onchange="chooseQuantity()">
-        <option value=" ">Select</option>
+        <option>Select</option>
         <%Set<Map.Entry<String, Integer>> set = product.getSizeOptionQuantity().entrySet();
         for (Map.Entry<String, Integer> entry : set) {%>
         <option ><%=entry.getKey()%></option>
        <%}%>
             </select></p>
+
     <script>
         function chooseQuantity(){
             var quantity ;

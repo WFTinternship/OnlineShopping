@@ -1,5 +1,6 @@
 package com.workfront.internship.dao;
 
+import com.workfront.internship.common.Basket;
 import com.workfront.internship.common.OrderItem;
 
 import java.util.ArrayList;

@@ -45,11 +45,15 @@ public class BasketManagerImpl implements BasketManager {
         OrderItem newOrderItem = new OrderItem();
         newOrderItem.setProduct(product).setBasketID(user.getBasket().getBasketID()).setQuantity(quantity).setSizeOption(sizeOption);
         OrderItem oldOrderItem = orderItemDao.getOrderItemByProductIDBasketIDSizeOption(product.getProductID(), user.getBasket().getBasketID(), sizeOption);
-        if (oldOrderItem == null)
+        if (oldOrderItem == null) {
             orderItemDao.insertOrderItem(newOrderItem);
+            user.setBasket(getCurrentBasket(user));
+        }
+
         else {
             oldOrderItem.setQuantity(oldOrderItem.getQuantity()+quantity);
             orderItemDao.updateOrderItem(oldOrderItem);
+            user.setBasket(getCurrentBasket(user));
         }
 return newOrderItem.getOrderItemID();
     }
@@ -69,9 +73,19 @@ return newOrderItem.getOrderItemID();
                 user.setBasket(basket);
                 return orderItems;
             }
-        } else
-            return
-                    user.getBasket().getOrderItems();
+        } else{
+            orderItems = orderItemDao.getOrderItemByBasketID(user.getBasket().getBasketID());
+            user.getBasket().setOrderItems(orderItems);
+            user.setBasket(user.getBasket());
+            return orderItems;
+        }
+            
+    }
+    @Override
+    public List<OrderItem> getOrderItemsByBasketId(int basketId){
+        if(basketId <= 0)
+            throw new RuntimeException("invalid id");
+        return orderItemDao.getOrderItemByBasketID(basketId);
 
     }
 
@@ -103,7 +117,9 @@ return newOrderItem.getOrderItemID();
             throw new RuntimeException("invalid entry");
         OrderItem orderItem = orderItemDao.getOrderItemByItemID(itemId);
         orderItemDao.deleteOrderItemByItemID(orderItem.getOrderItemID());
-        user.getBasket().getOrderItems().remove(orderItem);
+        //get new basket and set to the user...
+        Basket newBasket = basketDao.getBasket(orderItem.getBasketID());
+        user.setBasket(newBasket);
     }
 
     @Override

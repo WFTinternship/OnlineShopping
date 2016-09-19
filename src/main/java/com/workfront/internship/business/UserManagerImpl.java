@@ -71,16 +71,18 @@ public class UserManagerImpl implements UserManager {
             throw new RuntimeException("Can not update");
 
         }
+        String hashOfPassword = HashManager.getHash(user.getPassword());
+        user.setPassword(hashOfPassword);
         userDao.updateUser(user);
-        List<Address> oldAddresses = addressDao.getShippingAddressByUserID(user.getUserID());
-        List<Address> newAddresses = user.getShippingAddresses();
-        for (int i = 0; i < newAddresses.size(); i++)
-            if (!oldAddresses.contains(newAddresses.get(i)))
-                addressDao.insertAddress(newAddresses.get(i));
-        for (int i = 0; i < oldAddresses.size(); i++)
-            if (!newAddresses.contains(oldAddresses.get(i)))
-                addressDao.deleteAddressesByAddressID(oldAddresses.get(i).getAddressID());
 
+    }
+    @Override
+    public void editProfileWiyhoutPassword(User user){
+        if (!validateUser(user)) {
+            throw new RuntimeException("Can not update");
+
+        }
+        userDao.updateUserWiyhoutPassword(user);
     }
 
     @Override

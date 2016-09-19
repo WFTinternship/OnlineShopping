@@ -11,11 +11,11 @@ import java.util.List;
 public interface AddressManager {
     List<Address> getShippingAddressByUserID(int ID);
     void deleteAddressesByUserID(int userId);
-  //  void deleteAddressesByAddressID(int addressId);
+    void deleteAddressesByAddressID(int addressId);
     int insertAddress(Address address);
    void updateAddress(Address address);
 
-   // Address getAddressByID(int id);
+   Address getAddressByID(int id);
     void deleteAllAddresses();
    // List<Address> getAllAddresses();
 }

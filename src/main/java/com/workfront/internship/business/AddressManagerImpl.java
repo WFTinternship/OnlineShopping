@@ -27,7 +27,12 @@ public class AddressManagerImpl implements AddressManager{
         addressDao.deleteAddressesByUserID(userId);
 
     }
-    //  void deleteAddressesByAddressID(int addressId);
+    @Override
+    public void deleteAddressesByAddressID(int addressId){
+        if(addressId<=0)
+            throw new RuntimeException("not a valid ID");
+        addressDao.deleteAddressesByAddressID(addressId);
+    }
     @Override
     public int insertAddress(Address address){
         if(address==null)
@@ -35,8 +40,12 @@ public class AddressManagerImpl implements AddressManager{
         return addressDao.insertAddress(address);
 
     }
-    //void updateAddress(Address address);
-    // Address getAddressByID(int id);
+    @Override
+    public Address getAddressByID(int addressId){
+        if(addressId<=0)
+            throw new RuntimeException("not a valid ID");
+       return addressDao.getAddressByID(addressId);
+    }
     @Override
     public void deleteAllAddresses(){
         addressDao.deleteAllAddresses();

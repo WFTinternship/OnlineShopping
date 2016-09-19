@@ -18,6 +18,8 @@ public interface UserDao {
 
     void updateUser(User user);
 
+    void updateUserWiyhoutPassword(User user);
+
     void updateUserStatus(int id);
 
     void deleteUser(int userid);

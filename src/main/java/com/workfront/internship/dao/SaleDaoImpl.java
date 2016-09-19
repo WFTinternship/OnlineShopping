@@ -9,7 +9,9 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class SaleDaoImpl extends GeneralDao implements SaleDao {
@@ -104,8 +106,8 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         Basket basket = new Basket();
         //BasketDao basketDao = new BasketDaoImpl(dataSource);
         while (resultSet.next()) {
-            // basket = basketDao.getBasket(resultSet.getInt("basket_id"));
-            basket.setBasketID(resultSet.getInt("basket_id"));
+            basket = basketDao.getBasket(resultSet.getInt("basket_id"));
+            //basket.setBasketID(resultSet.getInt("basket_id"));
             sale = new Sale();
             //Retrieve by column name and set to a sale...
             sale = sale.setSaleID(resultSet.getInt("sale_id")).
@@ -171,19 +173,21 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Product product;
+        Map sizeOptionQuantity;
 
         int lastId = 0;
         try {
             connection = dataSource.getConnection();
             connection.setAutoCommit(false);
             //when sale is inserted, the basket status is updated to the "saled" from "current"
-            basketDao.updateBasket(connection, sale.getBasket());
+            basketDao.updateBasketStatus(connection, sale.getBasket().getBasketID());
 
             List<OrderItem> orderItems = orderItemDao.getOrderItemByBasketID(sale.getBasket().getBasketID());
             for (int i = 0; i < orderItems.size(); i++) {
-
+                sizeOptionQuantity = new HashMap();
                 product = orderItems.get(i).getProduct();
-             //   product.setQuantity(product.getQuantity() - orderItems.get(i).getQuantity());
+                sizeOptionQuantity = product.getSizeOptionQuantity();
+                sizeOptionQuantity.put(orderItems.get(i).getSizeOption(), sizeOptionQuantity.get(orderItems.get(i).getSizeOption())-orderItems.get(i).getQuantity());
                 productDao.updateProduct(connection, product);
             }
 

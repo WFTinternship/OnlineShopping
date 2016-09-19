@@ -204,7 +204,6 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         } finally {
             try {
                 preparedStatement.close();
-                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

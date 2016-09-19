@@ -35,7 +35,9 @@
         <%
 
             List<Category> categories = (List<Category>) request.getSession().getAttribute("categories");
+            String saleDone = (String)request.getAttribute("saleDone");
             List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
+
 
 
             int j = 0;
@@ -131,19 +133,21 @@
 <%
 
     if (user != null) {
-
+        int number = (Integer)request.getSession().getAttribute("number");
 
 %>
-
-<a href="/showCartContent" class="cart">
+<div id = "container">
+<a href="/showCartContent" class="cart" id="infoi">
     <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
 </a>
+<div id="navi"><%=number%></div>
+    </div>
 <div class="dropdown">
     <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
     <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
     <div class="dropdown-content">
-        <a href="#">edit account</a>
-        <a href="#">your orders</a>
+        <a href="/editAccount">edit account</a>
+        <a href="/getOrders">your orders</a>
         <a href="#">your wish list</a>
 
         <a href="/logout" id="logout_button">logout</a>
@@ -166,6 +170,12 @@
 
     <img src="/resources/image/pic1.jpg" alt="image2" class="backimg2">
 </div>
+<%if(saleDone!=null){%>
+<script>
+    alert("your sale is successfully done!")
+</script>
+<%}%>
+
 <div id="productsForPage">
 <%
 

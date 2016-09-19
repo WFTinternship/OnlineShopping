@@ -34,6 +34,8 @@
 
             List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
 
+            int number = (Integer)request.getSession().getAttribute("number");
+
 
             int j = 0;
             for (Category category : categories) {
@@ -105,10 +107,12 @@
             %>
 
         </div>
-
-        <a href="/showCartContent" class="cart">
+        <div id="container">
+        <a href="/showCartContent" class="cart" id="infoi">
             <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
         </a>
+        <div id="navi"><%=number%></div>
+            </div>
         <div class="dropdown">
             <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
             <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
@@ -127,37 +131,57 @@
     </div>
 </div>
 <div id="checkoutForm">
-<form action="/checkout" method="post">
-    <p style="font-size:25px;">Fill required information to continue checkout</p><br>
+    <form action="/checkout" method="post" onsubmit="return validateAddressField()">
+        <p style="font-size:25px;">Fill required information to continue checkout</p><br>
 
-    Full name:<br>
-    <input type="text" name="fullname" required><br><br>
-    <%if(!user.getShippingAddresses().isEmpty()){%>
-    Select from existing addresses:<br>
-    <select name="addressOption">
-        <%for(Address address : user.getShippingAddresses()){%>
-        <option><%=address.getAddress()%></option>
+        Full name:<br>
+        <input type="text" name="fullname" required><br><br>
+        <%if (!user.getShippingAddresses().isEmpty()) {%>
+        Select from existing addresses:<br>
+        <select name="addressOption" class="addressOption" id="addressOption">
+            <option>Select</option>
+            <%for (Address address : user.getShippingAddresses()) {%>
+            <option><%=address.getAddress()%>
+            </option>
+            <%}%>
+        </select><br>
+        Add new address:<br>
+        <input type="text" name="newAddress" id="newAddress"><br><br>
+        <%} else {%>
+        Address:<br>
+        <input type="text" name="address" required><br><br>
         <%}%>
-    </select>
-    Add new address:<br>
-    <input type="text" name="newAddress" required><br><br>
-    <%}
-    else{%>
-    Address:<br>
-    <input type="text" name="address" required><br><br>
-    <%}%>
-    City:<br>
-    <input type="text" name="city" required><br><br>
-    Country:<br>
-    <input type="text" name="country" required><br><br>
-    Zip:<br>
-    <input type="text" name="zip" required><br><br>
-    <button style="border-top-left-radius: 5px 5px;
+        City:<br>
+        <input type="text" name="city" required><br><br>
+        Country:<br>
+        <input type="text" name="country" required><br><br>
+        Zip:<br>
+        <input type="text" name="zip" required><br><br>
+        <button style="border-top-left-radius: 5px 5px;
 		border-bottom-left-radius: 5px 5px; width: 120px; height: 35px" class="button" id="signinButton">Continue
-    </button>
+        </button>
 
 
-</form>
+    </form>
+    <script>
+        function validateAddressField() {
+
+            if (document.getElementById("addressOption").value == "Select") {
+                if (document.getElementById("newAddress").value == "") {
+                    alert("At least one address option must be filled");
+                    return false;
+                }
+            }
+            if (document.getElementById("addressOption").value != "Select") {
+                if (document.getElementById("newAddress").value != "") {
+                    alert("Only one address option must be filled");
+                    return false;
+                }
+            }
+            else
+                return true;
+        }
+    </script>
 </div>
 </body>
 </html>

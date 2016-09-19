@@ -17,9 +17,15 @@ public interface BasketDao {
 
     Basket getBasket(int basketid);
 
+    Basket getBasketByItemId(int id);
+
+    Basket getBasketByItemId(Connection connection, int id);
+
     Basket getCurrentBasket(int userId);
 
     void updateBasket(Basket basket);
+
+    void updateBasketStatus(Connection connection, int id);
 
     void updateBasket(Connection connection, Basket basket);
 

@@ -1,12 +1,7 @@
 package com.workfront.internship.controller;
 
-import com.workfront.internship.business.AddressManager;
-import com.workfront.internship.business.CreditcardManager;
-import com.workfront.internship.business.SalesManager;
-import com.workfront.internship.common.Address;
-import com.workfront.internship.common.CreditCard;
-import com.workfront.internship.common.Sale;
-import com.workfront.internship.common.User;
+import com.workfront.internship.business.*;
+import com.workfront.internship.common.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +22,10 @@ public class saleController {
     private SalesManager salesManager;
     @Autowired
     private AddressManager addressManager;
+    @Autowired
+    private MediaManager mediaManager;
+    @Autowired
+    private BasketManager basketManager;
 
 
     @RequestMapping("/infoForSale")
@@ -61,7 +60,6 @@ public class saleController {
         request.getSession().setAttribute("address", address);
 
 
-
         return "cartInfo";
     }
 
@@ -71,15 +69,15 @@ public class saleController {
         int cvc = Integer.parseInt(request.getParameter("cvc"));
         String month = request.getParameter("month");
         String year = request.getParameter("year");
-
+//TODO make separate validate credit card... check balance as well...
         CreditCard creditCard = creditcardManager.getCreditCardByCardNumber(cartNumber);
-        if(creditCard == null){
+        if (creditCard == null) {
             String errorNumber = "wrong card number";
             request.setAttribute("errorNumber", errorNumber);
             return "cartInfo";
         }
 
-        if(creditCard.getCvc() != cvc) {
+        if (creditCard.getCvc() != cvc) {
             String errorCvc = "wrong cvc";
             request.setAttribute("errorCvc", errorCvc);
             return "cartInfo";
@@ -87,9 +85,9 @@ public class saleController {
         //create new sale...
         Sale sale = new Sale();
         //getting address from session...
-        Address address = (Address)(request.getSession().getAttribute("address"));
+        Address address = (Address) (request.getSession().getAttribute("address"));
 
-        User user = (User)request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
 
 
         sale.setAddressID(address.getAddressID()).
@@ -99,6 +97,48 @@ public class saleController {
 
         salesManager.makeNewSale(sale);
 
-        return "saleDone";
+        String saleDone = "Your sale is successfully done";
+        //setting success string attribute...
+        request.setAttribute("saleDone", saleDone);
+
+        return "index";
+    }
+
+    @RequestMapping("/getOrders")
+    public String getOrders(HttpServletRequest request) {
+
+        User user = (User) request.getSession().getAttribute("user");
+        //getting all sales of the user...
+        List<Sale> orders = salesManager.getSales(user);
+
+        request.setAttribute("orders", orders);
+
+        return "orders";
+
+    }
+    @RequestMapping("/showOrderInfo")
+    public String showOrderInfo(HttpServletRequest request){
+        int saleId = Integer.parseInt(request.getParameter("saleId"));
+
+        Sale sale = salesManager.getSaleBySaleID(saleId);
+
+
+
+        List<OrderItem> orderItemList = basketManager.getOrderItemsByBasketId(sale.getBasket().getBasketID());
+        sale.getBasket().setOrderItems(orderItemList);
+
+        List<Media> medias = new ArrayList<>();
+        int productId;
+        for(int i = 0; i< orderItemList.size(); i++){
+            productId =orderItemList.get(i).getProduct().getProductID();
+            medias = mediaManager.getMediaByProductID(productId);
+            request.setAttribute("media"+productId, medias.get(0));
+        }
+        //set Attributes to request...
+        request.setAttribute("sale", sale);
+
+        return "orderPage";
+
+
     }
 }

@@ -34,6 +34,8 @@
 
             List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
 
+            int number = (Integer)request.getSession().getAttribute("number");
+
 
             int j = 0;
             for (Category category : categories) {
@@ -105,10 +107,12 @@
             %>
 
         </div>
-
-        <a href="/showCartContent" class="cart">
+        <div id="container">
+        <a href="/showCartContent" class="cart" id="infoi">
             <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
         </a>
+        <div id="navi"><%=number%></div>
+            </div>
         <div class="dropdown">
             <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
             <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
@@ -131,8 +135,22 @@
         <p style="font-size:25px;">Fill required cart information to finish</p><br>
 
         Cart number:<br>
+        <% String string = (String) request.getAttribute("errorNumber");
+            if (string != null) {%>
+        <p style="font-size:12px; color:red"><%=request.getAttribute("errorNumber")%>
+        </p><br>
+        <%
+            }
+        %>
         <input type="text" name="cartNumber" required><br><br>
         CVC:<br>
+        <% String string1 = (String) request.getAttribute("errorCvc");
+            if (string1 != null) {%>
+        <p style="font-size:12px; color:red"><%=request.getAttribute("errorCvc")%>
+        </p><br>
+        <%
+            }
+        %>
         <input type="text" name="cvc" required><br><br>
         Expairing date:<br>
         <select name="month">

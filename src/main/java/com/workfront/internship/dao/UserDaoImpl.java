@@ -204,18 +204,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-           // connection.setAutoCommit(false);
 
-           /* AddressDao addressDao = new AddressDaoImpl(dataSource);
-            List<Address> oldAddresses = addressDao.getShippingAddressByUserID(user.getUserID());
-            List<Address> newAddresses = user.getShippingAddresses();
-            for(int i = 0; i < newAddresses.size(); i ++)
-                if(!oldAddresses.contains(newAddresses.get(i)))
-                    addressDao.insertAddress(connection, newAddresses.get(i));
-            for(int i = 0; i < oldAddresses.size(); i ++)
-                if(!newAddresses.contains(oldAddresses.get(i)))
-                    addressDao.deleteAddressesByAddressID(connection, oldAddresses.get(i).getAddressID());
-*/
             String sql = "UPDATE users SET firstname = ?, lastname = ?, username = ?, password = ?, phone = ?, email = ? where user_id = ?";
             preparedStatement = connection.prepareStatement(sql);
 
@@ -228,7 +217,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
             preparedStatement.setInt(7, user.getUserID());
 
             preparedStatement.executeUpdate();
-           // connection.commit();
+
         }catch(SQLIntegrityConstraintViolationException e){
             e.printStackTrace();
             LOGGER.error("Duplicate entry!");
@@ -236,18 +225,50 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
-           /* try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-                LOGGER.error("SQL exception occurred!");
-            }*/
+
             throw new RuntimeException(e);
         } finally {
             close(resultSet, preparedStatement, connection);
         }
 
     }
+    @Override
+    public void updateUserWiyhoutPassword(User user){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+
+            String sql = "UPDATE users SET firstname = ?, lastname = ?, username = ?, phone = ?, email = ? where user_id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, user.getFirstname());
+            preparedStatement.setString(2, user.getLastname());
+            preparedStatement.setString(3, user.getUsername());
+
+            preparedStatement.setString(4, user.getPhone());
+            preparedStatement.setString(5, user.getEmail());
+            preparedStatement.setInt(6, user.getUserID());
+
+            preparedStatement.executeUpdate();
+
+        }catch(SQLIntegrityConstraintViolationException e){
+            e.printStackTrace();
+            LOGGER.error("Duplicate entry!");
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+
+    }
+
+
     @Override
     public void deleteUser(int userid) {
         Connection connection = null;

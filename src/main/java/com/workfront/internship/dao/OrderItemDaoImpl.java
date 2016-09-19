@@ -6,6 +6,7 @@ import com.workfront.internship.common.Product;
 import org.apache.log4j.Logger;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -103,6 +104,7 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         return orderItem;
 
     }
+
     @Override
     public OrderItem getOrderItemByProductIDBasketIDSizeOption(int productid, int basketId, String sizeOption) {
         OrderItem orderItem = null;
@@ -168,16 +170,29 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
+            connection.setAutoCommit(false);
+            Basket basket = basketDao.getBasketByItemId(connection, itemid);
+            //set new price to basket
+            OrderItem orderItem = getOrderItemByItemID(itemid);
+            basket.setTotalPrice(basket.getTotalPrice() - orderItem.getProduct().getShippingPrice() - orderItem.getProduct().getPrice() * orderItem.getQuantity());
+            //update basket...
+            basketDao.updateBasket(connection, basket);
 
             String sql = "DELETE from orderitems where orderitem_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, itemid);
             preparedStatement.executeUpdate();
+            connection.commit();
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException(e);
+                e.printStackTrace();
+                try {
+                    connection.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+                LOGGER.error("SQL exception occurred!");
+                throw new RuntimeException(e);
         } finally {
             close(resultSet, preparedStatement, connection);
         }

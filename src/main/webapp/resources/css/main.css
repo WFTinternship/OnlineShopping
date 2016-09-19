@@ -492,7 +492,74 @@ display: none;
 	margin-top: 30px;
 }
 #checkoutForm select{
-	margin-top: 20px;
 	margin-right: 30px;
 
+}
+.addressOption{
+	margin-bottom: 30px;
+	height: 35px;
+	width: 400px;
+}
+.littleAnchor{
+	margin-left: 30px;
+	color: #DD127B;
+}
+.littleAnchor:hover{
+
+	color: #B9C710;
+}
+#changePass{
+	color: #DD127B;
+}
+#changePass:hover{
+	color: #B9C710;
+}
+#orders table {
+	width: 80%;
+	margin-top: 20px;
+}
+
+
+
+#orders table th {
+	padding: 4px;
+	border: 1px solid lightgrey;
+}
+
+#orders table td {
+	padding: 8px;
+	border: 1px solid lightgrey;
+	text-align: center;
+	vertical-align: middle;
+
+}
+#orders{
+	padding-left: 100px;
+	padding-top: 50px;
+}
+.saleId{
+	color: #DD127B;
+}
+.saleId:hover{
+	color: #B9C710;
+}
+.saleInfo{
+	padding-left: 200px;
+	padding-top: 20px;
+}
+
+
+#infoi {
+	position: relative;
+
+}
+#navi {
+	position: absolute;
+	z-index: 10;
+	padding-left: 5px;
+	padding-top: 8px;
+
+}
+#container{
+	float: right;
 }

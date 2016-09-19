@@ -19,6 +19,7 @@ public interface UserManager {
     void addToList(User user, Product product);
     void deleteFromList(User user, Product product);
     void deleteAllUsers();
+    void editProfileWiyhoutPassword(User user);
 
 
 }
