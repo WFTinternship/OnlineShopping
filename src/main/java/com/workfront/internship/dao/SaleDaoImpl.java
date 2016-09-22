@@ -167,6 +167,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         }
     }
 
+
     @Override
     public int insertSale(Sale sale) {
         Connection connection = null;
@@ -184,11 +185,18 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
 
             List<OrderItem> orderItems = orderItemDao.getOrderItemByBasketID(sale.getBasket().getBasketID());
             for (int i = 0; i < orderItems.size(); i++) {
-                sizeOptionQuantity = new HashMap();
+
                 product = orderItems.get(i).getProduct();
+
                 sizeOptionQuantity = product.getSizeOptionQuantity();
-                sizeOptionQuantity.put(orderItems.get(i).getSizeOption(), sizeOptionQuantity.get(orderItems.get(i).getSizeOption())-orderItems.get(i).getQuantity());
+
+                int newQuantity = (Integer)sizeOptionQuantity.get(orderItems.get(i).getSizeOption())-orderItems.get(i).getQuantity();
+                sizeOptionQuantity.put(orderItems.get(i).getSizeOption(), newQuantity);
+                product.setSizeOptionQuantity(sizeOptionQuantity);
+                //update product fields in db...
                 productDao.updateProduct(connection, product);
+                //update quantity in product_size table
+                productDao.updateProductQuantity(connection, product.getProductID(), orderItems.get(i).getSizeOption(), newQuantity);
             }
 
             CreditCard creditCard = creditCardDao.getCreditCardByCardID(sale.getCreditCardID());

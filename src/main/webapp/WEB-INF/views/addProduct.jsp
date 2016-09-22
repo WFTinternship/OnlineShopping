@@ -43,6 +43,7 @@
         Product product = (Product)request.getSession().getAttribute("product");
         String option = (String)request.getSession().getAttribute("option");
         Map categoryMap = (Map)request.getSession().getAttribute("categoryMap");
+        Map sizeOptionQuantity = (Map)request.getSession().getAttribute("sizeOptionQuantity");
         Map sizeMap = (Map)request.getSession().getAttribute("sizeMap");
 
     %>
@@ -123,11 +124,11 @@
 
             <select id="sizeOption" name = "sizeoption<%=l%>">
                <% for(int m = 0; m < listOfSizeLists.get(k).size(); m++){
-                   System.out.println("aaaaaaaaaaaaaaaaaaa" + l+listOfSizeLists.get(k).get(m).getSizeOption());%>
-                <option value="<%= listOfSizeLists.get(k).get(m).getSizeOption()%>" name = "<%=l+listOfSizeLists.get(k).get(m).getSizeOption()%>"><%=listOfSizeLists.get(k).get(m).getSizeOption()%></option>
+           %>
+                <option value="<%= listOfSizeLists.get(k).get(m).getSizeOption()%>" id = "sizeVersion<%=l + listOfSizeLists.get(k).get(m).getSizeOption()%>" name = "<%=l+listOfSizeLists.get(k).get(m).getSizeOption()%>"><%=listOfSizeLists.get(k).get(m).getSizeOption()%></option>
 
                 <%}%>
-            </select>&nbsp;&nbsp;&nbsp;<input id="quantityOption" name="quantity<%=l%>">
+            </select>&nbsp;&nbsp;&nbsp;<input id="quantityOption<%=l%>" name="quantity<%=l%>">
 
                     </input><br>
             <%}%>
@@ -139,6 +140,34 @@
            optionNumber=(Integer)map.get(product.getCategory().getCategoryID());
           %>
              document.getElementById('currentCategory').getElementsByTagName('option')[<%=optionNumber%>].selected='selected';
+           <%
+                       Set<Map.Entry<Integer, Integer>> set1 = categoryMap.entrySet();
+                       for (Map.Entry<Integer, Integer> entry1 : set1)  {%>
+
+           if(document.getElementById("currentCategory").value == "<%=entry1.getKey()%>"){
+
+               <% int versionNum = 0;
+               for (Map.Entry<Integer, List<Size>> entry2 : set)  {%>
+
+               <%if(entry1.getValue() == entry2.getKey()){%>
+
+               document.getElementById("sizeVersion<%=versionNum%>").style.display = "block";
+               <%Set<Map.Entry<String, Integer>> set3 = sizeOptionQuantity.entrySet();
+int l = 0;
+for (Map.Entry<String, Integer> entry3 : set3){%>
+document.getElementById("sizeVersion<%=l + entry3.getKey()%>").selected = 'selected'; 
+               document.getElementById("quantityOption<%=l%>").value = <%=entry3.getValue()%>;
+<% l++;}
+               %>
+
+
+               <%}
+               versionNum++;}%>
+           }
+
+           <%}%>
+
+
        <%}
        %>
         </script><br><br>
@@ -197,6 +226,8 @@
                                 alert("Color must be filled out");
                                 return false;}
             }
+
+
 
 
 

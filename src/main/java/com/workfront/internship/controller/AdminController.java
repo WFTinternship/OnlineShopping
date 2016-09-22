@@ -90,7 +90,29 @@ public class AdminController {
         List<Category> categories = categoryManager.getAllCategories();
         String[] checkedValues = (request.getParameterValues("product"));
         String option = (String) request.getParameter("option");
+        Map categoryMap = new HashMap();
+        Map sizeMap = new HashMap();
 
+
+        for (Category category : categories) {
+            if (category.getParentID() == 0) {
+                List<Size> sizes = sizeManager.getSizesByCategoryId(category.getCategoryID());
+                sizeMap.put(category.getCategoryID(), sizes);
+            }
+
+        }
+        for (Category category : categories) {
+            Category category1;
+            if (category.getParentID() == 0) {
+                categoryMap.put(category.getCategoryID(), category.getCategoryID());
+
+            } else {
+                category1 = categoryManager.getCategoryByID(category.getParentID());
+
+                categoryMap.put(category.getCategoryID(), category1.getParentID());
+
+            }
+        }
 
         if (option.equals("delete")) {
             List<Product> products = (List<Product>) request.getSession().getAttribute("products");
@@ -109,9 +131,14 @@ public class AdminController {
             request.getSession().setAttribute("products", products);
             return "products";
         } else {
+
             Product product = productManager.getProduct(Integer.parseInt(checkedValues[0]));
+            Map<String, Integer> sizeOptionQuantity = productManager.getSizeOptionQuantityMap(product.getProductID());
             request.getSession().setAttribute("product", product);
+            request.getSession().setAttribute("sizeOptionQuantity", sizeOptionQuantity);
             request.getSession().setAttribute("categories", categories);
+            request.getSession().setAttribute("categoryMap", categoryMap);
+            request.getSession().setAttribute("sizeMap", sizeMap);
             request.getSession().setAttribute("option", option);
             return "addProduct";
         }
@@ -121,17 +148,20 @@ public class AdminController {
     public String saveProduct(HttpServletRequest request,
                               @RequestParam(value = "file", required = false) MultipartFile image) throws IOException {
 
-        String filePath = "C:\\Users\\Workfront\\IdeaProjects\\OnlineShop\\OnlineShop\\src\\main\\webapp\\resources\\image";
+        String filePath = request.getSession().getServletContext().getRealPath("/resources/image");
 
-        boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
-        /*if (!isMultipartContent) {
-        }*/
+
         String imagePath = "";
-        Product product = new Product();
+        Product product = (Product) request.getSession().getAttribute("product");
+        if(product == null) {
+            product = new Product();
+        }
         if (!image.isEmpty()) {
             try {
 
-                imagePath = saveFile(filePath, image);
+
+                saveFile(filePath, image);
+                imagePath = "/resources/image/" + image.getOriginalFilename();
 
             } catch (IOException e) {
 
@@ -141,9 +171,10 @@ public class AdminController {
         }
         //set request parameters to user
         setRequestParametersToProduct(product, request);
-
-        if (request.getSession().getAttribute("option").equals("edit")) {
+        String option = (String) request.getSession().getAttribute("option");
+        if (option.equals("edit")) {
             formSubmissionEditMode(request, product);
+
             List<Product> products = productManager.getAllProducts();
             request.getSession().setAttribute("products", products);
             return "products";
@@ -165,7 +196,7 @@ public class AdminController {
 
 
         //create file path
-        filePath = uploadPath + "\\" + fileName;
+        filePath = uploadPath + File.separator + fileName;
         File storeFile = new File(filePath);
 
         // saves the file on disk
@@ -193,15 +224,17 @@ public class AdminController {
         //creating sizeId list for setting to product's size list...
         Map<String, Integer> sizeOptionQuantity = new HashMap<>();
         for (int i = 0; i < sizes.size(); i++) {
-            System.out.println("bbbbbbbbbbbbb" + i + sizes.get(i).getSizeOption());
-          //  String str = i + sizes.get(i).getSizeOption();
+
+            //  String str = i + sizes.get(i).getSizeOption();
             String sizeOption = request.getParameter("sizeoption" + i);
-            int quantity = Integer.parseInt(request.getParameter("quantity" + i));
+            if (!request.getParameter("quantity" + i).equals("")) {
+                int quantity = Integer.parseInt(request.getParameter("quantity" + i));
 
-            sizeOptionQuantity.put(sizeOption, quantity);
-           // product.getSizeId().add(Integer.parseInt(sizeOptionId));
-          //  int sizeId = sizeManager.getSizeIdBySizeOptionAndQuantity(sizeOption, quantity);
+                sizeOptionQuantity.put(sizeOption, quantity);
+                // product.getSizeId().add(Integer.parseInt(sizeOptionId));
+                //  int sizeId = sizeManager.getSizeIdBySizeOptionAndQuantity(sizeOption, quantity);
 
+            }
         }
         product.setSizeOptionQuantity(sizeOptionQuantity);
     }
@@ -212,7 +245,8 @@ public class AdminController {
         oldProduct.setName(product.getName()).setPrice(product.getPrice()).
                 setShippingPrice(product.getShippingPrice()).
                 setDescription(product.getDescription()).
-                setCategory(product.getCategory());
+                setCategory(product.getCategory()).
+                setSizeOptionQuantity(product.getSizeOptionQuantity());
         productManager.updateProduct(product);
 
     }

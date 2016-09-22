@@ -556,10 +556,14 @@ display: none;
 #navi {
 	position: absolute;
 	z-index: 10;
-	padding-left: 5px;
-	padding-top: 8px;
+	padding-left: 7px;
+	padding-top: 9px;
+	color: #756d6d;
 
 }
 #container{
 	float: right;
+}
+.inline{
+	display: inline-block;
 }

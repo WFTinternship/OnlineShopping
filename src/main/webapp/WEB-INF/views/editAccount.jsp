@@ -67,7 +67,7 @@
 
         %>
         <form method="get" action="http://www.google.com"><br><br><br><br>
-            <select name="category">
+            <select name="category" class = "searchCategory">
                 <option value="all" selected>All</option>
                 <%for (int i = 0; i < listofCategoriesList.size(); i++) {%>
 

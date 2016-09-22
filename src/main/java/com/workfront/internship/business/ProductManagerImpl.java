@@ -15,77 +15,96 @@ import java.util.Map;
  * Created by Administrator on 23.07.2016.
  */
 @Component
-public class ProductManagerImpl implements ProductManager{
+public class ProductManagerImpl implements ProductManager {
 
-   @Autowired
-   private ProductDao productDao;
-   @Autowired
-   private MediaManager mediaManager;
-
-
-   public int createNewProduct(Product product){
-       if(!validateProduct(product))
-           throw new RuntimeException("not valid product");
-       int index = 0;
-       index = productDao.insertProduct(product);
-       if(index > 0 && product.getMedias() !=null && !(product.getMedias().isEmpty()))
-           for(int i = 0; i <product.getMedias().size(); i++)
-               mediaManager.insertMedia(product.getMedias().get(i));
-
-       return index;
-   }
-   public Product getProduct(int productId){
-       if(productId<=0)
-           throw new RuntimeException("not valid id");
-       Product product = productDao.getProductByID(productId);
-       return product;
-   }
-   public void updateProduct(Product product){
-
-       productDao.updateProduct(product);
-
-       List<Media> oldMedias = mediaManager.getMediaByProductID(product.getProductID());
-       List<Media> newMedias = product.getMedias();
-       for(int i = 0; i < newMedias.size(); i ++)
-           if(!oldMedias.contains(newMedias.get(i)))
-               mediaManager.insertMedia(newMedias.get(i));
-       for(int i = 0; i < oldMedias.size(); i ++)
-           if(!newMedias.contains(oldMedias.get(i)))
-               mediaManager.deleteMediaByID(oldMedias.get(i).getMediaID());
-
-   }
-   public void deleteProduct(int id){
-
-       productDao.deleteProductByID(id);
+    @Autowired
+    private ProductDao productDao;
+    @Autowired
+    private MediaManager mediaManager;
 
 
-   }
-   public  List<Product> getAllProducts(){
-       List<Product> products = productDao.getAllProducts();
-       return products;
-   }
-   public List<Product> getProdactsByCategoryID(int id){
+    public int createNewProduct(Product product) {
+        if (!validateProduct(product))
+            throw new RuntimeException("not valid product");
+        int index = 0;
+        index = productDao.insertProduct(product);
+        if (index > 0 && product.getMedias() != null && !(product.getMedias().isEmpty()))
+            for (int i = 0; i < product.getMedias().size(); i++)
+                mediaManager.insertMedia(product.getMedias().get(i));
 
-       List<Product> products = productDao.getProdactsByCategoryID(id);
-       return products;
+        return index;
+    }
 
-   }
-    public List<Product> getLimitedNumberOfProducts(){
+    public Product getProduct(int productId) {
+        if (productId <= 0)
+            throw new RuntimeException("not valid id");
+        Product product = productDao.getProductByID(productId);
+        return product;
+    }
+
+    public void updateProduct(Product product) {
+
+        productDao.updateProduct(product);
+
+        List<Media> oldMedias = mediaManager.getMediaByProductID(product.getProductID());
+        List<Media> newMedias = product.getMedias();
+        for (int i = 0; i < newMedias.size(); i++)
+            if (!oldMedias.contains(newMedias.get(i)))
+                mediaManager.insertMedia(newMedias.get(i));
+        for (int i = 0; i < oldMedias.size(); i++)
+            if (!newMedias.contains(oldMedias.get(i)))
+                mediaManager.deleteMediaByID(oldMedias.get(i).getMediaID());
+
+    }
+
+    @Override
+    public int getQuantity(int productId, String sizeOption) {
+        if (productId <= 0 || sizeOption == null || sizeOption == "")
+            throw new RuntimeException("not valid id");
+        return productDao.getQuantity(productId, sizeOption);
+    }
+
+    public void deleteProduct(int id) {
+
+        productDao.deleteProductByID(id);
+
+
+    }
+
+    public List<Product> getAllProducts() {
+        List<Product> products = productDao.getAllProducts();
+        return products;
+    }
+
+    public List<Product> getProdactsByCategoryID(int id) {
+
+        List<Product> products = productDao.getProdactsByCategoryID(id);
+        return products;
+
+    }
+
+    public List<Product> getLimitedNumberOfProducts() {
         List<Product> products = productDao.getLimitedNumberOfProducts();
         return products;
 
     }
-   public void setSizes(int productId, String sizeOption, int quantity){
+
+    public void setSizes(int productId, String sizeOption, int quantity) {
         productDao.setSizes(productId, sizeOption, quantity);
-   }
-   private boolean validateProduct(Product product){
-       if(product!=null && product.getName() != null && product.getCategory() != null)
-           return true;
-       return false;
-   }
-   public Map<String, Integer> getSizeOptionQuantityMap(int productId){
-       return productDao.getSizeOptionQuantityMap(productId);
-   }
+    }
+
+    private boolean validateProduct(Product product) {
+        if (product != null && product.getName() != null && product.getCategory() != null)
+            return true;
+        return false;
+    }
+
+    public Map<String, Integer> getSizeOptionQuantityMap(int productId) {
+        return productDao.getSizeOptionQuantityMap(productId);
+    }
+    public void deleteProductFromProductSizeTable(int id, String option){
+        productDao.deleteProductFromProductSizeTable(id, option);
+    }
 
 
 }

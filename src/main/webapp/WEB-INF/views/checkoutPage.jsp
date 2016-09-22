@@ -61,7 +61,7 @@
 
         %>
         <form method="get" action="http://www.google.com"><br><br><br><br>
-            <select name="category">
+            <select name="category" class = "searchCategory">
                 <option value="all" selected>All</option>
                 <%for (int i = 0; i < listofCategoriesList.size(); i++) {%>
 
@@ -134,14 +134,12 @@
     <form action="/checkout" method="post" onsubmit="return validateAddressField()">
         <p style="font-size:25px;">Fill required information to continue checkout</p><br>
 
-        Full name:<br>
-        <input type="text" name="fullname" required><br><br>
         <%if (!user.getShippingAddresses().isEmpty()) {%>
         Select from existing addresses:<br>
         <select name="addressOption" class="addressOption" id="addressOption">
             <option>Select</option>
             <%for (Address address : user.getShippingAddresses()) {%>
-            <option><%=address.getAddress()%>
+            <option><%=address.getAddress() + ", " + address.getCity() + ", " + address.getCountry() + ", " + address.getZipCode()%>
             </option>
             <%}%>
         </select><br>
@@ -149,14 +147,14 @@
         <input type="text" name="newAddress" id="newAddress"><br><br>
         <%} else {%>
         Address:<br>
-        <input type="text" name="address" required><br><br>
+        <input type="text" name="address" id="address"><br><br>
         <%}%>
         City:<br>
-        <input type="text" name="city" required><br><br>
+        <input type="text" name="city" id = "city" ><br><br>
         Country:<br>
-        <input type="text" name="country" required><br><br>
+        <input type="text" name="country" id = "country" ><br><br>
         Zip:<br>
-        <input type="text" name="zip" required><br><br>
+        <input type="text" name="zip" id = "zip" ><br><br>
         <button style="border-top-left-radius: 5px 5px;
 		border-bottom-left-radius: 5px 5px; width: 120px; height: 35px" class="button" id="signinButton">Continue
         </button>
@@ -165,10 +163,18 @@
     </form>
     <script>
         function validateAddressField() {
+            if (document.getElementById("addressOption") == null) {
+                if (document.getElementById("address").value == "" || document.getElementById("city").value == ""
+                        || document.getElementById("country").value == "" || document.getElementById("zip").value == "") {
+                    alert("fill all required fields");
+                    return false;
+                }
+            }
 
             if (document.getElementById("addressOption").value == "Select") {
-                if (document.getElementById("newAddress").value == "") {
-                    alert("At least one address option must be filled");
+                if (document.getElementById("newAddress").value == "" || document.getElementById("city").value == ""
+                        || document.getElementById("country").value == "" || document.getElementById("zip").value == "") {
+                    alert("At least one address information must be filled");
                     return false;
                 }
             }
@@ -178,8 +184,8 @@
                     return false;
                 }
             }
-            else
-                return true;
+
+            return true;
         }
     </script>
 </div>

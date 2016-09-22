@@ -61,7 +61,7 @@
 
         %>
         <form method="get" action="http://www.google.com"><br><br><br><br>
-            <select name="category">
+            <select name="category" class = "searchCategory">
                 <option value="all" selected>All</option>
                 <%for (int i = 0; i < listofCategoriesList.size(); i++) {%>
 
@@ -133,6 +133,13 @@
 <div id="checkoutForm">
     <form method="post" action="/makeSale">
         <p style="font-size:25px;">Fill required cart information to finish</p><br>
+        <% String str = (String) request.getAttribute("errorBalance");
+            if (str != null) {%>
+        <p style="font-size:12px; color:red"><%=request.getAttribute("errorBalance")%>
+        </p><br>
+        <%
+            }
+        %>
 
         Cart number:<br>
         <% String string = (String) request.getAttribute("errorNumber");

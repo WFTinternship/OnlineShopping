@@ -91,6 +91,7 @@
                 }
             }
         if(count == 1) {
+            document.productForm.option.value = 'edit';
             document.getElementById("form_id").submit();
 
         }

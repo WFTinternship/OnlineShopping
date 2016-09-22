@@ -1,10 +1,7 @@
 package controllerTest;
 
 import com.workfront.internship.business.*;
-import com.workfront.internship.common.Category;
-import com.workfront.internship.common.Media;
-import com.workfront.internship.common.Product;
-import com.workfront.internship.common.User;
+import com.workfront.internship.common.*;
 import com.workfront.internship.controller.HomePageController;
 import com.workfront.internship.controller.UserController;
 import com.workfront.internship.dao.*;
@@ -28,9 +25,7 @@ import static controllerTest.TestHelper.getTestUser;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 /**
@@ -39,6 +34,8 @@ import static org.mockito.Mockito.when;
 public class UserControllerUnitTest {
 
     private UserManager userManager;
+    private BasketManager basketManager;
+    private AddressManager addressManager;
 
     private UserController userController;
     private HttpServletRequest testRequest;
@@ -52,8 +49,12 @@ public class UserControllerUnitTest {
         userController = new UserController();
 
         userManager = mock(UserManager.class);
+        basketManager = mock(BasketManager.class);
+        addressManager = mock(AddressManager.class);
 
         Whitebox.setInternalState(userController, "userManager", userManager);
+        Whitebox.setInternalState(userController, "basketManager", basketManager);
+        Whitebox.setInternalState(userController, "addressManager", addressManager);
 
         testRequest = mock(HttpServletRequest.class);
         testSession = mock(HttpSession.class);
@@ -77,6 +78,8 @@ public class UserControllerUnitTest {
 
 
         when(userManager.login(testUser.getUsername(), testUser.getPassword())).thenReturn(testUser);
+        when(basketManager.showItemsInCurrentBasket(testUser)).thenReturn(new ArrayList<OrderItem>());
+
         String result = userController.login(testRequest);
         verify(testSession).setAttribute("user", testUser);
 
@@ -140,6 +143,78 @@ public class UserControllerUnitTest {
     public void getRegistrationPage() {
         String result = userController.getRegistrationPage();
         assertEquals("registration", result);
+
+    }
+
+    @Test
+    public void deleteAddress() {
+        when(testRequest.getParameter("addressId")).thenReturn("5");
+
+        String result = userController.deleteAddress(testRequest);
+
+        verify(addressManager).deleteAddressesByAddressID(5);
+
+        assertEquals("did not get editAccount page", result, "editAccount");
+
+    }
+    @Test
+    public void saveEditedAccount_correct_oldPassword(){
+
+        when(testRequest.getParameter("oldPassword")).thenReturn(testUser.getPassword());
+        when(testRequest.getParameter("newPassword")).thenReturn("newPass");
+        when(testRequest.getParameter("repeatPassword")).thenReturn("newPass");
+        when(testSession.getAttribute("user")).thenReturn(testUser);
+        testUser.setPassword(HashManager.getHash(testUser.getPassword()));
+
+        String result = userController.saveEditedAccount(testRequest);
+
+
+        verify(testRequest).getParameter("firstname");
+        verify(testRequest).getParameter("lastname");
+        verify(testRequest).getParameter("username");
+        verify(testRequest).getParameter("email");
+        verify(testRequest, never()).setAttribute(eq("errorPass"), any(String.class));
+        verify(testRequest, never()).setAttribute(eq("errorString"), any(String.class));
+
+        assertEquals("did not get home page", result, "index");
+
+    }
+    @Test
+    public void saveEditedAccount_incorrect_oldPassword(){
+
+        when(testRequest.getParameter("oldPassword")).thenReturn("incorrectPass");
+        when(testRequest.getParameter("newPassword")).thenReturn("newPass");
+        when(testRequest.getParameter("repeatPassword")).thenReturn("newPass");
+        when(testSession.getAttribute("user")).thenReturn(testUser);
+
+        testUser.setPassword(HashManager.getHash(testUser.getPassword()));
+
+        String result = userController.saveEditedAccount(testRequest);
+
+
+
+        verify(testRequest).setAttribute(eq("errorPass"), any(String.class));
+        verify(testRequest, never()).setAttribute(eq("errorString"), any(String.class));
+
+        assertEquals("did not get editAccount page", result, "editAccount");
+
+    }
+    @Test
+    public void saveEditedAccount_non_matching_passwords(){
+
+        when(testRequest.getParameter("oldPassword")).thenReturn(testUser.getPassword());
+        when(testRequest.getParameter("newPassword")).thenReturn("newPass");
+        when(testRequest.getParameter("repeatPassword")).thenReturn("newPass1");
+        when(testSession.getAttribute("user")).thenReturn(testUser);
+
+        testUser.setPassword(HashManager.getHash(testUser.getPassword()));
+
+        String result = userController.saveEditedAccount(testRequest);
+
+        verify(testRequest, never()).setAttribute(eq("errorPass"), any(String.class));
+        verify(testRequest).setAttribute(eq("errorString"), any(String.class));
+
+        assertEquals("did not get editAccount page", result, "editAccount");
 
     }
 }

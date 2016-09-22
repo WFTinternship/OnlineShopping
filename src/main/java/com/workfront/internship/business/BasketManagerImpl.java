@@ -63,7 +63,7 @@ return newOrderItem.getOrderItemID();
         if (user == null)
             throw new RuntimeException("invalid user");
         List<OrderItem> orderItems = new ArrayList<>();
-        if (user.getBasket() == null) {
+        //if (user.getBasket() == null) {
             Basket basket = basketDao.getCurrentBasket(user.getUserID());
             if (basket == null)
                 return orderItems;
@@ -73,12 +73,10 @@ return newOrderItem.getOrderItemID();
                 user.setBasket(basket);
                 return orderItems;
             }
-        } else{
-            orderItems = orderItemDao.getOrderItemByBasketID(user.getBasket().getBasketID());
-            user.getBasket().setOrderItems(orderItems);
-            user.setBasket(user.getBasket());
-            return orderItems;
-        }
+       // } else{
+
+           // return user.getBasket().getOrderItems();
+       // }
             
     }
     @Override
@@ -87,6 +85,13 @@ return newOrderItem.getOrderItemID();
             throw new RuntimeException("invalid id");
         return orderItemDao.getOrderItemByBasketID(basketId);
 
+    }
+
+    @Override
+    public OrderItem getOrderItemByItemID(int id){
+        if(id <= 0)
+            throw new RuntimeException("invalid id");
+        return orderItemDao.getOrderItemByItemID(id);
     }
 
 

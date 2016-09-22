@@ -12,6 +12,8 @@ import java.util.List;
 public interface BasketManager {
     List<OrderItem> showItemsInCurrentBasket(User user);
     List<OrderItem> getOrderItemsByBasketId(int basketId);
+
+    OrderItem getOrderItemByItemID(int id);
     int createNewBasket(Basket basket);
     Basket getCurrentBasket(User user);
     Basket getBasket(int basketId);

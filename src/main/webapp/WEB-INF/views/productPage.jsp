@@ -1,4 +1,4 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.workfront.internship.business.CategoryManager" %>
 <%@ page import="com.workfront.internship.business.CategoryManagerImpl" %>
 <%@ page import="com.workfront.internship.common.Category" %>
@@ -35,24 +35,29 @@
     <script src="<c:url value="/resources/js/jquery.elevateZoom-3.0.8.min.js" />"></script>
     <script src="<c:url value="/resources/js/jzoom.min.js" />"></script>
 
-<script>
-    function addToCart(productId) {
-        var sizeOption = $('#sizeOptions').val();
-        if(sizeOption == "Select") {
-            alert("chose size");
+    <script>
+        function addToCart(productId) {
+            var sizeOption = $('#sizeOptions').val();
+            if (sizeOption == "Select") {
+                alert("choose size");
+
+
+            }
+            var quantity = $('#quantity').val();
+
+            $.get("/addToCart?productId=" + productId + "&sizeOption=" + sizeOption + "&quantity=" + quantity, function (data) {
+               /* if (data == "noUser") {
+                    window.location.assign("/login");
+                }*/
+
+                document.getElementById("navi").innerHTML = data;
+
+            });
+
+
         }
-        var quantity = $('#quantity').val();
 
-        $.get("/addToCart?productId=" + productId + "&sizeOption=" + sizeOption + "&quantity=" + quantity, function (data) {
-            alert(data);
-            document.getElementById("navi").innerHTML = data;
-
-        });
-
-
-    }
-
-</script>
+    </script>
 </head>
 <body>
 <!-- HTML for SEARCH BAR -->
@@ -63,8 +68,6 @@
 
             List<Category> categories = (List<Category>) request.getSession().getAttribute("categories");
             List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
-
-
 
 
             int j = 0;
@@ -91,7 +94,7 @@
 
         %>
         <form method="get" action="http://www.google.com"><br><br><br><br>
-            <select name="category">
+            <select name="category" class="searchCategory">
                 <option value="all" selected>All</option>
                 <%for (int i = 0; i < listofCategoriesList.size(); i++) {%>
 
@@ -110,7 +113,7 @@
         <br>
     </div>
     <div class="some">
-        <div class="category" class = "searchCategory">
+        <div class="category" class="searchCategory">
 
             <%
                 for (int i = 0; i < listofCategoriesList.size(); i++) {%>
@@ -159,16 +162,17 @@
 <%
 
     if (user != null) {
-        int number = (Integer)request.getSession().getAttribute("number");
+        int number = (Integer) request.getSession().getAttribute("number");
 
 
 %>
 <div id="container">
-<a href="/showCartContent" class="cart" id="infoi">
-    <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
-</a>
-<div id="navi"><%=number%></div>
+    <a href="/showCartContent" class="cart" id="infoi">
+        <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
+    </a>
+    <div id="navi"><%=number%>
     </div>
+</div>
 <div class="dropdown">
     <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
     <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
@@ -225,9 +229,8 @@
 
 </div>
 <div class="bigproductImage">
-    <% List<Media> medias= product.getMedias();
-    for(int i = 0; i<medias.size(); i++)
-        {%>
+    <% List<Media> medias = product.getMedias();
+        for (int i = 0; i < medias.size(); i++) {%>
     <div class="jzoom" id="bigimg<%=i+1%>">
 
 
@@ -246,28 +249,34 @@
 
 </div>
 <div class="productdesc">
-    <h1 class="productName"><%=product.getName()%></h1>
-    <p class="price">Price: $<%=product.getPrice()%></p>
-    <p class="size">Size:&nbsp; &nbsp; &nbsp; <select id="sizeOptions" name = "sizeOption"  onchange="chooseQuantity()">
+    <h1 class="productName"><%=product.getName()%>
+    </h1>
+    <p class="price">Price: $<%=product.getPrice()%>
+    </p>
+    <p class="size">Size:&nbsp; &nbsp; &nbsp; <select id="sizeOptions" name="sizeOption" onchange="chooseQuantity()">
         <option>Select</option>
-        <%Set<Map.Entry<String, Integer>> set = product.getSizeOptionQuantity().entrySet();
-        for (Map.Entry<String, Integer> entry : set) {%>
-        <option ><%=entry.getKey()%></option>
-       <%}%>
-            </select></p>
+        <%
+            Set<Map.Entry<String, Integer>> set = product.getSizeOptionQuantity().entrySet();
+            for (Map.Entry<String, Integer> entry : set) {
+        %>
+        <option><%=entry.getKey()%>
+        </option>
+        <%}%>
+    </select></p>
 
     <script>
-        function chooseQuantity(){
-            var quantity ;
+        function chooseQuantity() {
+            var quantity;
             <%for (Map.Entry<String, Integer> entry : set){%>
-            if( document.getElementById("sizeOptions").value == "<%=entry.getKey()%>") {
-                quantity = <%=entry.getValue()%>
+            if (document.getElementById("sizeOptions").value == "<%=entry.getKey()%>") {
+                quantity =
+                <%=entry.getValue()%>
             }
 
             var selectString = " <p class='quantity'>Quantity: </p><select id = 'quantity'>";
-                for (var i = 1; i<quantity+1; i++) {
-                    selectString +="<option>" + i + "</option>";
-                }
+            for (var i = 1; i < quantity + 1; i++) {
+                selectString += "<option>" + i + "</option>";
+            }
             selectString += "</select>";
             document.getElementById("select_quantity").innerHTML = selectString;
 
@@ -275,50 +284,60 @@
 }%>
         }
     </script>
-    <div id="select_quantity" >
-        <p class="quantity">Quantity: </p><select id = "q" name = "quantity">
-                <script>
-                    document.write("<option>" + 1 + "</option>");
-                </script>
+    <div id="select_quantity">
+        <p class="quantity">Quantity: </p><select id="q" name="quantity">
+        <script>
+            document.write("<option>" + 1 + "</option>");
+        </script>
 
-        </select>
+    </select>
     </div>
-    <div class = "cartButton" id="cartButton">
+    <div class="cartButton" id="cartButton">
         <button onclick="addToCart(<%=product.getProductID()%>)"
-                class='button'  role='button'>Add to Cart</button>
-    <%--<a href="/addToCart?productId=&sizeOption=" class="button"  role="button">Add to Cart</a>--%>
+                class='button' role='button'>Add to Cart
+        </button>
+        <%--<a href="/addToCart?productId=&sizeOption=" class="button"  role="button">Add to Cart</a>--%>
     </div>
 
     <div class="listButton">
-    <a href="#" class="button" role="button">Add to List</a>
+        <a href="#" class="button" role="button">Add to List</a>
 
-        </div>
+    </div>
 </div>
 <div class="clear"></div>
 </div>
 
 
 <div class="productButtons">
-    <%if(medias.size() == 2){%>
-    <button id="littleImage1" onclick="myFunction1()"><img src="<%=product.getMedias().get(0).getMediaPath()%>"
-                                                           style="height:90px" ></button>
-
-    <button id="littleImage2" onclick="myFunction2()"><img src="<%=product.getMedias().get(1).getMediaPath()%>"
-                                                      style="height:90px" ></button>
-            <%} if(medias.size() == 1){%>
+    <%if (medias.size() == 2) {%>
     <button id="littleImage1" onclick="myFunction1()"><img src="<%=product.getMedias().get(0).getMediaPath()%>"
                                                            style="height:90px"></button>
-<%}if(medias.size() == 0){%>
+
+    <button id="littleImage2" onclick="myFunction2()"><img src="<%=product.getMedias().get(1).getMediaPath()%>"
+                                                           style="height:90px"></button>
+    <%
+        }
+        if (medias.size() == 1) {
+    %>
+    <button id="littleImage1" onclick="myFunction1()"><img src="<%=product.getMedias().get(0).getMediaPath()%>"
+                                                           style="height:90px"></button>
+    <%
+        }
+        if (medias.size() == 0) {
+    %>
     <button id="littleImage1" onclick="myFunction1()"><img src="/resources/image/index.png"
                                                            style="height:90px"></button>
-    <%}if(medias.size() == 3){%>
+    <%
+        }
+        if (medias.size() == 3) {
+    %>
     <button id="littleImage1" onclick="myFunction1()"><img src="<%=product.getMedias().get(0).getMediaPath()%>"
-                                                           style="height:90px" ></button>
+                                                           style="height:90px"></button>
 
     <button id="littleImage2" onclick="myFunction2()"><img src="<%=product.getMedias().get(1).getMediaPath()%>"
-                                                           style="height:90px" ></button>
+                                                           style="height:90px"></button>
     <button id="littleImage2" onclick="myFunction3()"><img src="<%=product.getMedias().get(2).getMediaPath()%>"
-                                                           style="height:90px" ></button>
+                                                           style="height:90px"></button>
     <%}%>
     <script>function myFunction2() {
         document.getElementById("bigimg1").style.display = "none";

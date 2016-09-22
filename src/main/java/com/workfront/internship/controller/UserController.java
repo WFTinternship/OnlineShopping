@@ -20,10 +20,10 @@ import java.util.List;
  * Created by Anna Asmangulyan on 8/30/2016.
  */
 @Controller
-public class UserController{
+public class UserController {
 
-        @Autowired
-        private UserManager userManager;
+    @Autowired
+    private UserManager userManager;
     @Autowired
     private AddressManager addressManager;
     @Autowired
@@ -57,9 +57,9 @@ public class UserController{
 
             return "signin";
         } else {
-            List<OrderItem> orderItems =  basketManager.showItemsInCurrentBasket(user);
+            List<OrderItem> orderItems = basketManager.showItemsInCurrentBasket(user);
             int numberOfItemsInBasket = 0;
-            for(OrderItem orderItem : orderItems){
+            for (OrderItem orderItem : orderItems) {
 
                 numberOfItemsInBasket += orderItem.getQuantity();
 
@@ -69,19 +69,23 @@ public class UserController{
             return "index";
         }
     }
+
     @RequestMapping("/registration")
     public String registration(HttpServletRequest request) {
         String errorString = null;
+        //get parameters for the registration...
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
         String email = request.getParameter("email");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String repassword = request.getParameter("repeatpassword");
+        //create new user and set params...
         User user = new User();
         user.setFirstname(firstname).setLastname(lastname).setUsername(username).setEmail(email).setPassword(password).setAccessPrivilege("user").setConfirmationStatus(true);
         int id = userManager.createAccount(user);
         user.setUserID(id);
+
         if (id == 0) {
 
             errorString = "User with that username already exists";
@@ -112,12 +116,15 @@ public class UserController{
 
         return "registration";
     }
+
     @RequestMapping("/editAccount")
-    public String editAccount(HttpServletRequest request){
-       User user = (User)request.getSession().getAttribute("user");
+    public String editAccount(HttpServletRequest request) {
+
+        User user = (User) request.getSession().getAttribute("user");
 
         user.setShippingAddresses(addressManager.getShippingAddressByUserID(user.getUserID()));
         request.getSession().setAttribute("user", user);
+
         return "editAccount";
 
 
@@ -125,12 +132,13 @@ public class UserController{
 
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request) {
+
         request.getSession().setAttribute("user", null);
         return "index";
     }
 
     @RequestMapping("/deleteAddress")
-    public String deleteAddress(HttpServletRequest request){
+    public String deleteAddress(HttpServletRequest request) {
 
         int id = Integer.parseInt(request.getParameter("addressId"));
 
@@ -139,8 +147,9 @@ public class UserController{
 
         return "editAccount";
     }
+
     @RequestMapping("/saveEditedAccount")
-    public String saveEditedAccount(HttpServletRequest request){
+    public String saveEditedAccount(HttpServletRequest request) {
 
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
@@ -150,14 +159,14 @@ public class UserController{
         String newpassword = request.getParameter("newPassword");
         String repeadPassword = request.getParameter("repeatPassword");
 
-        if(!newpassword.equals(repeadPassword)){
+        if (!newpassword.equals(repeadPassword)) {
             String errorString = "Passwords are not equal";
             request.setAttribute("errorString", errorString);
             return "editAccount";
         }
 
-        User user = (User)request.getSession().getAttribute("user");
-        if(!HashManager.getHash(password).equals(user.getPassword())){
+        User user = (User) request.getSession().getAttribute("user");
+        if (!HashManager.getHash(password).equals(user.getPassword())) {
             String errorPass = "incorrect password";
 
             request.setAttribute("errorPass", errorPass);
@@ -166,18 +175,19 @@ public class UserController{
         }
 
         user.setFirstname(firstname).setLastname(lastname).setUsername(username).setEmail(email);
-        if(newpassword !=null && newpassword !=""){
+
+        if (!newpassword.equals("")) {
             user.setPassword(newpassword);
+            //update user...
             userManager.editProfile(user);
 
             return "index";
-        }
-        else{
+        } else {
             userManager.editProfileWiyhoutPassword(user);
             return "index";
         }
 
-        //update user...
+
 
     }
 

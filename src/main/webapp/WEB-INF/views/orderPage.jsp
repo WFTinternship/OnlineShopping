@@ -73,7 +73,7 @@
 
         %>
         <form method="get" action="http://www.google.com"><br><br><br><br>
-            <select name="category">
+            <select name="category" class = "searchCategory">
                 <option value="all" selected>All</option>
                 <%for (int i = 0; i < listofCategoriesList.size(); i++) {%>
 
@@ -119,10 +119,12 @@
             %>
 
         </div>
+        <div id="container">
         <a href="/showCartContent" class="cart" id="infoi">
             <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
         </a>
         <div id="navi"><%=number%></div>
+        </div>
         <div class="dropdown">
             <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
             <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +34,16 @@ public class BasketController {
 
     @RequestMapping("/addToCart")
     @ResponseBody
-    public String addToBasket(HttpServletRequest request) {
+    public String addToBasket(HttpServletRequest request, HttpServletResponse response) {
         //get user from session...
         User user = (User) request.getSession().getAttribute("user");
-
+        /*if(user == null){
+            try {
+                response.sendRedirect("signin");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }*/
         //getting parameters from request... productId and quantity...
         String productIdStr = request.getParameter("productId");
         int productId = Integer.parseInt(productIdStr);
@@ -45,6 +53,10 @@ public class BasketController {
         Product product = productManager.getProduct(productId);
 
         basketManager.addToBasket(user, product, sizeOption, quantity);
+
+        user.setBasket(basketManager.getCurrentBasket(user));
+
+
 
         List<OrderItem> orderItems =  basketManager.showItemsInCurrentBasket(user);
 
@@ -101,7 +113,32 @@ public class BasketController {
         }
         //set Attributes to request...
         request.setAttribute("orderItemList", orderItemList);
+        request.getSession().setAttribute("number",orderItemList.size());
 
         return "basketContent";
+    }
+
+    @RequestMapping("/updateBasket")
+    @ResponseBody
+    public String updateBasket(HttpServletRequest request) {
+
+        User user = (User) request.getSession().getAttribute("user");
+
+        int id = Integer.parseInt(request.getParameter("orderItemId"));
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+
+        //get orderItem by the given id...
+        OrderItem orderItem = basketManager.getOrderItemByItemID(id);
+
+        //change quantity...
+        int oldQuantity = orderItem.getQuantity();
+
+        orderItem.setQuantity(quantity);
+        //update basket...
+        basketManager.updateBasket(user, orderItem);
+
+
+        return Integer.toString(oldQuantity - quantity);
+
     }
 }

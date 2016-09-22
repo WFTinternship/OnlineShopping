@@ -14,10 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class ProductDaoImpl extends GeneralDao implements ProductDao {
@@ -58,6 +55,34 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
             close(resultSet, preparedStatement, connection);
         }
         return product;
+    }
+    @Override
+    public int getQuantity(int productId, String sizeOption){
+        int quantity = -1;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+
+            String sql = "SELECT * FROM product_size  where product_id = ? AND size_option = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, productId);
+            preparedStatement.setString(2, sizeOption);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                quantity = resultSet.getInt("quantity");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return quantity;
+
     }
     public List<Product> getLimitedNumberOfProducts(){
         Connection connection = null;
@@ -173,11 +198,16 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
 
         try {
             connection = dataSource.getConnection();
+            updateProduct(connection, product);
+            Set<Map.Entry<String, Integer>> set = product.getSizeOptionQuantity().entrySet();
+            for (Map.Entry<String, Integer> entry : set) {
+                updateProductQuantity(connection, product.getProductID(), entry.getKey(), entry.getValue());
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("can not get a connection");
         }
-        updateProduct(connection, product);
+
     }
 
     @Override
@@ -210,6 +240,32 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         }
 
     }
+    @Override
+    public void updateProductQuantity(Connection connection, int productId, String sizeOption, int quantity){
+        PreparedStatement preparedStatement = null;
+        try {
+
+            String sql = "UPDATE product_size SET quantity = ? where product_id = ? AND size_option = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, quantity);
+            preparedStatement.setInt(2, productId);
+            preparedStatement.setString(3, sizeOption);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     @Override
     public void deleteProductByID(int id) {
@@ -233,7 +289,29 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         }
 
     }
+    @Override
+    public void deleteProductFromProductSizeTable(int id, String sizeOption){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
 
+            String sql = "DELETE from product_size where product_id = ? AND size_option = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, sizeOption);
+            preparedStatement.executeUpdate();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+    }
     @Override
     public void deleteProductByName(String name) {
         Connection connection = null;

@@ -28,6 +28,43 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />">
     <script src="<c:url value="/resources/js/jquery-1.12.1.min.js" />"></script>
 
+    <script>
+
+
+        function changeNumberOnCart(orderItemId, elem) {
+
+            var quantity = elem.options[elem.selectedIndex].value;
+
+
+            $.get("/updateBasket?orderItemId=" + orderItemId + "&quantity=" + quantity, function (data) {
+
+                var delta = parseInt(data);
+
+                var oldQuantity = document.getElementById("navi").textContent;
+
+                var newQuantity = parseInt(oldQuantity) - parseInt(data);
+
+                document.getElementById("navi").innerHTML = newQuantity;
+
+                var oldPrice = document.getElementById("total").textContent;
+                alert(oldPrice);
+
+                var singlePrice = document.getElementById("price").textContent;
+                alert(singlePrice);
+                var newPrice = parseFloat(oldPrice) - parseFloat(singlePrice)*delta;
+                alert(newPrice);
+                document.getElementById("total").innerHTML = newPrice;
+                document.getElementById("error").style.display = "none";
+
+
+
+
+            });
+
+
+        }
+
+    </script>
 </head>
 <body>
 <!-- HTML for SEARCH BAR -->
@@ -74,7 +111,7 @@
 
         %>
         <form method="get" action="http://www.google.com"><br><br><br><br>
-            <select name="category">
+            <select name="category" class = "searchCategory">
                 <option value="all" selected>All</option>
                 <%for (int i = 0; i < listofCategoriesList.size(); i++) {%>
 
@@ -124,7 +161,7 @@
         <a href="/showCartContent" class="cart" id="infoi">
             <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
         </a>
-        <div id="navi"><%=number%></div>
+        <div id="navi" value ="<%=number%>"><%=number%></div>
             </div>
         <div class="dropdown">
             <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
@@ -155,13 +192,23 @@
         </div>
         <div class = "productInfo">
        <p style="font-size: 20px;">Name:&nbsp;<%= orderItemList.get(k).getProduct().getName()%></p>
-       <p style="font-style: italic; ">Price:&nbsp;$&nbsp;<%= orderItemList.get(k).getProduct().getPrice()%></p>
+       <p class="inline" style="font-style: italic; ">Price:&nbsp;$&nbsp;</p><span id= "price"><%= orderItemList.get(k).getProduct().getPrice()%></span>
        <p style="font-style: italic; ">Shipping Price:&nbsp;$&nbsp;<%= orderItemList.get(k).getProduct().getShippingPrice()%></p>
        <p >Size:&nbsp;<%= orderItemList.get(k).getSizeOption()%></p>
+            <% int productQuantity = orderItemList.get(k).getProduct().getSizeOptionQuantity().get(orderItemList.get(k).getSizeOption());
+
+                    if(productQuantity < orderItemList.get(k).getQuantity()){
+            %>
+            <p style="font-size:12px; color:red" id="error">the product number you have chosen is not available in store</p>
 
 
-            <p class="quantity">Quantity: </p><select id = "q" name = "quantity">
-            <%for(int i =1; i< orderItemList.get(k).getProduct().getSizeOptionQuantity().get(orderItemList.get(k).getSizeOption())+1; i++){%>
+            <%}%>
+
+            <p class="quantity" >Quantity: </p><select id = "selectQuantity<%=k%>" name = "quantity" onchange="changeNumberOnCart(<%=orderItemList.get(k).getOrderItemID()%>, this)">
+                <option>Select</option>
+                <%for(int i =1; i< productQuantity +1; i++){%>
+
+
             <script>
                 var str = "<option ";
                <% if(i==orderItemList.get(k).getQuantity()){%>
@@ -185,30 +232,23 @@
 </div>
 <%if(!orderItemList.isEmpty()){%>
 <div id="checkout">
-    <p>Subtotal(items) :&nbsp;$<%=user.getBasket().getTotalPrice()%></p><br>
-    <a href="/infoForSale" class="button" role="button">Procced to checkout</a>
+    <p class="inline">Total Price:&nbsp;$</p><span id ="total"><%=user.getBasket().getTotalPrice()%></span><br><br><br>
+    <a href="/infoForSale" class="button" role="button" onclick="return validate(<%=orderItemList.size()%>)">Procced to checkout</a>
 
 </div>
 <%}%>
 <script>
-    <%for(int l =0; l<orderItemList.size(); l++){%>
-    function deleteItem<%=l+1%>(itemId) {
-        alert("kuku");
-        alert("kukula");
-        alert("kuku1");
-        alert("lala" + itemId);
-
-
-        $.get("/deleteItemFromBasket?itemId=" + itemId, function (data) {
-            alert(data);
-
-        });
-        $( "#productdiv<%=(l+1)%>" ).remove();
-
-
+    function validate(size){
+        alert(size);
+        for(var i = 0; i < parseInt(size); i ++) {
+            if (document.getElementById("selectQuantity" + i).value == "Select"){
+                alert("chose quantity");
+                return false;
+            }
+        }
 
     }
-    <%}%>
+
 
 </script>
 <div class = "clear"></div>
