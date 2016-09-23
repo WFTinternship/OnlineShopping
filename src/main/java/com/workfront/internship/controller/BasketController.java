@@ -34,7 +34,7 @@ public class BasketController {
 
     @RequestMapping("/addToCart")
     @ResponseBody
-    public String addToBasket(HttpServletRequest request, HttpServletResponse response) {
+    public String addToBasket(HttpServletRequest request) {
         //get user from session...
         User user = (User) request.getSession().getAttribute("user");
         /*if(user == null){
@@ -51,18 +51,13 @@ public class BasketController {
         String sizeOption = (request.getParameter("sizeOption"));
 
         Product product = productManager.getProduct(productId);
-
         basketManager.addToBasket(user, product, sizeOption, quantity);
 
         user.setBasket(basketManager.getCurrentBasket(user));
 
-
-
-        List<OrderItem> orderItems =  basketManager.showItemsInCurrentBasket(user);
-
+        List<OrderItem> orderItems = basketManager.showItemsInCurrentBasket(user);
         int numberOfItemsInBasket = 0;
-
-        for(OrderItem orderItem : orderItems){
+        for (OrderItem orderItem : orderItems) {
 
             numberOfItemsInBasket += orderItem.getQuantity();
 
@@ -70,31 +65,34 @@ public class BasketController {
         request.getSession().setAttribute("number", numberOfItemsInBasket);
 
         String str = Integer.toString(numberOfItemsInBasket);
-        System.out.println("aaaaaaaaaaaaa" + str);
-
 
         return str;
     }
 
     @RequestMapping("/showCartContent")
-    public String showCartContent(HttpServletRequest request){
+    public String showCartContent(HttpServletRequest request) {
+
         //get items in basket...
-        List<OrderItem> orderItemList = basketManager.showItemsInCurrentBasket((User)request.getSession().getAttribute("user"));
+        List<OrderItem> orderItemList = basketManager.showItemsInCurrentBasket((User) request.getSession().getAttribute("user"));
+
         //get one media for each product...
         List<Media> medias = new ArrayList<>();
+
         int productId;
-        for(int i = 0; i< orderItemList.size(); i++){
-            productId =orderItemList.get(i).getProduct().getProductID();
+        for (int i = 0; i < orderItemList.size(); i++) {
+            productId = orderItemList.get(i).getProduct().getProductID();
             medias = mediaManager.getMediaByProductID(productId);
-            request.setAttribute("media"+productId, medias.get(0));
+            request.setAttribute("media" + productId, medias.get(0));
         }
+
         //set Attributes to request...
         request.setAttribute("orderItemList", orderItemList);
 
         return "basketContent";
     }
+
     @RequestMapping("/deleteItemFromBasket")
-        public String deleteItemFromBasket(HttpServletRequest request){
+    public String deleteItemFromBasket(HttpServletRequest request) {
 
         User user = (User) request.getSession().getAttribute("user");
 
@@ -102,18 +100,18 @@ public class BasketController {
 
         basketManager.deleteFromBasket(user, id);
 
-        List<OrderItem> orderItemList = basketManager.showItemsInCurrentBasket((User)request.getSession().getAttribute("user"));
+        List<OrderItem> orderItemList = basketManager.showItemsInCurrentBasket((User) request.getSession().getAttribute("user"));
         //get one media for each product...
         List<Media> medias = new ArrayList<>();
         int productId;
-        for(int i = 0; i< orderItemList.size(); i++){
-            productId =orderItemList.get(i).getProduct().getProductID();
+        for (int i = 0; i < orderItemList.size(); i++) {
+            productId = orderItemList.get(i).getProduct().getProductID();
             medias = mediaManager.getMediaByProductID(productId);
-            request.setAttribute("media"+productId, medias.get(0));
+            request.setAttribute("media" + productId, medias.get(0));
         }
         //set Attributes to request...
         request.setAttribute("orderItemList", orderItemList);
-        request.getSession().setAttribute("number",orderItemList.size());
+        request.getSession().setAttribute("number", orderItemList.size());
 
         return "basketContent";
     }

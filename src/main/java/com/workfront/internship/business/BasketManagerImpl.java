@@ -71,7 +71,7 @@ return newOrderItem.getOrderItemID();
                 orderItems = orderItemDao.getOrderItemByBasketID(basket.getBasketID());
                 basket.setOrderItems(orderItems);
                 user.setBasket(basket);
-                return orderItems;
+                return user.getBasket().getOrderItems();
             }
        // } else{
 

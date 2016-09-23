@@ -52,8 +52,11 @@ public class SaleController {
     public String getInfoFromCheckoutPage(HttpServletRequest request) {
         //getting request params...
         String addressOption = request.getParameter("addressOption");
+        Address address = new Address();
 
         if(addressOption !=null && !addressOption.equals("Select")){
+            address = addressManager.getAddressByID(Integer.parseInt(addressOption));
+            request.getSession().setAttribute("address", address);
             return "cartInfo";
         }
 
@@ -73,11 +76,13 @@ public class SaleController {
 
             //create address list and set to user...
             List<Address> addresses = new ArrayList<>();
-            Address address = new Address();
+
             address.setAddress(addressOption).setCity(city).setCountry(country).setZipCode(zip).setUserID(user.getUserID());
 
             //save address...
             addressManager.insertAddress(address);
+            //set address atribute...
+            request.getSession().setAttribute("address", address);
             return "cartInfo";
             }
 
@@ -87,38 +92,25 @@ public class SaleController {
 
     @RequestMapping("/makeSale")
     public String makeNewSale(HttpServletRequest request) {
+
         String cartNumber = request.getParameter("cartNumber");
-        int cvc = Integer.parseInt(request.getParameter("cvc"));
+        String cvc = request.getParameter("cvc");
         String month = request.getParameter("month");
         String year = request.getParameter("year");
 
         User user = (User) request.getSession().getAttribute("user");
 
-//TODO make separate validate credit card... check balance as well...
+
         CreditCard creditCard = creditcardManager.getCreditCardByCardNumber(cartNumber);
-        if (creditCard == null) {
-            String errorNumber = "wrong card number";
-            request.setAttribute("errorNumber", errorNumber);
+        //credit card validation...
+        if(!isCreditCardValid(creditCard,cvc, request)){
             return "cartInfo";
         }
 
-        if (creditCard.getCvc() != cvc) {
-            String errorCvc = "wrong cvc";
-            request.setAttribute("errorCvc", errorCvc);
-            return "cartInfo";
-        }
-        if (creditCard.getBalance() < user.getBasket().getTotalPrice()) {
-            String errorBalance = "not enough balance";
-            request.setAttribute("errorBalance", errorBalance);
-            return "cartInfo";
-        }
         //create new sale...
         Sale sale = new Sale();
         //getting address from session...
         Address address = (Address) (request.getSession().getAttribute("address"));
-
-
-
 
         sale.setAddressID(address.getAddressID()).
                 setBasket(user.getBasket()).
@@ -126,21 +118,29 @@ public class SaleController {
                 setUserID(user.getUserID()).setDate(new Date());
 
         int id = salesManager.makeNewSale(sale);
+        if(id == 0){
+            String errorString = "Sorry! One of the items may be out of stock! Check your Cart!";
+
+            // Store information in request attribute, before forward.
+            request.setAttribute("errorString", errorString);
+            // request.setAttribute("user", user);
+
+            return ("index");
+        }
         //update product info if sale is successfully done...
         if (id > 0) {
 
-            updateProductSizeAfterSale(user.getBasket().getOrderItems());
+            updateProductSizeAfterSale(sale.getBasket().getOrderItems());
+            System.out.println("" + sale.getBasket().getOrderItems().size());
         }
 
         String saleDone = "Your sale is successfully done";
         //setting success string attribute...
         request.setAttribute("saleDone", saleDone);
+        //make basket empty...
         request.getSession().setAttribute("number", 0);
         user.setBasket(null);
         request.getSession().setAttribute("user", user);
-
-        HomePageController homePageController = new HomePageController();
-        homePageController.getProductsForHomePage(request);
 
         return "index";
     }
@@ -183,7 +183,7 @@ public class SaleController {
 
     }
 
-    private void updateProductSizeAfterSale(List<OrderItem> orderItems) {
+    public void updateProductSizeAfterSale(List<OrderItem> orderItems) {
         int quantity;
         int productId;
         Product product;
@@ -193,8 +193,9 @@ public class SaleController {
             quantity = productManager.getQuantity(productId, orderItem.getSizeOption());
 
             //check if quantity is 0 delete from table...
-            if (quantity == 0) ;
-            productManager.deleteProductFromProductSizeTable(productId, orderItem.getSizeOption());
+            if (quantity == 0) {
+                productManager.deleteProductFromProductSizeTable(productId, orderItem.getSizeOption());
+            }
             //check if there remains a product of some size, if no delete from products table...
             product = productManager.getProduct(productId);
             for (Map.Entry<String, Integer> entry : product.getSizeOptionQuantity().entrySet()) {
@@ -204,5 +205,25 @@ public class SaleController {
                 productManager.deleteProduct(productId);
             }
         }
+    }
+    private boolean isCreditCardValid(CreditCard creditCard, String cvc, HttpServletRequest request){
+        User user = (User)request.getSession().getAttribute("user");
+        if (creditCard == null) {
+            String errorNumber = "wrong card number";
+            request.setAttribute("errorNumber", errorNumber);
+            return false;
+        }
+
+        if (cvc.equals("") || creditCard.getCvc() != Integer.parseInt(cvc)) {
+            String errorCvc = "wrong cvc";
+            request.setAttribute("errorCvc", errorCvc);
+            return false;
+        }
+        if (creditCard.getBalance() < user.getBasket().getTotalPrice()) {
+            String errorBalance = "not enough balance";
+            request.setAttribute("errorBalance", errorBalance);
+            return false;
+        }
+        return true;
     }
 }

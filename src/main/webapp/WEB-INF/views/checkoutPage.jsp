@@ -139,7 +139,7 @@
         <select name="addressOption" class="addressOption" id="addressOption">
             <option>Select</option>
             <%for (Address address : user.getShippingAddresses()) {%>
-            <option><%=address.getAddress() + ", " + address.getCity() + ", " + address.getCountry() + ", " + address.getZipCode()%>
+            <option value="<%=address.getAddressID()%>"><%=address.getAddress() + ", " + address.getCity() + ", " + address.getCountry() + ", " + address.getZipCode()%>
             </option>
             <%}%>
         </select><br>

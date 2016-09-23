@@ -1,9 +1,11 @@
 package com.workfront.internship.dao;
 
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
 import org.apache.log4j.Logger;
+import org.apache.xerces.dom.RangeExceptionImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -91,7 +93,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         List<Product> products = new ArrayList<>();
         try {
             connection = dataSource.getConnection();
-            String sql = "SELECT * FROM products LIMIT 6";
+            String sql = "SELECT * FROM products LIMIT 1";
             preparedStatement = connection.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
             products = createProductList(resultSet);
@@ -253,7 +255,11 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
 
             preparedStatement.executeUpdate();
 
-        } catch (SQLException e) {
+        } catch(MysqlDataTruncation e) {
+        e.printStackTrace();
+        LOGGER.error("Negative number!");
+            throw new RuntimeException("Negative number!");
+    }catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
             throw new RuntimeException(e);

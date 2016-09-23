@@ -131,7 +131,7 @@
     </div>
 </div>
 <div id="checkoutForm">
-    <form method="post" action="/makeSale">
+    <form method="post" action="/makeSale" onsubmit = "return validateCart()">
         <p style="font-size:25px;">Fill required cart information to finish</p><br>
         <% String str = (String) request.getAttribute("errorBalance");
             if (str != null) {%>
@@ -182,6 +182,11 @@
 
 
     </form>
+    <script>
+        function validateCart(){
+            return true;
+        }
+    </script>
 </div>
 </body>
 </html>

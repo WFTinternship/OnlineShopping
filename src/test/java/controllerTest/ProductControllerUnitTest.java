@@ -122,56 +122,13 @@ public class ProductControllerUnitTest {
         when(categoryManager.getCategoriesByParentID(0)).thenReturn(mainCategories);
         when(categoryManager.getCategoriesByParentID(mainCategories.get(0).getCategoryID())).thenReturn(subCategories);
         //testing method... getting all categories for productPage menu...
-        productController.getCategories(testRequest);
+       // productController.getCategories(testRequest);
         verify(categoryManager).getCategoriesByParentID(testCategory.getCategoryID());
 
 
         verify(testSession).setAttribute("subcategories0", subCategories);
         verify(testSession).setAttribute("mainCategories", mainCategories);
 
-/*
-    @Test
-    public void login_fali() {
-        when(userManager.login(testUser.getUsername(), testUser.getPassword())).thenReturn(null);
-        String errorString = "Username or password invalid";
-        //testing method... in case of wrong username or password
-        String result = userController.login(testRequest);
 
-        verify(testRequest).setAttribute("errorString", errorString);
-        assertEquals(result, "signin");
-    }
-
-    @Test
-    public void registration_succsess() {
-        when(userManager.createAccount(any(User.class))).thenReturn(testUser.getUserID());
-        //testing method... success case of registration
-        String result = userController.registration(testRequest);
-
-        verify(testSession).setAttribute(any(String.class), any(User.class));
-
-        assertEquals(result, "index");
-
-    }
-
-    @Test
-    public void registration_fail() {
-        when(userManager.createAccount(any(User.class))).thenReturn(0);
-        String errorString = "User with that username already exists";
-        //testing method... in case of duplicate username
-        String result = userController.registration(testRequest);
-        verify(testRequest).setAttribute("errorString", errorString);
-        assertEquals(result, "registration");
-
-    }
-
-    @Test
-    public void logout() {
-        //testing method...
-        String result = userController.logout(testRequest);
-
-        verify(testSession).setAttribute("user", null);
-        assertEquals(result, "index");
-
-    }*/
     }
 }

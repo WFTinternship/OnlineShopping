@@ -36,6 +36,7 @@
 
             List<Category> categories = (List<Category>) request.getSession().getAttribute("categories");
             String saleDone = (String)request.getAttribute("saleDone");
+            String errorString = (String)request.getAttribute("errorString");
             List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
 
 
@@ -175,7 +176,11 @@
     alert("your sale is successfully done!")
 </script>
 <%}%>
-
+<%if(errorString!=null){%>
+<script>
+    alert("Sorry! One of the items may be finished! Check your Cart!");
+</script>
+<%}%>
 <div id="productsForPage">
 <%
 

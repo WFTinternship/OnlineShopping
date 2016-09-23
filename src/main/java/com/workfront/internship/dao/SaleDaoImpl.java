@@ -1,5 +1,6 @@
 package com.workfront.internship.dao;
 
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import com.workfront.internship.common.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -194,7 +195,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
                 sizeOptionQuantity.put(orderItems.get(i).getSizeOption(), newQuantity);
                 product.setSizeOptionQuantity(sizeOptionQuantity);
                 //update product fields in db...
-                productDao.updateProduct(connection, product);
+                //productDao.updateProduct(connection, product);
                 //update quantity in product_size table
                 productDao.updateProductQuantity(connection, product.getProductID(), orderItems.get(i).getSizeOption(), newQuantity);
             }
@@ -221,7 +222,12 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
                 sale.setSaleID(lastId);
             }
 
-        } catch (SQLException e) {
+        } catch(RuntimeException e) {
+            e.printStackTrace();
+            LOGGER.error("Runtime exception!");
+            if(e.getMessage().equals("Negative number!"))
+            throw new RuntimeException("Negative number!");
+        }catch (SQLException e) {
             e.printStackTrace();
             try {
                 connection.rollback();

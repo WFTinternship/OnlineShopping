@@ -20,23 +20,26 @@ public class TestHelper {
     }
 
     public static Media getTestMedia(){
-        Product testProduct = getTestProduct();
+
         Random random = new Random();
         int x = random.nextInt(100000);
         Media media = new Media();
-        media.setMediaID(x).setMediaPath("some path" + x).setProductID(testProduct.getProductID());
+        media.setMediaID(x).setMediaPath("some path" + x).setProductID(1);
         return media;
     }
     public static Product getTestProduct(){
         Product product = new Product();
+        List<Media> medias = new ArrayList<>();
+        medias.add(getTestMedia());
         Map<String, Integer> sizeQuantity = new HashMap<>();
         sizeQuantity.put("3M", 5);
+        sizeQuantity.put("9M", 0);
         product.setName("baby hat").
                 setPrice(50).
                 setDescription("color:white").
                 setShippingPrice(1).
                 setCategory(getTestCategory()).
-                setProductID(1).setSizeOptionQuantity(sizeQuantity);
+                setProductID(1).setSizeOptionQuantity(sizeQuantity).setMedias(medias);
         return product;
     }
     public static User getTestUser() {
@@ -71,6 +74,28 @@ public class TestHelper {
 
         return basket;
 
+    }
+    public static CreditCard getTestCreditCard(){
+        CreditCard creditCard = new CreditCard();
+
+        creditCard.setCardID(1).setCardNumber("1234").setCvc(111).setBalance(1000);
+
+        return creditCard;
+    }
+    public static Address getTestAddress(){
+        Address address = new Address();
+
+        address.setAddress("testAddress").
+                setCity("Yerevan").setCountry("Armenia").
+                setZipCode("0026").setUserID(getTestUser().getUserID()).setAddressID(1);
+        return address;
+    }
+    public static Sale getTestSale(){
+        Sale sale = new Sale();
+        sale.setUserID(getTestUser().getUserID()).setSaleID(1).
+                setCreditCard(getTestCreditCard().getCardID()).
+                setBasket(getTestBasket()).setAddressID(getTestAddress().getAddressID());
+        return sale;
     }
 
 }

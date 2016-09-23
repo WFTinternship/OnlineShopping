@@ -35,9 +35,17 @@ public class SalesManagerImpl implements SalesManager {
 
     @Override
     public int makeNewSale(Sale sale) {
+        int result=0;
         if(!validateSale(sale))
             throw new RuntimeException("invalid sale");
-        int result = saleDao.insertSale(sale);
+
+        try {
+            result = saleDao.insertSale(sale);
+        }catch (RuntimeException e){
+            if(e.getMessage().equals("Negative number!"))
+                return 0;
+        }
+
         return  result;
     }
     @Override

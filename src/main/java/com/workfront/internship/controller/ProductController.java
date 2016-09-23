@@ -61,7 +61,7 @@ public class ProductController {
     public String getProducts(HttpServletRequest request) {
 
         getProductsForProductPage(request);
-        getCategories(request);
+       // getCategories(request);
 
         return "productsPage";
     }
@@ -85,7 +85,7 @@ public class ProductController {
         }
 
     }
-    public void getCategories(HttpServletRequest request){
+   /* public void getCategories(HttpServletRequest request){
 
         List<List<Category>> categories = new ArrayList<List<Category>>();
         List<Category> mainCategories = categoryManager.getCategoriesByParentID(0);
@@ -99,7 +99,7 @@ public class ProductController {
         request.getSession().setAttribute("mainCategories", mainCategories);
 
     }
-
+*/
 }
 
 
