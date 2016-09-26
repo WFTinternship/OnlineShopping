@@ -30,7 +30,7 @@ public interface UserDao {
 
     void deleteFromWishlistByUserIDAndProductID(int userid, int productid);
 
-    void insertIntoWishlist(int userID, int productID);
+    int insertIntoWishlist(int userID, int productID);
 
     boolean isInWishList(int userID, int productID);
 

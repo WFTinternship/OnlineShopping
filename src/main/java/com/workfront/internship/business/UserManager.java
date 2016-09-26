@@ -16,8 +16,8 @@ public interface UserManager {
     void editProfile(User user);
     void deleteAccount(int id);
     List<Product> getList(User user);
-    void addToList(User user, Product product);
-    void deleteFromList(User user, Product product);
+    int addToList(User user, Product product);
+    void deleteFromList(User user, int id);
     void deleteAllUsers();
     void editProfileWiyhoutPassword(User user);
 

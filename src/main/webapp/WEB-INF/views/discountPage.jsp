@@ -35,6 +35,23 @@
 
 </div>
 <div class="clear"></div>
+<div id="discount">
+    <form action="/makeDiscount" method = "get" onsubmit="return validate()">
+    Enter discount:<br>
+    <input type="text" name="discount" id="saleAmount"><br><br>
+        <input type="submit" value="Save" id = "uploadfile"/>
+    </form>
+</div>
+<script>
+    function validate(){
+        if(document.getElementById("saleAmount").value == "") {
+            alert("enter discount");
+            return false;
+        }
+        else
+            return true;
+    }
+</script>
 </body>
 </html>
 

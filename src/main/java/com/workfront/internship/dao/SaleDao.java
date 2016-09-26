@@ -21,6 +21,8 @@ public interface SaleDao {
 
     void updateSale(Sale sale);
 
+    void updateSaleStatus(int id, String status);
+
     List<Sale> getAllSales();
 
     void deleteAllSales();

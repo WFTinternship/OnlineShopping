@@ -39,6 +39,12 @@ public class CategoryManagerImpl implements CategoryManager {
         categoryDao.deleteCategoryByID(id);
 
     }
+    public void deleteCategoryByParentID(int id){
+        if(id <=0)
+            throw new RuntimeException("not a valid categoryId");
+        categoryDao.deleteCategoryByParentID(id);
+
+    }
     public void updateCategory(Category category){
         if(!validateCategory(category))
             throw new RuntimeException("not a valid category");

@@ -47,12 +47,12 @@
                 document.getElementById("navi").innerHTML = newQuantity;
 
                 var oldPrice = document.getElementById("total").textContent;
-                alert(oldPrice);
+
 
                 var singlePrice = document.getElementById("price").textContent;
-                alert(singlePrice);
+
                 var newPrice = parseFloat(oldPrice) - parseFloat(singlePrice)*delta;
-                alert(newPrice);
+
                 document.getElementById("total").innerHTML = newPrice;
                 document.getElementById("error").style.display = "none";
 
@@ -131,7 +131,7 @@
     </div>
     <div class="some">
         <div class="category">
-
+            <a href = "/getSaledProducts">SALE</a>
             <%
                 for (int i = 0; i < listofCategoriesList.size(); i++) {%>
             <div class="dropdown">
@@ -167,9 +167,9 @@
             <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
             <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
             <div class="dropdown-content">
-                <a href="#">edit account</a>
-                <a href="#">your orders</a>
-                <a href="#">your wish list</a>
+                <a href="/editAccount">edit account</a>
+                <a href="/getOrders">your orders</a>
+                <a href="/showWishlistContent">your wish list</a>
 
                 <a href="/logout" id="logout_button">logout</a>
             </div>
@@ -239,7 +239,7 @@
 <%}%>
 <script>
     function validate(size){
-        alert(size);
+
         for(var i = 0; i < parseInt(size); i ++) {
             if (document.getElementById("selectQuantity" + i).value == "Select"){
                 alert("chose quantity");

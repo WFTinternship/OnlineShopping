@@ -31,13 +31,13 @@ public class UserManagerImpl implements UserManager {
             throw new RuntimeException("Invalid user");
 
         }
-        int id=0;
+        int id = 0;
         String hashOfPassword = HashManager.getHash(user.getPassword());
         user.setPassword(hashOfPassword);
         try {
-            id= userDao.insertUser(user);
-        }catch (RuntimeException e){
-            if(e.getMessage().equals("Duplicate entry!"))
+            id = userDao.insertUser(user);
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("Duplicate entry!"))
                 return 0;
         }
 
@@ -76,8 +76,9 @@ public class UserManagerImpl implements UserManager {
         userDao.updateUser(user);
 
     }
+
     @Override
-    public void editProfileWiyhoutPassword(User user){
+    public void editProfileWiyhoutPassword(User user) {
         if (!validateUser(user)) {
             throw new RuntimeException("Can not update");
 
@@ -95,14 +96,22 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public void addToList(User user, Product product) {
+    public int addToList(User user, Product product) {
         if (user == null || product == null)
             throw new RuntimeException("invalid entry!");
         getList(user);
+        int id = 0;
 
-        userDao.insertIntoWishlist(user.getUserID(), product.getProductID());
+        try {
+            id = userDao.insertIntoWishlist(user.getUserID(), product.getProductID());
+
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("Duplicate entry!"))
+                return -1;
+        }
+
         user.setWishList(userDao.getWishlist(user.getUserID()));
-
+        return id;
 
     }
 
@@ -121,15 +130,16 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public void deleteFromList(User user, Product product) {
-        if (user == null || product == null)
+    public void deleteFromList(User user, int id) {
+        if (user == null || id <= 0)
             throw new RuntimeException("invalid entry");
-        userDao.deleteFromWishlistByUserIDAndProductID(user.getUserID(), product.getProductID());
+        userDao.deleteFromWishlistByUserIDAndProductID(user.getUserID(), id);
         user.setWishList(userDao.getWishlist(user.getUserID()));
 
     }
+
     @Override
-    public void deleteAllUsers(){
+    public void deleteAllUsers() {
         userDao.deleteAllUsers();
     }
 

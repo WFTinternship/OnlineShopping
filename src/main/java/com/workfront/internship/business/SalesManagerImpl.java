@@ -82,6 +82,13 @@ public class SalesManagerImpl implements SalesManager {
         List<Sale> sales = saleDao.getAllSales();
         return sales;
     }
+    @Override
+    public void updateSaleStatus(int id, String status){
+        if(id <= 0 || status == null)
+            throw new RuntimeException("invalid entry");
+        saleDao.updateSaleStatus(id, status);
+
+    }
     private boolean validateSale(Sale sale){
         if(sale != null && sale.getAddressID() >0 && sale.getCreditCardID() >0 && sale.getDate() !=null &&
                 sale.getUserID() > 0 && sale.getBasket() != null)

@@ -8,7 +8,7 @@
 </head>
 <body class="registration">
 <div class="logo"><img src="/resources/image/logo3.PNG" width="140px;" alt="logo"></div>
-<form method="post" action="/registration" id="registrationPage" name="theForm" onsubmit="return checkPasswords();">
+<form method="post" action="/registration" id="registrationPage" name="theForm" onsubmit="return validate();">
     <p style="font-size:30px;">Create account</p><br>
     <% String string = (String) request.getAttribute("errorString");
         if (string != null) {%>
@@ -55,7 +55,18 @@
 <div class="clear"></div>
 
 <script>
-    function checkPasswords() {
+    String.prototype.trim = function()
+    {
+        // Replace leading and trailing spaces with the empty string
+        return this.replace(/(^\s*)|(\s*$)/g, "");
+    }
+    function validate() {
+
+        document.getElementById("firstname").value = document.getElementById("firstname").value.trim();
+        document.getElementById("lastname").value = document.getElementById("lastname").value.trim();
+        document.getElementById("email").value = document.getElementById("email").value.trim();
+        document.getElementById("username").value = document.getElementById("username").value.trim();
+
         if (theForm.password.value != theForm.repeatpassword.value) {
             document.getElementById("message").style.display = "block";
             return false;
@@ -63,6 +74,10 @@
             return true;
         }
     }
+
+
+
+
 </script>
 
 </body>

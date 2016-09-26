@@ -148,7 +148,7 @@ public class CategoryDaoImpl extends GeneralDao implements CategoryDao {
 
         try {
             connection = dataSource.getConnection();
-            //delete category from db by categoruId...
+            //delete category from db by category Id...
             String sql = "DELETE from categories where category_id = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
@@ -163,6 +163,30 @@ public class CategoryDaoImpl extends GeneralDao implements CategoryDao {
         }
 
     }
+    @Override
+    public void deleteCategoryByParentID(int id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = dataSource.getConnection();
+            //delete category from db by parent id..
+            String sql = "DELETE from categories where parent_id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+
+        }  catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        }  finally {
+            close(resultSet, preparedStatement, connection);
+        }
+
+    }
+
 
     @Override
     public void deleteAllCategories(){

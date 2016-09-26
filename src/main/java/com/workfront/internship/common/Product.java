@@ -19,6 +19,7 @@ public class Product {
     private String description;
     private List<Media> medias;
     private Map<String, Integer> sizeOptionQuantity;
+    private int saled;
 
     public Map<String, Integer> getSizeOptionQuantity() {
         return sizeOptionQuantity;
@@ -125,5 +126,14 @@ public class Product {
 
         return true;
 
+    }
+
+    public int getSaled() {
+        return saled;
+    }
+
+    public Product setSaled(int saled) {
+        this.saled = saled;
+        return this;
     }
 }

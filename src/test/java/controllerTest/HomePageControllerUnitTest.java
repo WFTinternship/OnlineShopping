@@ -99,24 +99,18 @@ public class HomePageControllerUnitTest {
    }
     @Test
     public void getCategories(){
-        List<Category> mainCategories = new ArrayList<>();
-        List<Category> subCategories = new ArrayList<>();
 
-        mainCategories.add(testCategory);
-        Category testSubCategory = new Category();
-        testSubCategory.setName("subCategory").setCategoryID(10).setParentID(testSubCategory.getCategoryID());
+        List<Category> categories =  new ArrayList<>();
+        categories.add(getTestCategory());
 
-        subCategories.add(testSubCategory);
+        when(categoryManager.getAllCategories()).thenReturn(categories);
 
-        when(categoryManager.getCategoriesByParentID(0)).thenReturn(mainCategories);
-        when(categoryManager.getCategoriesByParentID(mainCategories.get(0).getCategoryID())).thenReturn(subCategories);
+
         //testing method... getting all categories for homePage menu...
         homePageController.getCategories(testRequest);
-        verify(categoryManager).getCategoriesByParentID(testCategory.getCategoryID());
 
 
-        verify(testSession).setAttribute("subcategories0", subCategories);
-        verify(testSession).setAttribute("mainCategories", mainCategories);
+        verify(testSession).setAttribute("categories", categories);
 
     }
     @Test

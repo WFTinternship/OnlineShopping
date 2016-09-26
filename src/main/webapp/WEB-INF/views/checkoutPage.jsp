@@ -81,7 +81,7 @@
     </div>
     <div class="some">
         <div class="category">
-
+            <a href = "/getSaledProducts">SALE</a>
             <%
                 for (int i = 0; i < listofCategoriesList.size(); i++) {%>
             <div class="dropdown">
@@ -117,9 +117,9 @@
             <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
             <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
             <div class="dropdown-content">
-                <a href="#">edit account</a>
-                <a href="#">your orders</a>
-                <a href="#">your wish list</a>
+                <a href="/editAccount">edit account</a>
+                <a href="/getOrders">your orders</a>
+                <a href="/showWishlistContent">your wish list</a>
 
                 <a href="/logout" id="logout_button">logout</a>
             </div>
@@ -131,8 +131,10 @@
     </div>
 </div>
 <div id="checkoutForm">
-    <form action="/checkout" method="post" onsubmit="return validateAddressField()">
+    <form action="/checkout" method="post" onsubmit="return validateForm">
         <p style="font-size:25px;">Fill required information to continue checkout</p><br>
+        Full name:<br>
+        <input type="text" name="fullName" id="fullName" required><br><br>
 
         <%if (!user.getShippingAddresses().isEmpty()) {%>
         Select from existing addresses:<br>
@@ -162,7 +164,24 @@
 
     </form>
     <script>
-        function validateAddressField() {
+        String.prototype.trim = function()
+        {
+            // Replace leading and trailing spaces with the empty string
+            return this.replace(/(^\s*)|(\s*$)/g, "");
+        }
+        function validateForm() {
+
+            document.getElementById("newAddress").value = document.getElementById("newAddress").value.trim();
+            document.getElementById("address").value = document.getElementById("address").value.trim();
+            document.getElementById("city").value = document.getElementById("city").value.trim();
+            document.getElementById("country").value = document.getElementById("country").value.trim();
+            document.getElementById("zip").value = document.getElementById("zip").value.trim();
+            document.getElementById("fullName").value = document.getElementById("fullName").value.trim();
+
+            if(document.getElementById("fullName").value == ""){
+                alert("fill name field");
+                return false;
+            }
             if (document.getElementById("addressOption") == null) {
                 if (document.getElementById("address").value == "" || document.getElementById("city").value == ""
                         || document.getElementById("country").value == "" || document.getElementById("zip").value == "") {
@@ -174,7 +193,7 @@
             if (document.getElementById("addressOption").value == "Select") {
                 if (document.getElementById("newAddress").value == "" || document.getElementById("city").value == ""
                         || document.getElementById("country").value == "" || document.getElementById("zip").value == "") {
-                    alert("At least one address information must be filled");
+                    alert("at least one address information must be filled");
                     return false;
                 }
             }

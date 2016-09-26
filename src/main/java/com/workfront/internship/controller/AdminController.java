@@ -1,14 +1,9 @@
 package com.workfront.internship.controller;
 
+import com.sun.xml.internal.ws.encoding.StringDataContentHandler;
 import com.sun.xml.internal.ws.wsdl.writer.document.Part;
-import com.workfront.internship.business.CategoryManager;
-import com.workfront.internship.business.MediaManager;
-import com.workfront.internship.business.ProductManager;
-import com.workfront.internship.business.SizeManager;
-import com.workfront.internship.common.Category;
-import com.workfront.internship.common.Media;
-import com.workfront.internship.common.Product;
-import com.workfront.internship.common.Size;
+import com.workfront.internship.business.*;
+import com.workfront.internship.common.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.commons.fileupload.FileItem;
@@ -18,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +35,8 @@ public class AdminController {
     private MediaManager mediaManager;
     @Autowired
     private SizeManager sizeManager;
+    @Autowired
+    private SalesManager salesManager;
 
     @RequestMapping("/admin")
     public String getAdminPage() {
@@ -78,9 +76,9 @@ public class AdminController {
         String option = (String) request.getParameter("option");
         product.setName(" ").setPrice(0.0).setShippingPrice(0.0).setDescription(" ").setCategory(category);
         request.getSession().setAttribute("product", product);
-        request.getSession().setAttribute("categories", categories);
-        request.getSession().setAttribute("categoryMap", categoryMap);
-        request.getSession().setAttribute("sizeMap", sizeMap);
+        request.setAttribute("categories", categories);
+        request.setAttribute("categoryMap", categoryMap);
+        request.setAttribute("sizeMap", sizeMap);
         request.getSession().setAttribute("option", option);
         return "addProduct";
     }
@@ -90,6 +88,28 @@ public class AdminController {
         List<Category> categories = categoryManager.getAllCategories();
         String[] checkedValues = (request.getParameterValues("product"));
         String option = (String) request.getParameter("option");
+        if(option.equals("sale")){
+            request.getSession().setAttribute("checkedValues", checkedValues);
+            return "discountPage";
+        }
+        if (option.equals("delete")) {
+            List<Product> products = (List<Product>) request.getSession().getAttribute("products");
+            for (int j = 0; j < checkedValues.length; j++) {
+                productManager.deleteProduct(Integer.parseInt(checkedValues[j]));
+
+
+                for (int i = 0; i < products.size(); i++) {
+                    if (products.get(i).getProductID() == Integer.parseInt(checkedValues[j])) {
+                        products.remove(products.get(i));
+
+                    }
+                }
+            }
+
+            request.getSession().setAttribute("products", products);
+            return "products";
+        }
+        else{
         Map categoryMap = new HashMap();
         Map sizeMap = new HashMap();
 
@@ -114,31 +134,14 @@ public class AdminController {
             }
         }
 
-        if (option.equals("delete")) {
-            List<Product> products = (List<Product>) request.getSession().getAttribute("products");
-            for (int j = 0; j < checkedValues.length; j++) {
-                productManager.deleteProduct(Integer.parseInt(checkedValues[j]));
-
-
-                for (int i = 0; i < products.size(); i++) {
-                    if (products.get(i).getProductID() == Integer.parseInt(checkedValues[j])) {
-                        products.remove(products.get(i));
-
-                    }
-                }
-            }
-
-            request.getSession().setAttribute("products", products);
-            return "products";
-        } else {
 
             Product product = productManager.getProduct(Integer.parseInt(checkedValues[0]));
             Map<String, Integer> sizeOptionQuantity = productManager.getSizeOptionQuantityMap(product.getProductID());
             request.getSession().setAttribute("product", product);
-            request.getSession().setAttribute("sizeOptionQuantity", sizeOptionQuantity);
-            request.getSession().setAttribute("categories", categories);
-            request.getSession().setAttribute("categoryMap", categoryMap);
-            request.getSession().setAttribute("sizeMap", sizeMap);
+            request.setAttribute("sizeOptionQuantity", sizeOptionQuantity);
+            request.setAttribute("categories", categories);
+            request.setAttribute("categoryMap", categoryMap);
+            request.setAttribute("sizeMap", sizeMap);
             request.getSession().setAttribute("option", option);
             return "addProduct";
         }
@@ -285,6 +288,126 @@ public class AdminController {
         request.setAttribute("categories", categories);
         return "categories";
     }
+    @RequestMapping("/addCategory")
+    public String getaddCategoryPage(HttpServletRequest request) {
+        List<Category> categories = categoryManager.getAllCategories();
+
+        Category category = new Category();
+        String option = (String) request.getParameter("option");
+        category.setName(" ");
+        request.getSession().setAttribute("category", category);
+        request.setAttribute("categories", categories);
+
+        request.getSession().setAttribute("option", option);
+        return "addCategory";
+    }
+    @RequestMapping("/saveCategory")
+    public String saveCategory(HttpServletRequest request){
+        Category category = (Category) request.getSession().getAttribute("category");
+        String option = (String) request.getSession().getAttribute("option");
+        String name = request.getParameter("categoryName");
+        int parentId = Integer.parseInt(request.getParameter("category"));
+        //add option...
+        if(!option.equals("edit")) {
+            category = new Category();
+            category.setName(name).setParentID(parentId);
+            categoryManager.createNewCategory(category);
+        }
+        //edit option...
+        else{
+
+            category.setName(name).setParentID(parentId);
+            categoryManager.updateCategory(category);
+
+        }
+        List<Category> categories = categoryManager.getAllCategories();
+        request.setAttribute("categories", categories);
+        return "categories";
+    }
+    @RequestMapping("/editCategory")
+    public String getEditCategoryPage(HttpServletRequest request) {
+        List<Category> categories = categoryManager.getAllCategories();
+        String[] checkedValues = (request.getParameterValues("category"));
+        String option = (String) request.getParameter("option");
+
+        if (option.equals("delete")) {
+
+            for (int j = 0; j < checkedValues.length; j++) {
+                categoryManager.deleteCategory(Integer.parseInt(checkedValues[j]));
+
+            }
+            List<Category> categories1 = categoryManager.getAllCategories();
+            request.setAttribute("categories", categories1);
+            return "categories";
+        }
+        else{
+
+            Category category = categoryManager.getCategoryByID(Integer.parseInt(checkedValues[0]));
+
+            request.getSession().setAttribute("category", category);
+
+            request.setAttribute("categories", categories);
+
+            request.getSession().setAttribute("option", option);
+
+        }
+        return "addCategory";
+    }
+    @RequestMapping("/allOrders")
+    public String getAllOrders(HttpServletRequest request){
+
+        List<Sale> orders = salesManager.getAllSales();
+        request.setAttribute("orders", orders);
+
+        return "allOrders";
+    }
+    @RequestMapping("/changeStatus")
+    @ResponseBody
+    public String changeStatus(HttpServletRequest request){
+
+        int saleId = Integer.parseInt(request.getParameter("saleId"));
+        String status = request.getParameter("status");
+
+        salesManager.updateSaleStatus(saleId, status);
+
+        return "status is changed";
+    }
+    @RequestMapping("/getDiscountPage")
+    public String getDiscountPage(HttpServletRequest request){
+
+
+        String[] checkedValues = (request.getParameterValues("product"));
+
+        request.getSession().setAttribute("checkedValues", checkedValues);
+        return "discountPage";
+
+    }
+    @RequestMapping("/makeDiscount")
+    public String makeDiscount(HttpServletRequest request){
+
+        int discount = Integer.parseInt(request.getParameter("discount"));
+        String[] checkedValues = (String[])request.getSession().getAttribute("checkedValues");
+
+        for (int j = 0; j < checkedValues.length; j++) {
+            productManager.updateSaleField(Integer.parseInt(checkedValues[j]), discount);
+        }
+
+        List<Product> products = productManager.getSaledProducts();
+
+        request.setAttribute("products", products);
+
+            return "saledProducts";
+
+        }
+        @RequestMapping("/sale")
+    public String sale(HttpServletRequest request){
+           List<Product> products = productManager.getSaledProducts();
+for(Product product : products){
+    System.out.println("aaaaaaaaaaaa" + product.getSaled());
+}
+            request.setAttribute("products", products);
+            return "saledProducts";
+        }
 
 }
 

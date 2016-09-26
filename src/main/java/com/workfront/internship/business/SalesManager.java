@@ -18,7 +18,7 @@ public interface SalesManager {
     Sale getSalesDetailedInfo(Sale sale);
     void deleteSaleByUserID(int userId);
     void deleteSaleBySaleID(int saleId);
-  //void updateSale(Sale sale);
+    void updateSaleStatus(int id, String status);
     List<Sale> getAllSales();
 
 

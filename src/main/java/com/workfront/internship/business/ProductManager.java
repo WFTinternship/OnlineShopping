@@ -14,8 +14,10 @@ public interface ProductManager {
     int createNewProduct(Product product);
     Product getProduct(int productId);
     void updateProduct(Product product);
+    void updateSaleField(int id, int discount);
     void deleteProduct(int id);
     List<Product> getProdactsByCategoryID(int id);
+    List<Product> getSaledProducts();
     List<Product> getLimitedNumberOfProducts();
     List<Product> getAllProducts();
     void setSizes(int productId, String sizeOption, int quantity);

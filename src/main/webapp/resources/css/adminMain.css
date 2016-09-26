@@ -107,29 +107,59 @@
 #uploadfile::-moz-focus-inner {
     border: 0;
 }
-#productsList table {
+.tables table {
     width: 80%;
     margin-top: 20px;
 }
 
 
 
-#productsList table th {
+.tables table th {
     padding: 4px;
     border: 1px solid lightgrey;
 }
 
-#productsList table td {
+.tables table td {
     padding: 8px;
     border: 1px solid lightgrey;
     text-align: center;
     vertical-align: middle;
 
 }
-#productsList{
+.tables{
     padding-left: 100px;
 }
 .littleButtons{
     background-color: white;
     border: none;
+}
+.saleInfo{
+    padding-left: 200px;
+    padding-top: 20px;
+}
+.iconImage img{
+    width: 150px;
+}
+.iconImage{
+    width:40%;
+    padding-left: 200px;
+    padding-top: 30px;
+    float: left;
+}
+.productInfo{
+    width: 20%;
+    float: right;
+    padding-top: 40px;
+    padding-right: 250px;
+}
+.productInfo p{
+    padding: 5px;
+}
+#totalPrice{
+    width: 37%;
+    float: right;
+}
+#discount{
+    padding-left: 500px;
+    padding-top: 50px;
 }

@@ -19,7 +19,7 @@
 <body class="registration">
 <div class="logo"><img src="/resources/image/logo3.PNG" width="140px;" alt="logo"></div>
 
-<form method="post" action="/signin" id="signinPage">
+<form method="post" action="/signin" id="signinPage" onsubmit="return validate()">
     <p style="font-size:30px;">Sign In</p><br>
     <% String string = (String) request.getAttribute("errorString");
         if (string != null) {%>
@@ -29,9 +29,9 @@
         }
     %>
     Username
-    <input type="text" name="username" required><br><br>
+    <input type="text" name="username" id = "username" required><br><br>
     Password<br>
-    <input type="password" pattern=".{6,}" name="password"><br><br>
+    <input type="password" pattern=".{6,}" name="password" id = "password" required><br><br>
     <button style="border-top-left-radius: 5px 5px;
 		border-bottom-left-radius: 5px 5px; width: 255px; height: 35px" class="button" id="signinButton">Sign in
     </button>
@@ -41,6 +41,20 @@
         <a href="/createaccount" style="font-size: 12px;" class="register">Start here</a>
 </form>
 <div class="clear"></div>
+<script>
+    String.prototype.trim = function()
+    {
+        // Replace leading and trailing spaces with the empty string
+        return this.replace(/(^\s*)|(\s*$)/g, "");
+    }
+    function validate(){
 
+        document.getElementById("username").value = document.getElementById("username").value.trim();
+
+
+        return true;
+
+    }
+</script>
 </body>
 </html>

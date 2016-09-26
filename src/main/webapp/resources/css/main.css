@@ -567,3 +567,18 @@ display: none;
 .inline{
 	display: inline-block;
 }
+.category a{
+	margin-right: 50px;
+	text-decoration: none;
+	color: #DD127B;
+}
+.category a:hover{
+
+	color: #B9C710;
+}
+#totalPrice{
+	padding-left: 910px;
+	display: inline-block;
+	padding-top: 10px;
+	color: red;
+}

@@ -84,13 +84,11 @@ public class ProductControllerIntegrationTest {
 
         Object object1 = testRequest.getAttribute("products");
         Object object = testRequest.getAttribute("medias0");
-        Object object2 = testRequest.getSession().getAttribute("subcategories0");
-        Object object3 = testRequest.getSession().getAttribute("mainCategories");
+
 
         assertNotNull(object);
         assertNotNull(object1);
-        assertNotNull(object2);
-        assertNotNull(object3);
+
         Assert.assertEquals("did not get a right page", result, "productsPage");
     }
 }

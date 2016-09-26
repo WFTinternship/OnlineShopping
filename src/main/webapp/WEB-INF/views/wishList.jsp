@@ -1,43 +1,52 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.HashMap" %>
 <%@ page import="com.workfront.internship.common.*" %><%--
   Created by IntelliJ IDEA.
-  User: Workfront
-  Date: 9/13/2016
-  Time: 10:29 AM
+  User: annaasmangulyan
+  Date: 9/24/16
+  Time: 4:20 PM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-
-<!DOCTYPE html>
 <html>
-<head>
-    <title>Search Box</title>
+<title>Search Box</title>
 
-    <!-- CSS styles for standard search box -->
-    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/reset.css" />">
-    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />">
+<!-- CSS styles for standard search box -->
 
+<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/reset.css" />">
+<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />">
+<script src="<c:url value="/resources/js/jquery-1.12.1.min.js" />"></script>
+<script>
+    function deleteFromList(productId){
+        alert("lalala");
+
+        $.get("/deleteFromList?productId=" + productId, function (data) {
+            document.getElementById("productdiv" + productId).remove();
+
+        });
+        }
+</script>
 </head>
 <body>
-<!-- HTML for SEARCH BAR -->
 <div class="logo"><img src="/resources/image/logo3.PNG" width="140px;" alt="logo"></div>
 <div class="wrapper">
     <div class="wrapper1">
 
-        <%
+        <% Map<Integer, Media> productIdMedia= new HashMap();
             int productId;
             User user = (User) request.getSession().getAttribute("user");
-            List<Sale> orders = (List<Sale>) request.getAttribute("orders");
-            int number = (Integer)request.getSession().getAttribute("number");
-
+            List<Product> productList = (List<Product>) request.getAttribute("productList");
             List<Category> categories = (List<Category>) request.getSession().getAttribute("categories");
 
+            int number = (Integer)request.getSession().getAttribute("number");
+
+            for(int i = 0; i<productList.size(); i++){
+                productId = productList.get(i).getProductID();
+                productIdMedia.put(productId, (Media)request.getAttribute("media"+productId));
+            }
             List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
 
 
@@ -111,20 +120,19 @@
             %>
 
         </div>
-
         <div id="container">
             <a href="/showCartContent" class="cart" id="infoi">
                 <img src="/resources/image/cart.PNG" class="cart" alt="cart image">
             </a>
-            <div id="navi"><%=number%></div>
+            <div id="navi" value ="<%=number%>"><%=number%></div>
         </div>
         <div class="dropdown">
             <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
             <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
             <div class="dropdown-content">
                 <a href="/editAccount">edit account</a>
-                <a href="#">your orders</a>
-                <a href="/showWishlistContent">your wish list</a>
+                <a href="/getOrders">your orders</a>
+                <a href="#">your wish list</a>
 
                 <a href="/logout" id="logout_button">logout</a>
             </div>
@@ -135,27 +143,41 @@
 
     </div>
 </div>
-<div id="orders">
-    <table>
-        <thead>
-        <tr><th>&nbsp;&nbsp;&nbsp;ID</th> <th>&nbsp;&nbsp;&nbsp;Date</th><th>&nbsp;&nbsp;&nbsp;Price($)</th></tr>
-        </thead>
-        <%
-            int i=0;
-            for(Sale sale : orders){%>
 
-        <tr>
-            <td><a href="/showOrderInfo?saleId=<%=sale.getSaleID()%>" class="saleId"><%=sale.getSaleID()%></a></td>
-            <td><a href="/showOrderInfo?saleId=<%=sale.getSaleID()%>" class="saleId"><%=sale.getDate()%></a></td>
-            <td><a href="/showOrderInfo?saleId=<%=sale.getSaleID()%>" class="saleId">$<%=sale.getBasket().getTotalPrice()%></a></td>
 
-        </tr>
 
-        <%}
-        %>
 
-    </table>
+<div id="wishlist">
+    <%int id = 0;
+        Media media;
+        for(int k=0; k<productList.size(); k++){%>
+    <div id="productdiv<%=productList.get(k).getProductID()%>">
+        <%  id = productList.get(k).getProductID();
+            media = (Media)request.getAttribute("media"+id);%>
+        <div class="iconImage">
+            <a href="/productPage?id=<%=id %>" id="productHref">
+            <img src="<%=media.getMediaPath()%>"  alt="image">
+                </a>
+        </div>
+        <div class = "productInfo">
+            <p style="font-size: 20px;">Name:&nbsp;<%= productList.get(k).getName()%></p>
+            <p class="inline" style="font-style: italic; ">Price:&nbsp;$&nbsp;</p><span id= "price"><%= productList.get(k).getPrice()%></span>
+            <p style="font-style: italic; ">Shipping Price:&nbsp;$&nbsp;<%= productList.get(k).getShippingPrice()%></p><br>
+
+
+            <a href="#" onclick="deleteFromList(<%=productList.get(k).getProductID()%>)" class="littleAnchor">delete</a><br><br>
+
+        </div><br>
+
+
+    </div>
+    <%}%>
+
+    <div class = "clear"></div>
 </div>
-<div class = "clear"></div>
+
+
+
+
 </body>
 </html>

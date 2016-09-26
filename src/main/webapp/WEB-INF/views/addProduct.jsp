@@ -31,7 +31,8 @@
     <div class="buttons">
         <a href="/categories" id="categories">CATEGORIES</a>
         <a href="/products" id="products">PRODUCTS</a>
-        <a href="/orders" id="orders">ORDEERS</a>
+        <a href="/allOrders" id="orders">ORDEERS</a>
+        <a href="/sale" id="sale">SALE</a>
     </div>
 
 </div>
@@ -39,12 +40,12 @@
 
 
 <div>
-    <% List<Category> categories = (List<Category>)request.getSession().getAttribute("categories");
+    <% List<Category> categories = (List<Category>)request.getAttribute("categories");
         Product product = (Product)request.getSession().getAttribute("product");
         String option = (String)request.getSession().getAttribute("option");
-        Map categoryMap = (Map)request.getSession().getAttribute("categoryMap");
-        Map sizeOptionQuantity = (Map)request.getSession().getAttribute("sizeOptionQuantity");
-        Map sizeMap = (Map)request.getSession().getAttribute("sizeMap");
+        Map categoryMap = (Map)request.getAttribute("categoryMap");
+        Map sizeOptionQuantity = (Map)request.getAttribute("sizeOptionQuantity");
+        Map sizeMap = (Map)request.getAttribute("sizeMap");
 
     %>
     <form action="/saveProduct" method="post" name="myForm"

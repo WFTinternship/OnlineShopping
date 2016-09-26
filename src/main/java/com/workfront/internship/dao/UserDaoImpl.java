@@ -357,23 +357,29 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
     }
 
     @Override
-    public void insertIntoWishlist(int userId, int productId){
+    public int insertIntoWishlist(int userId, int productId){
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        int lastId = 0;
         try {
             connection = dataSource.getConnection();
 
             String sql = "INSERT into wishlist VALUES (?, ?)";
-            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, productId);
             preparedStatement.executeUpdate();
+            resultSet = preparedStatement.getGeneratedKeys();
+
+            while (resultSet.next()) {
+                lastId = resultSet.getInt(1);
+            }
 
         }catch(SQLIntegrityConstraintViolationException e){
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException(e);
+            throw new RuntimeException("Duplicate entry!");
         }catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
@@ -381,6 +387,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         } finally {
             close(resultSet, preparedStatement, connection);
         }
+        return lastId;
     }
     @Override
     public List<Product> getWishlist(int userid) {

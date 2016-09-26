@@ -21,8 +21,10 @@ public interface ProductDao {
      void deleteProductFromProductSizeTable(int id, String option);
      void deleteProductByName(String name);
      void updateProduct(Connection connection, Product product);
+     void updateSaledField(int id, int discount);
      void deleteAllProducts();
      List<Product> getAllProducts();
+     List<Product> getSaledProducts();
      List<Product> getProdactsByCategoryID(int id);
      List<Product> getLimitedNumberOfProducts();
      void setSizes(int productId, String sizeOption, int quantity);

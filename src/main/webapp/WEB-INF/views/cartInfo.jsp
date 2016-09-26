@@ -81,7 +81,7 @@
     </div>
     <div class="some">
         <div class="category">
-
+            <a href = "/getSaledProducts">SALE</a>
             <%
                 for (int i = 0; i < listofCategoriesList.size(); i++) {%>
             <div class="dropdown">
@@ -117,9 +117,9 @@
             <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
             <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
             <div class="dropdown-content">
-                <a href="#">edit account</a>
-                <a href="#">your orders</a>
-                <a href="#">your wish list</a>
+                <a href="/editAccount">edit account</a>
+                <a href="/getOrders">your orders</a>
+                <a href="/showWishlistContent">your wish list</a>
 
                 <a href="/logout" id="logout_button">logout</a>
             </div>
@@ -131,7 +131,7 @@
     </div>
 </div>
 <div id="checkoutForm">
-    <form method="post" action="/makeSale" onsubmit = "return validateCart()">
+    <form method="post" action="/makeSale" onsubmit = "return validate()">
         <p style="font-size:25px;">Fill required cart information to finish</p><br>
         <% String str = (String) request.getAttribute("errorBalance");
             if (str != null) {%>
@@ -149,7 +149,7 @@
         <%
             }
         %>
-        <input type="text" name="cartNumber" required><br><br>
+        <input type="text" name="cartNumber" id = "cartNumber" required><br><br>
         CVC:<br>
         <% String string1 = (String) request.getAttribute("errorCvc");
             if (string1 != null) {%>
@@ -158,7 +158,7 @@
         <%
             }
         %>
-        <input type="text" name="cvc" required><br><br>
+        <input type="text" name="cvc" id = "cvc" required><br><br>
         Expairing date:<br>
         <select name="month">
           <%for(int i=0; i<31; i++){
@@ -183,7 +183,16 @@
 
     </form>
     <script>
-        function validateCart(){
+        String.prototype.trim = function()
+        {
+            // Replace leading and trailing spaces with the empty string
+            return this.replace(/(^\s*)|(\s*$)/g, "");
+        }
+        function validate(){
+
+            document.getElementById("cartNumber").value = document.getElementById("cartNumber").value.trim();
+            document.getElementById("cvc").value = document.getElementById("cvc").value.trim();
+
             return true;
         }
     </script>

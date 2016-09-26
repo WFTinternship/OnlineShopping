@@ -1,19 +1,16 @@
 package com.workfront.internship.controller;
 
-import com.workfront.internship.business.AddressManager;
-import com.workfront.internship.business.BasketManager;
-import com.workfront.internship.business.HashManager;
-import com.workfront.internship.business.UserManager;
-import com.workfront.internship.common.Address;
-import com.workfront.internship.common.OrderItem;
-import com.workfront.internship.common.User;
+import com.workfront.internship.business.*;
+import com.workfront.internship.common.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +25,10 @@ public class UserController {
     private AddressManager addressManager;
     @Autowired
     private BasketManager basketManager;
+    @Autowired
+    private ProductManager productManager;
+    @Autowired
+    private MediaManager mediaManager;
 
     @RequestMapping("/signin")
     public String login(HttpServletRequest request) {
@@ -186,9 +187,61 @@ public class UserController {
             userManager.editProfileWiyhoutPassword(user);
             return "index";
         }
-
-
-
     }
+    @RequestMapping("/addToList")
+    @ResponseBody
+    public String addToList(HttpServletRequest request){
+
+        User user = (User)request.getSession().getAttribute("user");
+
+        int productId = Integer.parseInt(request.getParameter("productId"));
+
+        int id = userManager.addToList(user, productManager.getProduct(productId));
+
+        String str;
+
+        if(id == -1){
+            str = "the item is already in your wishlist";
+
+        }
+        else{
+            str = "the item is added to your wishlist";
+        }
+        request.setAttribute("str", str);
+
+        return str;
+    }
+    @RequestMapping("/showWishlistContent")
+    public String showWishlistContent(HttpServletRequest request){
+
+        User user = (User)request.getSession().getAttribute("user");
+
+        List<Product> productList = userManager.getList(user);
+
+        List<Media> medias = new ArrayList<>();
+        //get medias for the given productList for wishlist...
+        int productId;
+        for (int i = 0; i < productList.size(); i++) {
+            productId = productList.get(i).getProductID();
+            medias = mediaManager.getMediaByProductID(productId);
+            request.setAttribute("media" + productId, medias.get(0));
+        }
+
+        request.setAttribute("productList", productList);
+
+        return "wishList";
+    }
+    @RequestMapping("/deleteFromList")
+    @ResponseBody
+    public String deleteFromList(HttpServletRequest request){
+        User user = (User)request.getSession().getAttribute("user");
+
+        int id = Integer.parseInt(request.getParameter("productId"));
+
+        userManager.deleteFromList(user, id);
+
+        return "deleted";
+    }
+
 
 }

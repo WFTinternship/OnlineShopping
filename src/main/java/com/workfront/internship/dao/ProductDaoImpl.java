@@ -93,7 +93,28 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         List<Product> products = new ArrayList<>();
         try {
             connection = dataSource.getConnection();
-            String sql = "SELECT * FROM products LIMIT 1";
+            String sql = "SELECT * FROM products LIMIT 5";
+            preparedStatement = connection.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+            products = createProductList(resultSet);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return products;
+
+    }
+    public List<Product> getSaledProducts(){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Product> products = new ArrayList<>();
+        try {
+            connection = dataSource.getConnection();
+            String sql = "SELECT * FROM products where saled > 0";
             preparedStatement = connection.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
             products = createProductList(resultSet);
@@ -151,6 +172,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
                     setDescription(resultSet.getString("description")).
                     setShippingPrice(resultSet.getDouble("shipping_price")).
                     setCategory(category).
+                    setSaled(resultSet.getInt("saled")).
                     setMedias(medias).setSizeOptionQuantity(getSizeOptionQuantityMap(resultSet.getInt("product_id")));
 
 
@@ -236,6 +258,33 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         } finally {
             try {
                 preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    @Override
+    public void updateSaledField(int id, int discount){
+        PreparedStatement preparedStatement = null;
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            String sql = "UPDATE products SET saled = ? where product_id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, discount);
+            preparedStatement.setInt(2, id);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                preparedStatement.close();
+                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -446,6 +495,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
                     setCategory(category).
                     setDescription(resultSet.getString("description")).
                     setPrice(resultSet.getDouble("price")).
+                    setSaled(resultSet.getInt("saled")).
                     setShippingPrice(resultSet.getDouble("shipping_price"));
             products.add(product);
         }

@@ -82,7 +82,7 @@
     </div>
     <div class="some">
         <div class="category" class = "searchCategory">
-
+            <a href = "/getSaledProducts">SALE</a>
             <%
                 for (int i = 0; i < listofCategoriesList.size(); i++) {%>
             <div class="dropdown">
@@ -146,10 +146,11 @@
     <span class="greeting"><%out.print("Hello," + " " + user.getFirstname());%></span>
     <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
     <div class="dropdown-content">
-        <a href="#">edit account</a>
-        <a href="#">your orders</a>
-        <a href="#">your wish list</a>
-        <a href="/WEB-INF/views/index.jsp?user=null" id="logout_button">logout</a>
+        <a href="/editAccount">edit account</a>
+        <a href="/getOrders">your orders</a>
+        <a href="/showWishlistContent">your wish list</a>
+
+        <a href="/logout" id="logout_button">logout</a>
     </div>
 </div>
 
@@ -177,9 +178,11 @@
         int productId = products.get(i).getProductID();
 
 %>
+<div id="productsForPage">
 <div class="image">
     <a href="/productPage?id=<%=productId %>" id="productHref">
-        <img src="/resources/image/index.png" alt="index" class="index" style="width:80px;">
+        <%if(products.get(i).getSaled() > 0){%>
+        <img src="/resources/image/index.png" alt="index" class="index" style="width:80px;"><%}%>
         <%for(int n=0; n<medias.size(); n++){%>
         <img src="<%=medias.get(n).getMediaPath()%>" class="img<%=(n+1)%>" alt="cart image">
        <%}%>
@@ -199,14 +202,18 @@
      </script>--%>
     <p><%=products.get(i).getName()%>
     </p>
-    <p>$<%=products.get(i).getPrice()%>
+
+    <p>$<%=products.get(i).getPrice()-products.get(i).getPrice()*products.get(i).getSaled()/100%>
+        <%if(products.get(i).getSaled() > 0){%>
+        <span style="font-size: 12px; color: red;">$<%=products.get(i).getPrice()%></span>
+        <%}%>
     </p>
 </div>
 
 <%
     }
 %>
-
+</div>
 
 </body>
 </html>

@@ -15,7 +15,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Search Box</title>
+    <title>Products</title>
 
     <!-- CSS styles for standard search box -->
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/reset.css" />">
@@ -30,8 +30,9 @@
     <img src="/resources/image/logo3.PNG" width="140px;" alt="logo" id="logo">
     <div class="buttons">
         <a href="/categories" id="categories">CATEGORIES</a>
-        <a href="/products" id="products">PRODUCTS</a>
-        <a href="#" id="orders">ORDEERS</a>
+        <a href="#" id="products">PRODUCTS</a>
+        <a href="/allOrders" id="orders">ORDEERS</a>
+        <a href="/sale" id="sale">SALE</a>
     </div>
 
 </div>
@@ -43,6 +44,7 @@
 
     <button  value="0" class = "littleButtons" onclick="function1();"><img src="/resources/image/edit.jpg" alt="add" style="height: 40px; width:42px;"></button>
     <button  value="0" class = "littleButtons" onclick="function2();"><img src="/resources/image/delete.jpg" alt="add" style="height: 40px; width:42px;"></button>
+    <button  value="0" class = "littleButtons" onclick="function3();"><img src="/resources/image/sale.jpg" alt="add" style="height: 40px; width:42px;"></button>
     <%--<a href="/add" id="add">
             <img src="/resources/image/add.jpg" alt="add" style="height: 40px; width:42px;"></a>--%>
 
@@ -50,11 +52,11 @@
         <img src="/resources/image/delete.jpg" alt="add" style="height: 40px; width:42px;"></a>--%>
 </div>
 <div class="clear"></div>
-<div id="productsList">
+<div class="tables">
     <% List<Product> products = (List<Product>)request.getSession().getAttribute("products"); %>
     <table>
         <thead>
-        <tr><th>&nbsp;&nbsp;&nbsp;ID</th> <th>&nbsp;&nbsp;&nbsp;Name</th><th>&nbsp;&nbsp;&nbsp;Price($)</th><th>&nbsp;&nbsp;&nbsp;Category</th></tr>
+        <tr><th>&nbsp;&nbsp;&nbsp;ID</th> <th>&nbsp;&nbsp;&nbsp;Name</th><th>&nbsp;&nbsp;&nbsp;Price($)</th><th>&nbsp;&nbsp;&nbsp;Category</th><th>&nbsp;&nbsp;&nbsp;Sale(%)</th></tr>
         </thead>
         <%
             int i=0;
@@ -64,6 +66,7 @@
             <td><%=product.getName()%></td>
             <td><%=product.getPrice()%></td>
             <td><%=product.getCategory().getName()%></td>
+            <td><%=product.getSaled()%></td>
 
         </tr>
         <%}
@@ -122,6 +125,7 @@
             }
         }
         if(count >0) {
+            document.productForm.option.value = 'delete';
             document.getElementById("form_id").submit();
 
         }
@@ -135,9 +139,29 @@
         document.productForm.option.value = 'delete';
         return true;
     }
+    function function3() {
+        var inputElems = document.getElementsByTagName("input"),
+                count = 0;
 
+        for (var i=0; i<inputElems.length; i++) {
+            if (inputElems[i].type == "checkbox" && inputElems[i].checked == true){
+                count++;
+            }
+        }
+        if(count >0) {
+            document.productForm.option.value = 'sale';
+            document.getElementById("form_id").submit();
 
+        }
 
+        if(count == 0) {
+            alert("choose an item");
+            document.getElementById("form_id").addEventListener("submit", function (event) {
+                event.preventDefault()
+            });
+        }
+
+    }
 
 </script>
 </div>

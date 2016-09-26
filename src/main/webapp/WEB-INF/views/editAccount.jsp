@@ -87,7 +87,7 @@
     </div>
     <div class="some">
         <div class="category">
-
+            <a href = "/getSaledProducts">SALE</a>
             <%
                 for (int i = 0; i < listofCategoriesList.size(); i++) {%>
             <div class="dropdown">
@@ -124,8 +124,8 @@
             <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
             <div class="dropdown-content">
                 <a href="#">edit account</a>
-                <a href="#">your orders</a>
-                <a href="#">your wish list</a>
+                <a href="/getOrders">your orders</a>
+                <a href="/showWishlistContent">your wish list</a>
 
                 <a href="/logout" id="logout_button">logout</a>
             </div>

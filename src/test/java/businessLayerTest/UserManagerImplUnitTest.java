@@ -222,7 +222,7 @@ public class UserManagerImplUnitTest {
     @Test(expected = RuntimeException.class)
     public void deleteFromList_invalid_entry() {
 
-        userManager.deleteFromList(null, product);
+        userManager.deleteFromList(null, 5);
     }
 
     @Test
@@ -248,8 +248,8 @@ public class UserManagerImplUnitTest {
 
     @Test
     public void deleteFromList() {
-        userManager.deleteFromList(user, product);
-        verify(userDao).deleteFromWishlistByUserIDAndProductID(user.getUserID(), product.getProductID());
+        userManager.deleteFromList(user, 5);
+        verify(userDao).deleteFromWishlistByUserIDAndProductID(user.getUserID(), 5);
         verify(userDao).getWishlist(user.getUserID());
     }
 

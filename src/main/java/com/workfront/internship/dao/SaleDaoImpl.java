@@ -87,7 +87,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         Basket basket = new Basket();
         //BasketDao basketDao = new BasketDaoImpl(dataSource);
         while (resultSet.next()) {
-            // basket = basketDao.getBasket(resultSet.getInt("basket_id"));
+            basket = basketDao.getBasket(resultSet.getInt("basket_id"));
             basket.setBasketID(resultSet.getInt("basket_id"));
             sale = new Sale();
             //Retrieve by column name and set to sale...
@@ -96,7 +96,9 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
                     setBasket(basket).
                     setCreditCard(resultSet.getInt("card_id")).
                     setDate(resultSet.getTimestamp("date_of_purchuase")).
-                    setUserID(resultSet.getInt("user_id"));
+                    setUserID(resultSet.getInt("user_id")).
+                    setStatus(resultSet.getString("status")).
+                    setFullName(resultSet.getString("full_name"));
         }
         return sale;
     }
@@ -116,7 +118,9 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
                     setBasket(basket).
                     setCreditCard(resultSet.getInt("card_id")).
                     setDate(resultSet.getTimestamp("date_of_purchuase")).
-                    setUserID(resultSet.getInt("user_id"));
+                    setUserID(resultSet.getInt("user_id")).
+                    setStatus(resultSet.getString("status")).
+                    setFullName(resultSet.getString("full_name"));
             sales.add(sale);
         }
         return sales;
@@ -205,7 +209,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
             creditCardDao.updateCreditCard(creditCard);
 
 
-            String sql = "INSERT into sales(user_id, card_id, address_id, basket_id) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT into sales(user_id, card_id, address_id, basket_id, status, full_name) VALUES (?, ?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setInt(1, sale.getUserID());
@@ -213,6 +217,8 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
             preparedStatement.setInt(2, sale.getCreditCardID());
             preparedStatement.setInt(3, sale.getAddressID());
             preparedStatement.setInt(4, sale.getBasket().getBasketID());
+            preparedStatement.setString(5, sale.getStatus());
+            preparedStatement.setString(6, sale.getFullName());
             preparedStatement.executeUpdate();
             connection.commit();
 
@@ -224,7 +230,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
 
         } catch(RuntimeException e) {
             e.printStackTrace();
-            LOGGER.error("Runtime exception!");
+            LOGGER.error("Negative number!");
             if(e.getMessage().equals("Negative number!"))
             throw new RuntimeException("Negative number!");
         }catch (SQLException e) {
@@ -315,5 +321,30 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
             close(null, preparedStatement, connection);
         }
 
+    }
+    @Override
+    public void updateSaleStatus(int id, String status) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = dataSource.getConnection();
+
+            String sql = "UPDATE sales SET status = ? where sale_id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, status);
+
+            preparedStatement.setInt(2, id);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(null, preparedStatement, connection);
+        }
     }
 }

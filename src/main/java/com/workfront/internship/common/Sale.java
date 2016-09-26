@@ -14,6 +14,8 @@ public class Sale {
     private Basket basket;
     private int userID;
     private int creditCardID;
+    private String status;
+    private String fullName;
 
 
     public int getCreditCardID() {
@@ -77,6 +79,23 @@ public class Sale {
     }
 
 
+    public String getStatus() {
+        return status;
+    }
+
+    public Sale setStatus(String status) {
+        this.status = status;
+        return this;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public Sale setFullName(String fullName) {
+        this.fullName = fullName;
+        return this;
+    }
 }
 
 

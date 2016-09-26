@@ -46,7 +46,7 @@ public class ProductManagerImpl implements ProductManager {
 
         productDao.updateProduct(product);
 
-        List<Media> oldMedias = mediaManager.getMediaByProductID(product.getProductID());
+        /*List<Media> oldMedias = mediaManager.getMediaByProductID(product.getProductID());
         List<Media> newMedias = product.getMedias();
         for (int i = 0; i < newMedias.size(); i++)
             if (!oldMedias.contains(newMedias.get(i)))
@@ -55,6 +55,12 @@ public class ProductManagerImpl implements ProductManager {
             if (!newMedias.contains(oldMedias.get(i)))
                 mediaManager.deleteMediaByID(oldMedias.get(i).getMediaID());
 
+    }*/
+    }
+    public void updateSaleField(int id, int discount){
+        if (id <= 0 || discount <0)
+            throw new RuntimeException("not valid entry");
+         productDao.updateSaledField(id, discount);
     }
 
     @Override
@@ -73,6 +79,10 @@ public class ProductManagerImpl implements ProductManager {
 
     public List<Product> getAllProducts() {
         List<Product> products = productDao.getAllProducts();
+        return products;
+    }
+    public List<Product> getSaledProducts() {
+        List<Product> products = productDao.getSaledProducts();
         return products;
     }
 
@@ -102,7 +112,8 @@ public class ProductManagerImpl implements ProductManager {
     public Map<String, Integer> getSizeOptionQuantityMap(int productId) {
         return productDao.getSizeOptionQuantityMap(productId);
     }
-    public void deleteProductFromProductSizeTable(int id, String option){
+
+    public void deleteProductFromProductSizeTable(int id, String option) {
         productDao.deleteProductFromProductSizeTable(id, option);
     }
 

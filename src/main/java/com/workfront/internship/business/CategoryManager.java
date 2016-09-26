@@ -13,6 +13,7 @@ public interface CategoryManager {
     Category getCategoryByID(int catId);
     void updateCategory(Category category);
     void deleteCategory(int id);
+    void deleteCategoryByParentID(int id);
     List<Category> getAllCategories();
     List<Category> getCategoriesByParentID(int id);
 }

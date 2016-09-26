@@ -52,11 +52,13 @@ public class SaleController {
     public String getInfoFromCheckoutPage(HttpServletRequest request) {
         //getting request params...
         String addressOption = request.getParameter("addressOption");
+        String fullName = request.getParameter("fullName");
         Address address = new Address();
 
         if(addressOption !=null && !addressOption.equals("Select")){
             address = addressManager.getAddressByID(Integer.parseInt(addressOption));
             request.getSession().setAttribute("address", address);
+            request.getSession().setAttribute("fullName", fullName);
             return "cartInfo";
         }
 
@@ -83,6 +85,7 @@ public class SaleController {
             addressManager.insertAddress(address);
             //set address atribute...
             request.getSession().setAttribute("address", address);
+            request.getSession().setAttribute("fullName", fullName);
             return "cartInfo";
             }
 
@@ -111,11 +114,12 @@ public class SaleController {
         Sale sale = new Sale();
         //getting address from session...
         Address address = (Address) (request.getSession().getAttribute("address"));
+        String fullName = (String) (request.getSession().getAttribute("fullName"));
 
         sale.setAddressID(address.getAddressID()).
                 setBasket(user.getBasket()).
                 setCreditCard(creditCard.getCardID()).
-                setUserID(user.getUserID()).setDate(new Date());
+                setUserID(user.getUserID()).setDate(new Date()).setStatus("not delivered").setFullName(fullName);
 
         int id = salesManager.makeNewSale(sale);
         if(id == 0){
@@ -161,6 +165,7 @@ public class SaleController {
     @RequestMapping("/showOrderInfo")
     public String showOrderInfo(HttpServletRequest request) {
         int saleId = Integer.parseInt(request.getParameter("saleId"));
+        String adminOption = request.getParameter("admin");
 
         Sale sale = salesManager.getSaleBySaleID(saleId);
 
@@ -177,6 +182,10 @@ public class SaleController {
         }
         //set Attributes to request...
         request.setAttribute("sale", sale);
+
+        if(adminOption != null){
+            return "orderInfo";
+        }
 
         return "orderPage";
 

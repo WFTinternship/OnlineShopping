@@ -108,27 +108,4 @@ public class ProductControllerUnitTest {
 
     }
 
-    @Test
-    public void getCategories() {
-        List<Category> mainCategories = new ArrayList<>();
-        List<Category> subCategories = new ArrayList<>();
-
-        mainCategories.add(testCategory);
-        Category testSubCategory = new Category();
-        testSubCategory.setName("subCategory").setCategoryID(10).setParentID(testSubCategory.getCategoryID());
-
-        subCategories.add(testSubCategory);
-
-        when(categoryManager.getCategoriesByParentID(0)).thenReturn(mainCategories);
-        when(categoryManager.getCategoriesByParentID(mainCategories.get(0).getCategoryID())).thenReturn(subCategories);
-        //testing method... getting all categories for productPage menu...
-       // productController.getCategories(testRequest);
-        verify(categoryManager).getCategoriesByParentID(testCategory.getCategoryID());
-
-
-        verify(testSession).setAttribute("subcategories0", subCategories);
-        verify(testSession).setAttribute("mainCategories", mainCategories);
-
-
-    }
 }
