@@ -23,6 +23,8 @@ public interface CategoryDao {
 
     List<Category> getAllCategories();
 
+    List<Category> getChildCategories();
+
     List<Category> getCategoriesByParentID(int id);
 
     List<Category> getCategories(int parentId, String str);

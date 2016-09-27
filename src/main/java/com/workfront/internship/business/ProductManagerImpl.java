@@ -102,6 +102,11 @@ public class ProductManagerImpl implements ProductManager {
         return products;
 
     }
+    public List<Product> getProducts(int categoryId, String str){
+		if (categoryId <= 0 || str == null)
+			throw new RuntimeException("not valid entry");
+		return productDao.getProducts(categoryId, str);
+	}
 
     public void setSizes(int productId, String sizeOption, int quantity) {
         productDao.setSizes(productId, sizeOption, quantity);
@@ -120,18 +125,22 @@ public class ProductManagerImpl implements ProductManager {
     public void deleteProductFromProductSizeTable(int id, String option) {
         productDao.deleteProductFromProductSizeTable(id, option);
     }
-    public String getLikeStringsByCategory(int categoryID, String str){
-        String result = "";
+
+    public List<String> getLikeStringsByCategory(int categoryID, String str){
+        List<String> result = new ArrayList<>();
 
         List<Category> categories = categoryDao.getCategories(categoryID, str);
 
         for(Category category : categories){
-            result += category.getName();
-            result += ",";
+			if(!result.contains(category.getName())) {
+				result.add(category.getName());
+			}
             List<Product> products = productDao.getProducts(category.getCategoryID(), str);
             for(Product product : products){
-                result += product.getName();
-                result += ",";
+				if(!result.contains(product.getName())) {
+					result.add(product.getName());
+				}
+
             }
         }
         return result;

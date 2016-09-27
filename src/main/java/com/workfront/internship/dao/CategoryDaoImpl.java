@@ -269,7 +269,7 @@ public class CategoryDaoImpl extends GeneralDao implements CategoryDao {
             String sql = "SELECT * FROM categories where parent_id=? AND category_name like ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, parentId);
-            preparedStatement.setString(2, "%" + str + "%");
+            preparedStatement.setString(2, str + "%");
 
             resultSet = preparedStatement.executeQuery();
             categories = createCategoryList(resultSet);

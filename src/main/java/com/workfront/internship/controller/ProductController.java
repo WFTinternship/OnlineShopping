@@ -109,7 +109,7 @@ public class ProductController {
     }
     @RequestMapping("/getLikeProducts")
     @ResponseBody
-    public String getLikeProducts(HttpServletRequest request){
+    public List<String> getLikeProducts(HttpServletRequest request){
 
         int parentId = Integer.parseInt(request.getParameter("category"));
         String str = request.getParameter("searchKey");
@@ -117,6 +117,30 @@ public class ProductController {
         return productManager.getLikeStringsByCategory(parentId, str);
 
     }
+    @RequestMapping("/getProductsBySearch")
+    public String getProductsBySearch(HttpServletRequest request){
+        List<Product> products = new ArrayList<>();
+        int productId = 0;
+
+        int categoryId = Integer.parseInt(request.getParameter("category"));
+        String searchkey = request.getParameter("productName");
+
+        products = productManager.getProducts(categoryId, searchkey);
+
+        request.setAttribute("products", products);
+        List<List<Media>> medias = new ArrayList<List<Media>>();
+        List<Media> medias1 = null;
+        for (int i = 0; i < products.size(); i++) {
+            productId = products.get(i).getProductID();
+            medias1 = mediaManager.getMediaByProductID(productId);
+            medias.add(medias1);
+            products.get(i).setMedias(medias1);
+            request.setAttribute("medias" + i, medias.get(i));
+        }
+        return "productsPage";
+    }
+
+
    /* public void getCategories(HttpServletRequest request){
 
         List<List<Category>> categories = new ArrayList<List<Category>>();

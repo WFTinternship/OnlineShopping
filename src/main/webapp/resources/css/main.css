@@ -17,7 +17,7 @@
 	font-family: Arial;
 	border-top-left-radius: 5px 5px;
 	border-bottom-left-radius: 5px 5px;
-	margin-bottom: 50px;
+
 	border-color: #eae6e6;
 	padding: 9px;
 
@@ -267,7 +267,7 @@
 }
 .category{
 	margin-top: 30px;
-	margin-left: 300px;
+
 	display: inline-block;
 
 }
@@ -583,6 +583,20 @@ display: none;
 	color: red;
 }
 #searchResult{
-	z-index: 15;
+	z-index: 1000;
 	background-color: white;
+	display: inline-block;
+	width: 476px;
+	position: absolute;
+	top: 130px;
+	right: 495px;
+
+}
+.some{
+	margin-left: 50px;
+}
+.wrapper1 input[type=search] {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
 }
