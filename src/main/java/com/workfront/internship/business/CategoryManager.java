@@ -15,5 +15,7 @@ public interface CategoryManager {
     void deleteCategory(int id);
     void deleteCategoryByParentID(int id);
     List<Category> getAllCategories();
+    List<Category> getChildCategories(int parentId);
     List<Category> getCategoriesByParentID(int id);
+    Category getCategoryByParentIDANDCategoryName(int parentId, String name);
 }

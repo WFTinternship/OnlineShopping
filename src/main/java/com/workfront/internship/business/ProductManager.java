@@ -39,6 +39,7 @@ public interface ProductManager {
 
     List<String> getLikeStringsByCategory(int categoryID, String str);
 
+
     List<Product> getProducts(int categoryId, String str);
 
 }

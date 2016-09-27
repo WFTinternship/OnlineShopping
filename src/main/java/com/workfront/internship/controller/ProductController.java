@@ -112,6 +112,7 @@ public class ProductController {
     public List<String> getLikeProducts(HttpServletRequest request){
 
         int parentId = Integer.parseInt(request.getParameter("category"));
+
         String str = request.getParameter("searchKey");
 
         return productManager.getLikeStringsByCategory(parentId, str);
@@ -125,8 +126,14 @@ public class ProductController {
         int categoryId = Integer.parseInt(request.getParameter("category"));
         String searchkey = request.getParameter("productName");
 
-        products = productManager.getProducts(categoryId, searchkey);
+        List<Category> categories = categoryManager.getChildCategories(categoryId);
+        Category cat = categoryManager.getCategoryByParentIDANDCategoryName(categoryId, searchkey);
 
+        for(Category category : categories) {
+            products.addAll(productManager.getProducts(category.getCategoryID(), searchkey));
+
+        }
+        products.addAll(productManager.getProdactsByCategoryID(cat.getCategoryID()));
         request.setAttribute("products", products);
         List<List<Media>> medias = new ArrayList<List<Media>>();
         List<Media> medias1 = null;

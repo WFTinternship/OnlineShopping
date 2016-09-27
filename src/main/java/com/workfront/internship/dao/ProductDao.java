@@ -25,6 +25,8 @@ public interface ProductDao {
      void deleteAllProducts();
      List<Product> getAllProducts();
      List<Product> getProducts(int categoryId, String str);
+
+
      List<Product> getSaledProducts();
      List<Product> getProdactsByCategoryID(int id);
      List<Product> getLimitedNumberOfProducts();

@@ -453,6 +453,7 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         }
         return products;
     }
+
     public List<Product> getProdactsByCategoryID(int id){
         Connection connection = null;
         PreparedStatement preparedStatement = null;

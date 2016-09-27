@@ -53,7 +53,7 @@
             <% List<Product> products = (List<Product>)request.getAttribute("products"); %>
         <table>
             <thead>
-            <tr><th>&nbsp;&nbsp;&nbsp;ID</th> <th>&nbsp;&nbsp;&nbsp;Name</th><th>&nbsp;&nbsp;&nbsp;Price($)</th><th>&nbsp;&nbsp;&nbsp;Category</th><th>&nbsp;&nbsp;&nbsp;Sale</th></tr>
+            <tr><th>&nbsp;&nbsp;&nbsp;ID</th> <th>&nbsp;&nbsp;&nbsp;Name</th><th>&nbsp;&nbsp;&nbsp;Price($)</th><th>&nbsp;&nbsp;&nbsp;Category</th><th>&nbsp;&nbsp;&nbsp;Sale(%)</th></tr>
             </thead>
             <%
                 int i=0;

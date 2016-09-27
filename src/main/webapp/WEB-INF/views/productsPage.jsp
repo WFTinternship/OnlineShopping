@@ -25,6 +25,45 @@
     <script src="<c:url value="/resources/js/jquery-1.8.3.min.js" />"></script>
     <script src="<c:url value="/resources/js/jquery.elevateZoom-3.0.8.min.js" />"></script>
     <script src="<c:url value="/resources/js/jzoom.min.js" />"></script>
+    <script>
+        function searchFunction() {
+
+            var category = $('#category').val();
+
+            var searchKey = $('#searchKey').val();
+
+            if (searchKey == "") {
+                document.getElementById("searchResult").innerHTML = "";
+                searchFunction().abort();
+
+            }
+            document.getElementById("searchKey").value = document.getElementById("searchKey").value.trim();
+
+            $.get("/getLikeProducts?searchKey=" + searchKey + "&category=" + category, function (data) {
+
+                var str = "";
+                for (var i = 0; i < data.length; i++) {
+                    str += "<div class = 'subcategory'>" + data[i] + "</div>"
+                    //console.log('data', data[i]);
+                }
+
+                document.getElementById("searchResult").innerHTML = str;
+
+            });
+        }
+        $(document).ready(function () {
+
+            $('#searchResult').on('click', '.subcategory', function() {
+
+                var category = $('#category').val();
+
+                var subCategory = $(this).text();
+                document.getElementById("searchKey").value = subCategory;
+                $('#searchResult').hide();
+
+            });
+        })
+    </script>
 
 </head>
 <body>
@@ -61,21 +100,26 @@
 
 
         %>
-        <form method="get" action="http://www.google.com"><br><br><br><br>
-            <select name="category">
-                <option value="all" selected>All</option>
+        <form method="get" action="/getProductsBySearch" onsubmit="return validate()"><br><br><br><br>
+            <select name="category" class="searchCategory" id="category">
+
+
                 <%for (int i = 0; i < listofCategoriesList.size(); i++) {%>
 
                 <option value="<%=listofCategoriesList.get(i).get(0).getCategoryID()%>"
-                        selected><%=listofCategoriesList.get(i).get(0).getName()%>
+                        ><%=listofCategoriesList.get(i).get(0).getName()%>
                 </option>
 
                 <%
                     }
                 %>
 
-            </select><input type="text" class="textinput" name="productName" size="60" maxlength="120"><input
-                    type="submit" value="search" class="button">
+            </select><input type="search" class="textinput" name="productName" id="searchKey" size="60" maxlength="120"
+                            onkeyup="searchFunction()"><input
+                type="submit" value="search" class="button">
+            <div id="searchResult">
+
+            </div>
 
         </form>
         <br>
@@ -117,8 +161,8 @@
         %>
 
         <div class="signinRegister">
-            <a href="/signin.jsp" class="register" id="login_button">SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="/registration.jsp" class="register" id="registration_button">CREATE ACCOUNT</a>
+            <a href="/login" class="register" id="login_button">SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/createaccount" class="register" id="registration_button">CREATE ACCOUNT</a>
         </div>
 
         <div class="clear"></div>
@@ -214,6 +258,24 @@
     }
 %>
 </div>
+<script>
+    String.prototype.trim = function()
+    {
+        // Replace leading and trailing spaces with the empty string
+        return this.replace(/(^\s*)|(\s*$)/g, "");
+    }
+    function validate(){
+        if(document.getElementById("searchKey").value != "") {
+            if(document.getElementById("searchKey").value.trim() == "")
+                return false;
+            else{
+                document.getElementById("searchKey").value = document.getElementById("searchKey").value.trim();
+                return true;
+            }
+        }
+        else return false;
+    }
 
+</script>
 </body>
 </html>

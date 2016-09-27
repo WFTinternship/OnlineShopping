@@ -52,10 +52,17 @@ public class CategoryManagerImpl implements CategoryManager {
 
     }
 
-
+    public Category getCategoryByParentIDANDCategoryName(int parentId, String name){
+        return categoryDao.getCategoryByParentIDANDCategoryName(parentId, name);
+    }
     public List<Category> getAllCategories(){
 
         List<Category> categories = categoryDao.getAllCategories();
+        return  categories;
+    }
+    public List<Category> getChildCategories(int parentId){
+
+        List<Category> categories = categoryDao.getChildCategories(parentId);
         return  categories;
     }
     public List<Category> getCategoriesByParentID(int id){

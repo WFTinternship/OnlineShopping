@@ -37,13 +37,9 @@ public class BasketController {
     public String addToBasket(HttpServletRequest request) {
         //get user from session...
         User user = (User) request.getSession().getAttribute("user");
-        /*if(user == null){
-            try {
-                response.sendRedirect("signin");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
+        if(user == null){
+            return "noUser";
+        }
         //getting parameters from request... productId and quantity...
         String productIdStr = request.getParameter("productId");
         int productId = Integer.parseInt(productIdStr);

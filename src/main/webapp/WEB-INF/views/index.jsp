@@ -37,13 +37,10 @@
 				searchFunction().abort();
 
 			}
+			document.getElementById("searchKey").value = document.getElementById("searchKey").value.trim();
 
 			$.get("/getLikeProducts?searchKey=" + searchKey + "&category=" + category, function (data) {
-				/* if (data == "noUser") {
-				 window.location.assign("/login");
-				 }*/
 
-				//alert(data);
 				var str = "";
 				for (var i = 0; i < data.length; i++) {
 					str += "<div class = 'subcategory'>" + data[i] + "</div>"
@@ -62,6 +59,7 @@
 
 				var subCategory = $(this).text();
 				document.getElementById("searchKey").value = subCategory;
+				$('#searchResult').hide();
 
 				});
 		})
@@ -105,13 +103,13 @@
 
 
 		%>
-		<form method="get" action="/getProductsBySearch"><br><br><br><br>
+		<form method="get" action="/getProductsBySearch" onsubmit="return validate()"><br><br><br><br>
 			<select name="category" class="searchCategory" id="category">
-				<option value="all" selected>All</option>
+
 				<%for (int i = 0; i < listofCategoriesList.size(); i++) {%>
 
 				<option value="<%=listofCategoriesList.get(i).get(0).getCategoryID()%>"
-						selected><%=listofCategoriesList.get(i).get(0).getName()%>
+						><%=listofCategoriesList.get(i).get(0).getName()%>
 				</option>
 
 				<%
@@ -130,7 +128,7 @@
 	</div>
 	<div class="some">
 		<div class="category">
-			<a href="/getSaledProducts">SALE</a>
+			<a href="/getSaledProducts" class = "saleId">SALE</a>
 			<%
 				for (int i = 0; i < listofCategoriesList.size(); i++) {%>
 			<div class="dropdown">
@@ -270,6 +268,25 @@
 	<%
 		}
 	%>
+		<script>
+			String.prototype.trim = function()
+			{
+				// Replace leading and trailing spaces with the empty string
+				return this.replace(/(^\s*)|(\s*$)/g, "");
+			}
+			function validate(){
+if(document.getElementById("searchKey").value != "") {
+	if(document.getElementById("searchKey").value.trim() == "")
+		return false;
+		else{
+			document.getElementById("searchKey").value = document.getElementById("searchKey").value.trim();
+			return true;
+		}
+	}
+else return false;
+}
+
+			</script>
 </div>
 </body>
 </html>

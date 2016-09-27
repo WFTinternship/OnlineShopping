@@ -78,7 +78,37 @@ public class CategoryDaoImpl extends GeneralDao implements CategoryDao {
         return category;
 
     }
+    public Category getCategoryByParentIDANDCategoryName(int parentId, String name){
+        Category category = null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            //getting category from db by categoryId...
+            String sql = "SELECT * from categories where parent_id =? AND category_name = ?";
+            preparedStatement = connection.prepareStatement(sql);
 
+            preparedStatement.setInt(1, parentId);
+            preparedStatement.setString(2, name);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                category = new Category();
+                String catname = resultSet.getString("category_name");
+                int parenId = resultSet.getInt("parent_id");
+                category.setCategoryID(resultSet.getInt("category_id"));
+                category.setName(catname).setParentID(parenId);
+            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw new RuntimeException(e);
+        } finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return category;
+    }
     @Override
     public int insertCategory(Category category) {
         int lastId = 0;
@@ -220,6 +250,31 @@ public class CategoryDaoImpl extends GeneralDao implements CategoryDao {
             //get all categories from db...
             String sql = "SELECT * FROM categories";
             preparedStatement = connection.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+
+            categories = createCategoryList(resultSet);
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.error("SQL exception occurred!");
+            throw  new RuntimeException(e);
+        }  finally {
+            close(resultSet, preparedStatement, connection);
+        }
+        return categories;
+    }
+    @Override
+    public List<Category> getChildCategories(int parentId){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Category> categories = new ArrayList<Category>();
+        try {
+            connection = dataSource.getConnection();
+            //get all categories from db...
+            String sql = "SELECT * FROM categories where parent_id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, parentId);
             resultSet = preparedStatement.executeQuery();
 
             categories = createCategoryList(resultSet);
