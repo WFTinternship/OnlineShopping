@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -104,6 +105,16 @@ public class ProductController {
 
         }
         return "productsPage";
+
+    }
+    @RequestMapping("/getLikeProducts")
+    @ResponseBody
+    public String getLikeProducts(HttpServletRequest request){
+
+        int parentId = Integer.parseInt(request.getParameter("category"));
+        String str = request.getParameter("searchKey");
+
+        return productManager.getLikeStringsByCategory(parentId, str);
 
     }
    /* public void getCategories(HttpServletRequest request){

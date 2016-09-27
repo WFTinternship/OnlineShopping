@@ -1,5 +1,6 @@
 package com.workfront.internship.business;
 
+import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Media;
 import com.workfront.internship.common.Product;
 import com.workfront.internship.dao.*;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,8 @@ public class ProductManagerImpl implements ProductManager {
 
     @Autowired
     private ProductDao productDao;
+    @Autowired
+    private CategoryDao categoryDao;
     @Autowired
     private MediaManager mediaManager;
 
@@ -115,6 +119,22 @@ public class ProductManagerImpl implements ProductManager {
 
     public void deleteProductFromProductSizeTable(int id, String option) {
         productDao.deleteProductFromProductSizeTable(id, option);
+    }
+    public String getLikeStringsByCategory(int categoryID, String str){
+        String result = "";
+
+        List<Category> categories = categoryDao.getCategories(categoryID, str);
+
+        for(Category category : categories){
+            result += category.getName();
+            result += ",";
+            List<Product> products = productDao.getProducts(category.getCategoryID(), str);
+            for(Product product : products){
+                result += product.getName();
+                result += ",";
+            }
+        }
+        return result;
     }
 
 

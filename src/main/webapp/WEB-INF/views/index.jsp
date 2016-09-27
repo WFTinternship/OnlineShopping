@@ -24,7 +24,29 @@
     <!-- CSS styles for standard search box -->
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/reset.css" />">
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />">
+    <script src="<c:url value="/resources/js/jquery-1.12.1.min.js" />"></script>
+    <script>
+        function searchFunction() {
 
+            var category = $('#category').val();
+
+            var searchKey = $('#searchKey').val();
+
+            if(searchKey == ""){
+                searchFunction().abort();
+            }
+
+            $.get("/getLikeProducts?searchKey=" + searchKey + "&category=" + category, function (data) {
+                /* if (data == "noUser") {
+                 window.location.assign("/login");
+                 }*/
+
+                alert(data);
+                document.getElementById("searchResult").innerHTML = data;
+
+            });
+        }
+        </script>
 </head>
 <body>
 <!-- HTML for SEARCH BAR -->
@@ -65,7 +87,7 @@
 
         %>
         <form method="get" action="http://www.google.com"><br><br><br><br>
-            <select name="category" class = "searchCategory">
+            <select name="category" class = "searchCategory" id = "category">
                 <option value="all" selected>All</option>
                 <%for (int i = 0; i < listofCategoriesList.size(); i++) {%>
 
@@ -77,8 +99,11 @@
                     }
                 %>
 
-            </select><input type="text" class="textinput" name="productName" size="60" maxlength="120"><input
+            </select><input type="text" class="textinput" name="productName" id = "searchKey" size="60" maxlength="120" onkeyup="searchFunction()"><input
                     type="submit" value="search" class="button">
+            <div id="searchResult">
+
+            </div>
 
         </form>
         <br>

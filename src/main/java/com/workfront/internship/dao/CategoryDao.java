@@ -24,4 +24,6 @@ public interface CategoryDao {
     List<Category> getAllCategories();
 
     List<Category> getCategoriesByParentID(int id);
+
+    List<Category> getCategories(int parentId, String str);
 }

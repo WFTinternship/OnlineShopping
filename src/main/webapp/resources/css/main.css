@@ -582,3 +582,7 @@ display: none;
 	padding-top: 10px;
 	color: red;
 }
+#searchResult{
+	z-index: 15;
+	background-color: white;
+}

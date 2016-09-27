@@ -24,5 +24,6 @@ public interface ProductManager {
     int getQuantity(int productId, String sizeOption);
     void deleteProductFromProductSizeTable(int id, String option);
     Map<String, Integer> getSizeOptionQuantityMap(int productId);
+    String getLikeStringsByCategory(int categoryID, String str);
 
 }

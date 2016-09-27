@@ -24,11 +24,12 @@ public interface ProductDao {
      void updateSaledField(int id, int discount);
      void deleteAllProducts();
      List<Product> getAllProducts();
+     List<Product> getProducts(int categoryId, String str);
      List<Product> getSaledProducts();
      List<Product> getProdactsByCategoryID(int id);
      List<Product> getLimitedNumberOfProducts();
      void setSizes(int productId, String sizeOption, int quantity);
-     ;
+
      Map<String, Integer> getSizeOptionQuantityMap(int productId);
 
 }
