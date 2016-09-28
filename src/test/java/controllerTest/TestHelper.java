@@ -12,10 +12,8 @@ public class TestHelper {
 
 
     public static Category getTestCategory() {
-        Random random = new Random();
-        int x = random.nextInt(100000);
         Category category = new Category();
-        category.setName("oldCategory" + x).setCategoryID(x).setParentID(2);
+        category.setName("oldCategory" ).setCategoryID(1).setParentID(2);
         return category;
     }
 
@@ -39,7 +37,7 @@ public class TestHelper {
                 setDescription("color:white").
                 setShippingPrice(1).
                 setCategory(getTestCategory()).
-                setProductID(1).setSizeOptionQuantity(sizeQuantity).setMedias(medias);
+                setProductID(2).setSizeOptionQuantity(sizeQuantity).setMedias(medias).setSaled(0);
         return product;
     }
     public static User getTestUser() {

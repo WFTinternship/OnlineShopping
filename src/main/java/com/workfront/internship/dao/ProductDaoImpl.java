@@ -189,14 +189,15 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
         try {
             connection = dataSource.getConnection();
 
-            String sql = "INSERT into products(name, price, description, shipping_price, category_id)" +
-                    " VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT into products(name, price, description, shipping_price, category_id, saled)" +
+                    " VALUES (?, ?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, product.getName());
             preparedStatement.setDouble(2, product.getPrice());
             preparedStatement.setString(3, product.getDescription());
             preparedStatement.setDouble(4, product.getShippingPrice());
             preparedStatement.setInt(5, product.getCategory().getCategoryID());
+            preparedStatement.setInt(6, 0);
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {

@@ -114,8 +114,8 @@ public class Product {
         Product product = (Product) obj;
 
         if (getProductID() != product.getProductID()) return false;
-        if (getName() != product.getName()) return false;
-        if (getDescription() != product.getDescription()) return false;
+        if (!getName().equals(product.getName())) return false;
+        if (!getDescription().equals(product.getDescription())) return false;
         if (getPrice() != product.getPrice()) return false;
         if (getShippingPrice() != product.getShippingPrice()) return false;
         if (getCategory() != null ? !getCategory().equals(product.getCategory()) : product.getCategory() != null) return false;

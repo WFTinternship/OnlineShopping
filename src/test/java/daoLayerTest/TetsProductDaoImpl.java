@@ -3,12 +3,20 @@ package daoLayerTest;
 import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Product;
 import com.workfront.internship.dao.*;
+import com.workfront.internship.spring.TestConfiguration;
+import controllerTest.TestHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,28 +25,30 @@ import java.util.List;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertEquals;
 
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfiguration.class)
+@ActiveProfiles("test")
 public class TetsProductDaoImpl{
-    LegacyDataSource dataSource;
+
     Product product = null;
     Category category = null;
     int lastInsertedIndex = 0;
+    @Autowired
     ProductDao productDao;
+    @Autowired
     CategoryDao categoryDao;
+    @Autowired
+    DataSource dataSource;
 
     @Before
     public void setUpDB() throws SQLException, IOException{
-        dataSource = LegacyDataSource.getInstance();
 
-        productDao = new ProductDaoImpl();
-        Whitebox.setInternalState(productDao, "dataSource", dataSource);
 
-        categoryDao = new CategoryDaoImpl();
-        Whitebox.setInternalState(categoryDao, "dataSource", dataSource);
-        category = getRandomCategory();
+        category = TestHelper.getTestCategory();
         categoryDao.insertCategory(category);
 
-        product = getRandomProduct();
+        product = TestHelper.getTestProduct();
+        product.setCategory(category);
         lastInsertedIndex = productDao.insertProduct(product);
 
     }
@@ -48,11 +58,6 @@ public class TetsProductDaoImpl{
 
         productDao.deleteAllProducts();
         categoryDao.deleteAllCategories();
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void insertProduct_duplicate() {
-        productDao.insertProduct(product);
     }
 
     @Test
@@ -72,7 +77,8 @@ public class TetsProductDaoImpl{
     @Test
     public void insertProduct() {
 
-        Product product1 = getRandomProduct();
+        Product product1 = TestHelper.getTestProduct();
+        product1.setCategory(category);
         product1.setName("newName");
         int insertindex = productDao.insertProduct(product1);
 
@@ -93,26 +99,11 @@ public class TetsProductDaoImpl{
    @Test
     public void updateProduct() {
 
-
-      //  product.setQuantity(product.getQuantity() + 3000);
-
         productDao.updateProduct(product);
 
         Product product1 = productDao.getProductByID(lastInsertedIndex);
 
         doAssertion(product, product1);
-
-    }
-    @Test(expected = RuntimeException.class)
-    public void updateProduct_duplicate(){
-
-        Product product1 = getRandomProduct();
-        product1.setName("newName");
-
-        productDao.insertProduct(product1);
-        product1.setName(product.getName());
-
-        productDao.updateProduct(product1);
 
     }
 
@@ -132,13 +123,15 @@ public class TetsProductDaoImpl{
         List<Product> products = new ArrayList<>();
 
 
-        Product product = getRandomProduct();
+        Product product = TestHelper.getTestProduct();
+        product.setCategory(category);
         productDao.insertProduct(product);
         products.add(product);
 
-        Product product1 = getRandomProduct();
-        product1.setName("newProductName");
+        Product product1 = TestHelper.getTestProduct();
+        product1.setName("newProductName").setCategory(category);
         productDao.insertProduct(product1);
+
         products.add(product1);
 
         List<Product> products1 = productDao.getAllProducts();
@@ -150,16 +143,13 @@ public class TetsProductDaoImpl{
     @Test
     public void getProductsByCategoryID(){
 
-        productDao.deleteAllProducts();
 
         List<Product> products = new ArrayList<>();
 
-
-        Product product = getRandomProduct();
-        productDao.insertProduct(product);
         products.add(product);
 
-        Product product1 = getRandomProduct();
+        Product product1 = TestHelper.getTestProduct();
+        product1.setCategory(category);
         product1.setName("newProductName");
         productDao.insertProduct(product1);
         products.add(product1);
@@ -170,18 +160,60 @@ public class TetsProductDaoImpl{
             doAssertion(products.get(i), products1.get(i));
         }
     }
+    @Test
+    public void getQuantity(){
 
-    private Category getRandomCategory(){
-        category = new Category();
-        category.setName("hat");
-        return category;
+        productDao.setSizes(product.getProductID(), "3M", 5);
+
+        int quantity = productDao.getQuantity(product.getProductID(), "3M");
+
+        assertEquals("the quantity is not the rigth one", 5, quantity);
+    }
+    @Test
+    public void deleteProductFromProductSizeTable(){
+        //testing method...
+        productDao.deleteProductFromProductSizeTable(product.getProductID(), "3M");
+
+        int quantity = productDao.getQuantity(product.getProductID(), "3M");
+
+        assertEquals("the item was not deleted", -1, quantity);
+
+    }
+    @Test
+    public void updateSaledField(){
+
+        productDao.updateSaledField(product.getProductID(), 50);
+        //testing method...
+        Product product1 = productDao.getProductByID(product.getProductID());
+
+        assertEquals("sale is not equal to 50", 50, product1.getSaled());
+
+
+    }
+    @Test
+    public void getProducts(){
+        //testing method...
+        List<Product> products = productDao.getProducts(product.getCategory().getCategoryID(), "baby");
+
+        doAssertion(product, products.get(0));
+    }
+    @Test
+    public void getSaledProducts(){
+
+        productDao.updateSaledField(product.getProductID(), 30);
+        //testing method...
+        List<Product> products = productDao.getSaledProducts();
+
+        doAssertion(product, products.get(0));
+    }
+    @Test
+    public void getLimitidNumberOfProducts(){
+
+        List<Product> products = productDao.getLimitedNumberOfProducts();
+
+        doAssertion(product, products.get(0));
     }
 
-    private Product getRandomProduct(){
-        Product product1 = new Product();
-        product1.setName("baby hat").setPrice(50).setDescription("color:white").setShippingPrice(1).setCategory(category);
-        return product1;
-    }
     private void doAssertion(Product product, Product product1){
         assertEquals(product.getProductID(), product1.getProductID());
         assertEquals(product.getName(), product1.getName());
@@ -191,6 +223,7 @@ public class TetsProductDaoImpl{
         assertEquals(product.getCategory().getCategoryID(), product1.getCategory().getCategoryID());
         assertEquals(product.getDescription(), product1.getDescription());
     }
+
 
 
 
