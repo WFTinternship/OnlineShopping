@@ -206,7 +206,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
 
             CreditCard creditCard = creditCardDao.getCreditCardByCardID(sale.getCreditCardID());
             creditCard.setBalance(creditCard.getBalance() - sale.getBasket().getTotalPrice());
-            creditCardDao.updateCreditCard(creditCard);
+            creditCardDao.updateCreditCard(connection, creditCard);
 
 
             String sql = "INSERT into sales(user_id, card_id, address_id, basket_id, status, full_name) VALUES (?, ?, ?, ?, ?, ?)";

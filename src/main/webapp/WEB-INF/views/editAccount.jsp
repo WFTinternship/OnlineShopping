@@ -128,7 +128,7 @@
     </div>
     <div class="some">
         <div class="category">
-            <a href = "/getSaledProducts">SALE</a>
+            <a href = "/getSaledProducts" class = "saleId">SALE</a>
             <%
                 for (int i = 0; i < listofCategoriesList.size(); i++) {%>
             <div class="dropdown">

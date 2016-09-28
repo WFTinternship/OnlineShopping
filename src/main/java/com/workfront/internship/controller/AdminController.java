@@ -149,34 +149,36 @@ public class AdminController {
 
     @RequestMapping("/saveProduct")
     public String saveProduct(HttpServletRequest request,
-                              @RequestParam(value = "file", required = false) MultipartFile image) throws IOException {
+                              @RequestParam(value = "file", required = false) MultipartFile[] image) throws IOException {
 
         String filePath = request.getSession().getServletContext().getRealPath("/resources/image");
+List<String> imagePath = new ArrayList<>();
 
 
-        String imagePath = "";
         Product product = (Product) request.getSession().getAttribute("product");
         if(product == null) {
             product = new Product();
         }
-        if (!image.isEmpty()) {
-            try {
+        for(MultipartFile multipartFile : image) {
+            if (!multipartFile.isEmpty()) {
+                try {
 
 
-                saveFile(filePath, image);
-                imagePath = "/resources/image/" + image.getOriginalFilename();
+                    saveFile(filePath, multipartFile);
+                    imagePath.add("/resources/image/" + multipartFile.getOriginalFilename());
 
-            } catch (IOException e) {
+                } catch (IOException e) {
 
-            } catch (Exception e) {
+                } catch (Exception e) {
 
+                }
             }
         }
         //set request parameters to user
         setRequestParametersToProduct(product, request);
         String option = (String) request.getSession().getAttribute("option");
         if (option.equals("edit")) {
-            formSubmissionEditMode(request, product);
+            formSubmissionEditMode(request, product, imagePath);
 
             List<Product> products = productManager.getAllProducts();
             request.getSession().setAttribute("products", products);
@@ -243,7 +245,7 @@ public class AdminController {
     }
 
 
-    private void formSubmissionEditMode(HttpServletRequest request, Product product) {
+    private void formSubmissionEditMode(HttpServletRequest request, Product product, List<String> filePath) {
         Product oldProduct = (Product) request.getSession().getAttribute("product");
         oldProduct.setName(product.getName()).setPrice(product.getPrice()).
                 setShippingPrice(product.getShippingPrice()).
@@ -251,21 +253,28 @@ public class AdminController {
                 setCategory(product.getCategory()).
                 setSizeOptionQuantity(product.getSizeOptionQuantity());
         productManager.updateProduct(product);
-
+        for(String path : filePath) {
+            if (!path.equals("")) {
+                Media media;
+                // for(int i=0; i<fileNames.size(); i++) {
+                media = new Media();
+                media.setProductID(oldProduct.getProductID()).setMediaPath(path);
+                mediaManager.insertMedia(media);
+            }
+        }
     }
 
-    private void formSubmissionAddMode(Product product, String filePath) {
+    private void formSubmissionAddMode(Product product, List<String> filePath) {
         int id = productManager.createNewProduct(product);
         Set<Map.Entry<String, Integer>> set = product.getSizeOptionQuantity().entrySet();
         for (Map.Entry<String, Integer> entry : set) {
             productManager.setSizes(product.getProductID(), entry.getKey(), entry.getValue());
         }
-        Media media;
-        // for(int i=0; i<fileNames.size(); i++) {
-        media = new Media();
-        media.setProductID(id).setMediaPath(filePath);
-        mediaManager.insertMedia(media);
-
+       for(String path : filePath) {
+           Media media = new Media();
+           media.setProductID(id).setMediaPath(path);
+           mediaManager.insertMedia(media);
+       }
         //   }
     }
 
@@ -403,7 +412,7 @@ public class AdminController {
     public String sale(HttpServletRequest request){
            List<Product> products = productManager.getSaledProducts();
 for(Product product : products){
-    System.out.println("aaaaaaaaaaaa" + product.getSaled());
+
 }
             request.setAttribute("products", products);
             return "saledProducts";

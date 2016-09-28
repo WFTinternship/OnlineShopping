@@ -239,7 +239,12 @@
 	<div class="image">
 
 		<a href="/productPage?id=<%=productId %>" id="productHref">
+			<%if(products.get(i).getSaled() > 0){%>
 			<img src="/resources/image/index.png" alt="index" class="index" style="width:80px;">
+			<%}%>
+			<%if(products.get(i).getSaled() > 0){%>
+			<img src="/resources/image/empty.png" alt="index" class="index" style="width:80px;">
+			<%}%>
 			<%for (int k = 0; k < medias.size(); k++) {%>
 			<img src="<%=medias.get(k).getMediaPath()%>" class="img<%=k+1%>" alt="cart image">
 
@@ -261,7 +266,10 @@
 		 </script>--%>
 		<p><%=products.get(i).getName()%>
 		</p>
-		<p>$<%=products.get(i).getPrice()%>
+		<p>$<%=products.get(i).getPrice()-products.get(i).getPrice()*products.get(i).getSaled()/100%>
+			<%if(products.get(i).getSaled() > 0){%>
+			<span style="font-size: 12px; color: red;">$<%=products.get(i).getPrice()%></span>
+			<%}%>
 		</p>
 	</div>
 
