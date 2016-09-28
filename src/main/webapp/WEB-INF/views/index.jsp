@@ -37,7 +37,7 @@
 				searchFunction().abort();
 
 			}
-			document.getElementById("searchKey").value = document.getElementById("searchKey").value.trim();
+
 
 			$.get("/getLikeProducts?searchKey=" + searchKey + "&category=" + category, function (data) {
 
@@ -229,7 +229,7 @@
 <div id="productsForPage">
 	<%
 
-		List<Product> products = (List<Product>) request.getSession().getAttribute("products");
+		List<Product> products = (List<Product>) request.getAttribute("products");
 		List<Media> medias;
 		for (int i = 0; i < products.size(); i++) {
 			medias = (List<Media>) request.getSession().getAttribute("medias" + i);
@@ -242,8 +242,8 @@
 			<%if(products.get(i).getSaled() > 0){%>
 			<img src="/resources/image/index.png" alt="index" class="index" style="width:80px;">
 			<%}%>
-			<%if(products.get(i).getSaled() > 0){%>
-			<img src="/resources/image/empty.png" alt="index" class="index" style="width:80px;">
+			<%if(products.get(i).getSaled() == 0){%>
+			<img src="/resources/image/empty.png" alt="index" class="index" style="height:55px;">
 			<%}%>
 			<%for (int k = 0; k < medias.size(); k++) {%>
 			<img src="<%=medias.get(k).getMediaPath()%>" class="img<%=k+1%>" alt="cart image">

@@ -46,8 +46,8 @@ public class AdminController {
     @RequestMapping("/add")
     public String getaddProductPage(HttpServletRequest request) {
         List<Category> categories = categoryManager.getAllCategories();
-        Map categoryMap = new HashMap();
-        Map sizeMap = new HashMap();
+        Map<Integer, Integer> categoryMap = new HashMap();
+        Map<Integer, List<Size>> sizeMap = new HashMap();
 
 
         for (Category category : categories) {
@@ -85,54 +85,54 @@ public class AdminController {
 
     @RequestMapping("/edit")
     public String getEditProductPage(HttpServletRequest request) {
+
         List<Category> categories = categoryManager.getAllCategories();
         String[] checkedValues = (request.getParameterValues("product"));
+        //getting in which option we are: sale, delete or edit...
         String option = (String) request.getParameter("option");
-        if(option.equals("sale")){
+
+        //when option is sale after checking products...
+        if (option.equals("sale")) {
             request.getSession().setAttribute("checkedValues", checkedValues);
             return "discountPage";
         }
+        //in case of pressing delete button after checking products...
         if (option.equals("delete")) {
-            List<Product> products = (List<Product>) request.getSession().getAttribute("products");
+
             for (int j = 0; j < checkedValues.length; j++) {
                 productManager.deleteProduct(Integer.parseInt(checkedValues[j]));
-
-
-                for (int i = 0; i < products.size(); i++) {
-                    if (products.get(i).getProductID() == Integer.parseInt(checkedValues[j])) {
-                        products.remove(products.get(i));
-
-                    }
-                }
             }
 
-            request.getSession().setAttribute("products", products);
+            List<Product> products1 = productManager.getAllProducts();
+
+            request.setAttribute("products", products1);
             return "products";
         }
-        else{
-        Map categoryMap = new HashMap();
-        Map sizeMap = new HashMap();
+        //edit option...
+        else {
+            Map categoryMap = new HashMap();
+            Map sizeMap = new HashMap();
 
 
-        for (Category category : categories) {
-            if (category.getParentID() == 0) {
-                List<Size> sizes = sizeManager.getSizesByCategoryId(category.getCategoryID());
-                sizeMap.put(category.getCategoryID(), sizes);
-            }
-
-        }
-        for (Category category : categories) {
-            Category category1;
-            if (category.getParentID() == 0) {
-                categoryMap.put(category.getCategoryID(), category.getCategoryID());
-
-            } else {
-                category1 = categoryManager.getCategoryByID(category.getParentID());
-
-                categoryMap.put(category.getCategoryID(), category1.getParentID());
+            for (Category category : categories) {
+                if (category.getParentID() == 0) {
+                    List<Size> sizes = sizeManager.getSizesByCategoryId(category.getCategoryID());
+                    sizeMap.put(category.getCategoryID(), sizes);
+                }
 
             }
-        }
+            for (Category category : categories) {
+                Category category1;
+                if (category.getParentID() == 0) {
+                    categoryMap.put(category.getCategoryID(), category.getCategoryID());
+
+                } else {
+                    category1 = categoryManager.getCategoryByID(category.getParentID());
+
+                    categoryMap.put(category.getCategoryID(), category1.getParentID());
+
+                }
+            }
 
 
             Product product = productManager.getProduct(Integer.parseInt(checkedValues[0]));
@@ -152,14 +152,14 @@ public class AdminController {
                               @RequestParam(value = "file", required = false) MultipartFile[] image) throws IOException {
 
         String filePath = request.getSession().getServletContext().getRealPath("/resources/image");
-List<String> imagePath = new ArrayList<>();
+        List<String> imagePath = new ArrayList<>();
 
 
         Product product = (Product) request.getSession().getAttribute("product");
-        if(product == null) {
+        if (product == null) {
             product = new Product();
         }
-        for(MultipartFile multipartFile : image) {
+        for (MultipartFile multipartFile : image) {
             if (!multipartFile.isEmpty()) {
                 try {
 
@@ -174,17 +174,22 @@ List<String> imagePath = new ArrayList<>();
                 }
             }
         }
-        //set request parameters to user
+        //set request parameters to product
         setRequestParametersToProduct(product, request);
+        //get option: "edit" or "add"...
         String option = (String) request.getSession().getAttribute("option");
+
+        //save product after editing existing one...
         if (option.equals("edit")) {
             formSubmissionEditMode(request, product, imagePath);
 
             List<Product> products = productManager.getAllProducts();
-            request.getSession().setAttribute("products", products);
+            request.setAttribute("products", products);
             return "products";
 
-        } else {
+        }
+        //save product after creating new one...
+        else {
             formSubmissionAddMode(product, imagePath);
             List<Product> products = productManager.getAllProducts();
             request.getSession().setAttribute("products", products);
@@ -210,17 +215,19 @@ List<String> imagePath = new ArrayList<>();
     }
 
     private void setRequestParametersToProduct(Product product, HttpServletRequest request) {
+        //get parameters filled in jsp to create new product...
         String name = request.getParameter("productName");
         double price = Double.parseDouble(request.getParameter("price"));
         double shippingPrice = Double.parseDouble(request.getParameter("shippingPrice"));
         String color = request.getParameter("color");
         int categoryId = Integer.parseInt(request.getParameter("category"));
 
+        //set fields to product
         product.setName(name).setDescription(color).
                 setPrice(price).setCategory(categoryManager.getCategoryByID(categoryId)).
                 setShippingPrice(shippingPrice);
 
-        //finding the main parrent categoryid of the selected category...
+        //finding the main parent categoryid of the selected category...
         Category category = categoryManager.getCategoryByID(categoryId);
         category = categoryManager.getCategoryByID(category.getParentID());
 
@@ -229,15 +236,13 @@ List<String> imagePath = new ArrayList<>();
         //creating sizeId list for setting to product's size list...
         Map<String, Integer> sizeOptionQuantity = new HashMap<>();
         for (int i = 0; i < sizes.size(); i++) {
-
-            //  String str = i + sizes.get(i).getSizeOption();
+////
             String sizeOption = request.getParameter("sizeoption" + i);
+            //if sizeoption field is filled by admin...
             if (!request.getParameter("quantity" + i).equals("")) {
                 int quantity = Integer.parseInt(request.getParameter("quantity" + i));
 
                 sizeOptionQuantity.put(sizeOption, quantity);
-                // product.getSizeId().add(Integer.parseInt(sizeOptionId));
-                //  int sizeId = sizeManager.getSizeIdBySizeOptionAndQuantity(sizeOption, quantity);
 
             }
         }
@@ -253,7 +258,7 @@ List<String> imagePath = new ArrayList<>();
                 setCategory(product.getCategory()).
                 setSizeOptionQuantity(product.getSizeOptionQuantity());
         productManager.updateProduct(product);
-        for(String path : filePath) {
+        for (String path : filePath) {
             if (!path.equals("")) {
                 Media media;
                 // for(int i=0; i<fileNames.size(); i++) {
@@ -270,11 +275,11 @@ List<String> imagePath = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : set) {
             productManager.setSizes(product.getProductID(), entry.getKey(), entry.getValue());
         }
-       for(String path : filePath) {
-           Media media = new Media();
-           media.setProductID(id).setMediaPath(path);
-           mediaManager.insertMedia(media);
-       }
+        for (String path : filePath) {
+            Media media = new Media();
+            media.setProductID(id).setMediaPath(path);
+            mediaManager.insertMedia(media);
+        }
         //   }
     }
 
@@ -297,6 +302,7 @@ List<String> imagePath = new ArrayList<>();
         request.setAttribute("categories", categories);
         return "categories";
     }
+
     @RequestMapping("/addCategory")
     public String getaddCategoryPage(HttpServletRequest request) {
         List<Category> categories = categoryManager.getAllCategories();
@@ -310,20 +316,21 @@ List<String> imagePath = new ArrayList<>();
         request.getSession().setAttribute("option", option);
         return "addCategory";
     }
+
     @RequestMapping("/saveCategory")
-    public String saveCategory(HttpServletRequest request){
+    public String saveCategory(HttpServletRequest request) {
         Category category = (Category) request.getSession().getAttribute("category");
         String option = (String) request.getSession().getAttribute("option");
         String name = request.getParameter("categoryName");
         int parentId = Integer.parseInt(request.getParameter("category"));
         //add option...
-        if(!option.equals("edit")) {
+        if (!option.equals("edit")) {
             category = new Category();
             category.setName(name).setParentID(parentId);
             categoryManager.createNewCategory(category);
         }
         //edit option...
-        else{
+        else {
 
             category.setName(name).setParentID(parentId);
             categoryManager.updateCategory(category);
@@ -333,8 +340,10 @@ List<String> imagePath = new ArrayList<>();
         request.setAttribute("categories", categories);
         return "categories";
     }
+
     @RequestMapping("/editCategory")
     public String getEditCategoryPage(HttpServletRequest request) {
+
         List<Category> categories = categoryManager.getAllCategories();
         String[] checkedValues = (request.getParameterValues("category"));
         String option = (String) request.getParameter("option");
@@ -348,8 +357,7 @@ List<String> imagePath = new ArrayList<>();
             List<Category> categories1 = categoryManager.getAllCategories();
             request.setAttribute("categories", categories1);
             return "categories";
-        }
-        else{
+        } else {
 
             Category category = categoryManager.getCategoryByID(Integer.parseInt(checkedValues[0]));
 
@@ -362,17 +370,19 @@ List<String> imagePath = new ArrayList<>();
         }
         return "addCategory";
     }
+
     @RequestMapping("/allOrders")
-    public String getAllOrders(HttpServletRequest request){
+    public String getAllOrders(HttpServletRequest request) {
 
         List<Sale> orders = salesManager.getAllSales();
         request.setAttribute("orders", orders);
 
         return "allOrders";
     }
+
     @RequestMapping("/changeStatus")
     @ResponseBody
-    public String changeStatus(HttpServletRequest request){
+    public String changeStatus(HttpServletRequest request) {
 
         int saleId = Integer.parseInt(request.getParameter("saleId"));
         String status = request.getParameter("status");
@@ -381,8 +391,9 @@ List<String> imagePath = new ArrayList<>();
 
         return "status is changed";
     }
+
     @RequestMapping("/getDiscountPage")
-    public String getDiscountPage(HttpServletRequest request){
+    public String getDiscountPage(HttpServletRequest request) {
 
 
         String[] checkedValues = (request.getParameterValues("product"));
@@ -391,11 +402,12 @@ List<String> imagePath = new ArrayList<>();
         return "discountPage";
 
     }
+
     @RequestMapping("/makeDiscount")
-    public String makeDiscount(HttpServletRequest request){
+    public String makeDiscount(HttpServletRequest request) {
 
         int discount = Integer.parseInt(request.getParameter("discount"));
-        String[] checkedValues = (String[])request.getSession().getAttribute("checkedValues");
+        String[] checkedValues = (String[]) request.getSession().getAttribute("checkedValues");
 
         for (int j = 0; j < checkedValues.length; j++) {
             productManager.updateSaleField(Integer.parseInt(checkedValues[j]), discount);
@@ -405,18 +417,17 @@ List<String> imagePath = new ArrayList<>();
 
         request.setAttribute("products", products);
 
-            return "saledProducts";
+        return "saledProducts";
 
-        }
-        @RequestMapping("/sale")
-    public String sale(HttpServletRequest request){
-           List<Product> products = productManager.getSaledProducts();
-for(Product product : products){
+    }
 
-}
-            request.setAttribute("products", products);
-            return "saledProducts";
-        }
+    @RequestMapping("/sale")
+    public String sale(HttpServletRequest request) {
+        List<Product> products = productManager.getSaledProducts();
+
+        request.setAttribute("products", products);
+        return "saledProducts";
+    }
 
 }
 

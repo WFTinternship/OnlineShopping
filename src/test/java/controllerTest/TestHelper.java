@@ -97,5 +97,10 @@ public class TestHelper {
                 setBasket(getTestBasket()).setAddressID(getTestAddress().getAddressID());
         return sale;
     }
+    public static Size getTestSize(){
+        Size size = new Size();
+        size.setSizeId(5).setCategoryId(16).setSizeOption("12M");
+        return  size;
+    }
 
 }

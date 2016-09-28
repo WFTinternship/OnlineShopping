@@ -49,7 +49,7 @@ public class HomePageController {
 
 
 
-        request.getSession().setAttribute("products", products);
+        request.setAttribute("products", products);
 
         List<List<Media>> medias = new ArrayList<List<Media>>();
         List<Media> ms = null;

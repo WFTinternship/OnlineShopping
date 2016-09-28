@@ -133,8 +133,13 @@ public class ProductController {
             products.addAll(productManager.getProducts(category.getCategoryID(), searchkey));
 
         }
-        products.addAll(productManager.getProdactsByCategoryID(cat.getCategoryID()));
+        if(cat != null) {
+            products.addAll(productManager.getProdactsByCategoryID(cat.getCategoryID()));
+        }
+        List<Category> categories1 = categoryManager.getAllCategories();
+
         request.setAttribute("products", products);
+        request.setAttribute("categories", categories1);
         List<List<Media>> medias = new ArrayList<List<Media>>();
         List<Media> medias1 = null;
         for (int i = 0; i < products.size(); i++) {

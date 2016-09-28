@@ -73,7 +73,7 @@
     <div class="wrapper1">
         <%
 
-            List<Category> categories = (List<Category>) request.getSession().getAttribute("categories");
+            List<Category> categories = (List<Category>) request.getAttribute("categories");
             List<List<Category>> listofCategoriesList = new ArrayList<List<Category>>();
 
 
@@ -227,6 +227,9 @@
     <a href="/productPage?id=<%=productId %>" id="productHref">
         <%if(products.get(i).getSaled() > 0){%>
         <img src="/resources/image/index.png" alt="index" class="index" style="width:80px;"><%}%>
+        <%if(products.get(i).getSaled() == 0){%>
+        <img src="/resources/image/empty.png" alt="index" class="index" style="height:55px;">
+        <%}%>
         <%for(int n=0; n<medias.size(); n++){%>
         <img src="<%=medias.get(n).getMediaPath()%>" class="img<%=(n+1)%>" alt="cart image">
        <%}%>
