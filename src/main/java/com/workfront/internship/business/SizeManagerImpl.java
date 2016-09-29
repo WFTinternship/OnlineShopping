@@ -17,10 +17,17 @@ public class SizeManagerImpl implements SizeManager {
 
     @Override
     public List<Size> getSizesByCategoryId(int categoryId){
+        if(categoryId <= 0)
+            throw new RuntimeException("invalid category id");
+
         return sizeDao.getSizesByCategoryId(categoryId);
     }
-    public int getSizeIdBySizeOptionAndQuantity(String sizeOption, int quantity){
-        return sizeDao.getSizeIdBySizeOptionAndQuantity(sizeOption, quantity);
+    @Override
+    public int insertSize(Size size){
+        if(size == null)
+            throw new RuntimeException("invalid category id");
+        return sizeDao.insertSize(size);
     }
-
 }
+
+

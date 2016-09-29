@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,13 +20,13 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 public class CategoryDaoUnitTest {
-    LegacyDataSource dataSource;
+    DataSource dataSource;
     CategoryDao categoryDao;
 
     @Before
     public void beforeTest() throws IOException, SQLException{
 
-        dataSource = Mockito.mock(LegacyDataSource.class);
+        dataSource = Mockito.mock(DataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);

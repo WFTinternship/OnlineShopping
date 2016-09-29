@@ -91,4 +91,5 @@ public class ProductControllerIntegrationTest {
 
         Assert.assertEquals("did not get a right page", result, "productsPage");
     }
+
 }

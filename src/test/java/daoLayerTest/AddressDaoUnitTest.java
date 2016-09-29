@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 public class AddressDaoUnitTest {
 
-    LegacyDataSource dataSource;
+    DataSource dataSource;
 
     AddressDao addressDao;
 
@@ -28,7 +29,7 @@ public class AddressDaoUnitTest {
     @Before
     public void beforeTest() throws Exception {
 
-        dataSource = Mockito.mock(LegacyDataSource.class);
+        dataSource = Mockito.mock(DataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
 

@@ -107,5 +107,32 @@ public class BasketControllerUnitTest {
 
         assertEquals("can not get basketContent page", result, "basketContent");
     }
+    @Test
+    public void deleteItemFromBasket(){
+        when(testRequest.getParameter("itemId")).thenReturn("5");
+        when(basketManager.showItemsInCurrentBasket(testUser)).thenReturn(testBasket.getOrderItems());
+
+        String result = basketController.deleteItemFromBasket(testRequest);
+
+        verify(basketManager).deleteFromBasket(testUser, 5);
+        verify(testRequest).setAttribute("orderItemList", testBasket.getOrderItems());
+        verify(testSession).setAttribute("number", testBasket.getOrderItems().size());
+        assertEquals("can not get basketContent page", result, "basketContent");
+
+    }
+    @Test
+    public void updateBasket(){
+        when(testRequest.getParameter("orderItemId")).thenReturn(Integer.toString(testOrderItem.getOrderItemID()));
+        when(testRequest.getParameter("quantity")).thenReturn("1");
+        when(basketManager.getOrderItemByItemID(testOrderItem.getOrderItemID())).thenReturn(testOrderItem);
+
+        testOrderItem.setQuantity(1);
+
+        String result = basketController.updateBasket(testRequest);
+
+        verify(basketManager).updateBasket(testUser, testOrderItem);
+        assertEquals("can not get basketContent page", result, Integer.toString(testOrderItem.getQuantity() - 1));
+
+    }
 
 }

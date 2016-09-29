@@ -1,6 +1,10 @@
 package controllerTest;
 
+import com.workfront.internship.business.CategoryManager;
+import com.workfront.internship.business.ProductManager;
 import com.workfront.internship.business.UserManager;
+import com.workfront.internship.common.Category;
+import com.workfront.internship.common.Product;
 import com.workfront.internship.common.User;
 import com.workfront.internship.controller.UserController;
 import com.workfront.internship.spring.TestConfiguration;
@@ -28,12 +32,15 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static controllerTest.TestHelper.getTestCategory;
 import static controllerTest.TestHelper.getTestUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,14 +57,28 @@ public class UserControllerIntegrationTest {
 
     @Autowired
     private UserManager userManager;
+    @Autowired
+    private ProductManager productManager;
+    @Autowired
+    private CategoryManager categoryManager;
 
     private HttpServletRequestMock testRequest;
     private User testUser;
+    private Product testProduct;
+    private Category testCategory;
 
     @Before
     public void setUp() {
         testRequest = new HttpServletRequestMock();
         testUser = getTestUser();
+        testProduct = TestHelper.getTestProduct();
+        testCategory = getTestCategory();
+
+        categoryManager.createNewCategory(testCategory);
+
+
+        testProduct.setCategory(testCategory);
+        productManager.createNewProduct(testProduct);
 
         testRequest.setParameter("username", testUser.getUsername());
         testRequest.setParameter("password", testUser.getPassword());
@@ -66,6 +87,8 @@ public class UserControllerIntegrationTest {
         testRequest.setParameter("email", testUser.getEmail());
         testRequest.setParameter("repeatpassword", testUser.getPassword());
 
+        testRequest.getSession().setAttribute("user", testUser);
+
         userController.registration(testRequest);
 
     }
@@ -73,6 +96,7 @@ public class UserControllerIntegrationTest {
     @After
     public void tearDown() {
         userManager.deleteAllUsers();
+        categoryManager.deleteAllCategories();
     }
 
     @Test
@@ -100,4 +124,49 @@ public class UserControllerIntegrationTest {
 
 
     }
+    @Test
+    public void addToList(){
+        testRequest.setParameter("productId", Integer.toString(testProduct.getProductID()));
+        //testing method...
+        String result = userController.addToList(testRequest);
+
+        assertEquals("wrong message", "the item is added to your wishlist", result);
+
+    }
+    @Test
+    public void addToList_duplicate(){
+        testRequest.setParameter("productId", Integer.toString(testProduct.getProductID()));
+        //testing method...
+        userController.addToList(testRequest);
+
+        String result = userController.addToList(testRequest);
+
+        assertEquals("wrong message", "the item is already in your wishlist", result);
+
+    }
+    @Test
+    public void showWishlistContent(){
+
+        userManager.addToList(testUser, testProduct);
+        //testing method...
+        String result = userController.showWishlistContent(testRequest);
+
+        assertNotNull(testRequest.getAttribute("products"));
+
+        assertEquals("can not get wishlist", result, "wishList");
+    }
+    @Test
+    public void deleteFromList(){
+
+        testRequest.setParameter("productId", Integer.toString(testProduct.getProductID()));
+        userManager.addToList(testUser, testProduct);
+        //testing method...
+        userController.deleteFromList(testRequest);
+
+        List<Product> products = userManager.getList(testUser);
+
+        assertTrue(products.isEmpty());
+    }
+
+
 }

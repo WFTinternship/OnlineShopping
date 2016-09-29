@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -23,14 +24,14 @@ import static org.mockito.Mockito.when;
  * Created by Administrator on 17.07.2016.
  */
 public class ProductDaoUnitTest {
-    LegacyDataSource dataSource;
+    DataSource dataSource;
 
     ProductDao productDao;
 
     @SuppressWarnings("unchecked")
     @Before
     public void beforeTest() throws Exception {
-        dataSource = Mockito.mock(LegacyDataSource.class);
+        dataSource = Mockito.mock(DataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);

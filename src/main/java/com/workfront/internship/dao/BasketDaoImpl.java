@@ -130,31 +130,16 @@ public class BasketDaoImpl extends GeneralDao implements BasketDao {
         }
         return basket;
     }
-    @Override
-    public Basket getBasketByItemId(int id) {
+
+        @Override
+    public Basket getBasketByItemId(int id){
         Basket basket = null;
-        Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+            Connection connection = null;
 
         try {
             connection = dataSource.getConnection();
-            //getting a basket given basketId...
-            getBasketByItemId(connection, id);
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return basket;
-    }
-        @Override
-    public Basket getBasketByItemId(Connection connection, int id){
-        Basket basket = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
             //getting a basket given basketId...
             String sql = "SELECT * from orderitems where orderitem_id=?";
             preparedStatement = connection.prepareStatement(sql);
@@ -174,12 +159,8 @@ public class BasketDaoImpl extends GeneralDao implements BasketDao {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-                resultSet.close();
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+
+              close(resultSet,preparedStatement,connection);
 
 
         }
@@ -216,6 +197,11 @@ public class BasketDaoImpl extends GeneralDao implements BasketDao {
             //update a basket...
             updateBasket(connection, basket);
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -300,28 +286,6 @@ public class BasketDaoImpl extends GeneralDao implements BasketDao {
         }
     }
 
-    @Override
-    public void deleteBasketByUserId(int userid) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            //delete basket from db given userId...
-            String sql = "DELETE from baskets where user_id = ?";
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, userid);
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException();
-        } finally {
-            close(resultSet, preparedStatement, connection);
-        }
-
-    }
 
     @Override
     public void deleteAllBaskets() {

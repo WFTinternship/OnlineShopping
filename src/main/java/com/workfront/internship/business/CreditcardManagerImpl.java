@@ -44,6 +44,10 @@ public class CreditcardManagerImpl implements CreditcardManager {
 
 
     }
+    public void deleteAllCards(){
+        creditCardDao.deleteAllCreditCards();
+
+    }
     public void deleteCreditCard(int cardid){
         if(cardid<=0)
             throw new RuntimeException("invalid card id");
@@ -54,4 +58,5 @@ public class CreditcardManagerImpl implements CreditcardManager {
             return true;
         return false;
     }
+
 }

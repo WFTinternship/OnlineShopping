@@ -11,4 +11,5 @@ public interface CreditcardManager {
     int createCreditCard(CreditCard creditCard);
     void updateCreditCard(CreditCard creditCard);
     void deleteCreditCard(int id);
+    void deleteAllCards();
 }

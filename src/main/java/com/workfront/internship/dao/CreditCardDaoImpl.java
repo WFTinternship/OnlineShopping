@@ -100,11 +100,13 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
         try {
             connection = dataSource.getConnection();
 
-            String sql = "INSERT into creditcards(billing_address, balance) VALUES (?, ?)";
+            String sql = "INSERT into creditcards(billing_address, balance, card_number, cvc) VALUES (?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, creditCard.getBillingAddress());
             preparedStatement.setDouble(2, creditCard.getBalance());
+            preparedStatement.setString(3, creditCard.getCardNumber());
+            preparedStatement.setInt(4, creditCard.getCvc());
             preparedStatement.executeUpdate();
 
             resultSet = preparedStatement.getGeneratedKeys();
@@ -129,11 +131,16 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
 
         try {
             connection = dataSource.getConnection();
+            updateCreditCard(connection, creditCard);
         } catch (SQLException e) {
             e.printStackTrace();
             LOGGER.error("can not get a connection!");
         }
-        updateCreditCard(connection, creditCard);
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
     @Override
@@ -158,7 +165,11 @@ public class CreditCardDaoImpl extends GeneralDao implements CreditCardDao {
             LOGGER.error("SQL exception occurred!");
             throw new RuntimeException(e);
         } finally {
-            close(resultSet, preparedStatement, connection);
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
     }

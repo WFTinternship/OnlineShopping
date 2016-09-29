@@ -55,7 +55,7 @@ public class TestHelper {
     }
     public static OrderItem getTestOrderItem() {
         OrderItem orderItem = new OrderItem();
-        orderItem.setBasketID(1).setQuantity(2).
+        orderItem.setBasketID(1).setQuantity(2).setOrderItemID(10).
                 setProduct(getTestProduct()).setSizeOption("3M");
         return orderItem;
     }
@@ -68,7 +68,7 @@ public class TestHelper {
                 setOrderItems(orderItems).
                 setTotalPrice(orderItems.get(0).
                         getProduct().getPrice()*2).
-                setBasketStatus("current");
+                setBasketStatus("current").setUserID(getTestUser().getUserID());
 
         return basket;
 
@@ -76,7 +76,7 @@ public class TestHelper {
     public static CreditCard getTestCreditCard(){
         CreditCard creditCard = new CreditCard();
 
-        creditCard.setCardID(1).setCardNumber("1234").setCvc(111).setBalance(1000);
+        creditCard.setCardID(1).setCardNumber("1234").setCvc(111).setBalance(1000).setBillingAddress("someAddress");
 
         return creditCard;
     }

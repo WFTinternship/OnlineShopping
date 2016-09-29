@@ -2,10 +2,17 @@ package daoLayerTest;
 
 import com.workfront.internship.common.CreditCard;
 import com.workfront.internship.dao.*;
+import com.workfront.internship.spring.TestConfiguration;
+import controllerTest.TestHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -16,18 +23,21 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertNull;
 
-public class TestCreditCardDaoImpl {
-    LegacyDataSource dataSource;
-    CreditCard creditCard = null;
-    int lastInsertedIndex = 0;
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfiguration.class)
+@ActiveProfiles("test")
+public class CreditCardDaoImplIntegrationTest {
+
+    @Autowired
     CreditCardDao creditCardDao;
 
+    CreditCard creditCard;
+    int lastInsertedIndex;
+
     @Before
-    public void setUpDB()  throws SQLException, IOException{
-        dataSource = LegacyDataSource.getInstance();
-        creditCardDao = new CreditCardDaoImpl();
-        Whitebox.setInternalState(creditCardDao, "dataSource", dataSource);
-        creditCard = getRandomCreditCard();
+    public void setUpDB() throws SQLException, IOException {
+
+        creditCard = TestHelper.getTestCreditCard();
         lastInsertedIndex = creditCardDao.insertCreditCard(creditCard);
 
     }
@@ -40,13 +50,9 @@ public class TestCreditCardDaoImpl {
     @Test
     public void insertCreditCard() {
 
-        CreditCard creditCard1 = getRandomCreditCard();
-        creditCard1.setBillingAddress("newRandomBillinAddress");
-        int insertindex = creditCardDao.insertCreditCard(creditCard1);
+        CreditCard creditCard2 = creditCardDao.getCreditCardByCardID(creditCard.getCardID());
 
-        CreditCard creditCard2 = creditCardDao.getCreditCardByCardID(insertindex);
-
-        doAssertion(creditCard2, creditCard1);
+        doAssertion(creditCard2, creditCard);
 
     }
 
@@ -62,7 +68,7 @@ public class TestCreditCardDaoImpl {
     public void updateCreditCard() {
 
 
-        creditCard.setBalance(creditCard.getBalance()+1000);
+        creditCard.setBalance(creditCard.getBalance() + 1000);
 
         creditCardDao.updateCreditCard(creditCard);
 
@@ -71,51 +77,38 @@ public class TestCreditCardDaoImpl {
         doAssertion(creditCard1, creditCard);
 
     }
+
     @Test
-    public void deleteAllCreditCards(){
+    public void deleteAllCreditCards() {
+
         creditCardDao.deleteAllCreditCards();
 
         List<CreditCard> creditCards = creditCardDao.getAllCreditCards();
 
         assertEquals(true, creditCards.isEmpty());
     }
+
     @Test
-    public void getAllCreditCards(){
-
-        creditCardDao.deleteAllCreditCards();
-
-        List<CreditCard> creditCards = new ArrayList<>();
-
-
-        CreditCard creditCard = getRandomCreditCard();
-        creditCardDao.insertCreditCard(creditCard);
-        creditCards.add(creditCard);
-
-        CreditCard creditCard1 = getRandomCreditCard();
-        creditCard1.setBillingAddress("newBillingAddress");
-        creditCardDao.insertCreditCard(creditCard1);
-        creditCards.add(creditCard1);
+    public void getAllCreditCards() {
 
         List<CreditCard> creditCards1 = creditCardDao.getAllCreditCards();
 
-        for (int i = 0; i < creditCards1.size(); i++) {
-            doAssertion(creditCards.get(i), creditCards1.get(i));
-        }
+        doAssertion(creditCards1.get(0), creditCard);
+
     }
+
     @Test
     public void deleteCreditCard() {
 
         creditCardDao.deleteCreditCard(lastInsertedIndex);
+
         CreditCard creditCard1 = creditCardDao.getCreditCardByCardID(lastInsertedIndex);
+
         assertNull(creditCard1);
     }
 
-    private CreditCard getRandomCreditCard() {
-        CreditCard creditCard = new CreditCard();
-        creditCard.setBillingAddress("randomBillingAddress").setBalance(1000);
-        return creditCard;
-    }
-    private void doAssertion(CreditCard creditCard, CreditCard creditCard1){
+    private void doAssertion(CreditCard creditCard, CreditCard creditCard1) {
+
         assertEquals(creditCard.getCardID(), creditCard1.getCardID());
         assertEquals(creditCard.getBillingAddress(), creditCard1.getBillingAddress());
         assertEquals(creditCard.getBalance(), creditCard1.getBalance());

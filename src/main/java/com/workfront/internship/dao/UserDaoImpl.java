@@ -97,33 +97,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         }
         return user;
     }
-    @Override
-    public boolean isInWishList(int userID, int productID){
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        Boolean result = false;
-        try {
-            connection = dataSource.getConnection();
-            //checks if a given product is in the wishlist of a given user...
-            String sql = "SELECT * FROM wishlist where user_id =? and product_id = ?";
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, userID);
-            preparedStatement.setInt(2, productID);
 
-            resultSet = preparedStatement.executeQuery();
-
-            if(resultSet.next())
-                result = true;
-        }catch (SQLException e) {
-            e.printStackTrace();
-            LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException(e);
-        }  finally {
-            close(resultSet, preparedStatement, connection);
-        }
-       return result;
-    }
     @Override
     public User getUserByUsername(String uname) {
         Connection connection = null;
@@ -173,30 +147,7 @@ public class UserDaoImpl extends GeneralDao implements UserDao {
         }
         return users;
     }
-    @Override
-    public void updateUserStatus(int id){
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            //updates user status after he/she gets a confirmation email...
-            String sql = "UPDATE users SET confirmation_status = ? where user_id = ?";
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setBoolean(1, true);
-            preparedStatement.setInt(2, id);
 
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException(e);
-        } finally {
-            close(resultSet, preparedStatement, connection);
-        }
-
-    }
     @Override
     public void updateUser(User user){
         Connection connection = null;

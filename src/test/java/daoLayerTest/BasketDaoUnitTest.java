@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,13 +21,13 @@ import static org.mockito.Mockito.when;
 
 
 public class BasketDaoUnitTest {
-    LegacyDataSource dataSource;
+    DataSource dataSource;
     BasketDao basketDao;
 
     @Before
     public void beforeTest() throws IOException, SQLException{
 
-        dataSource = Mockito.mock(LegacyDataSource.class);
+        dataSource = Mockito.mock(DataSource.class);
 
         Connection connection = Mockito.mock(Connection.class);
         when(dataSource.getConnection()).thenReturn(connection);
@@ -56,10 +57,6 @@ public class BasketDaoUnitTest {
     @Test(expected = RuntimeException.class)
     public void updateBasket_dbError() {
         basketDao.updateBasket(new Basket());
-    }
-    @Test(expected = RuntimeException.class)
-    public void deleteBasketByUserID_dbError() {
-        basketDao.deleteBasketByUserId(2);
     }
     @Test(expected = RuntimeException.class)
     public void deleteBasketByBasktID_dbError() {

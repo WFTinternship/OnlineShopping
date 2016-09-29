@@ -292,36 +292,7 @@ public class SaleDaoImpl extends GeneralDao implements SaleDao {
         return sales;
     }
 
-    @Override
-    public void updateSale(Sale sale) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
 
-        try {
-            connection = dataSource.getConnection();
-
-            String sql = "UPDATE sales SET user_id = ?, date_of_purchuase = ?, card_id = ?, address_id = ?," +
-                    " basket_id = ? where sale_id = ?";
-            preparedStatement = connection.prepareStatement(sql);
-
-            preparedStatement.setInt(1, sale.getUserID());
-            preparedStatement.setTimestamp(2, new Timestamp(sale.getDate().getTime()));
-            preparedStatement.setInt(3, sale.getCreditCardID());
-            preparedStatement.setInt(4, sale.getAddressID());
-            preparedStatement.setInt(5, sale.getBasket().getBasketID());
-            preparedStatement.setInt(6, sale.getSaleID());
-
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            LOGGER.error("SQL exception occurred!");
-            throw new RuntimeException(e);
-        } finally {
-            close(null, preparedStatement, connection);
-        }
-
-    }
     @Override
     public void updateSaleStatus(int id, String status) {
         Connection connection = null;

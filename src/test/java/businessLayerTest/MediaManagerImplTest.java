@@ -51,7 +51,7 @@ public class MediaManagerImplTest {
     @After
     public void tearDown()  {
         mediaManager.deleteMediaByID(media.getMediaID());
-        categoryManager.deleteCategory(category.getCategoryID());
+        categoryManager.deleteAllCategories();
     }
     @Test
     public void insertMedia(){

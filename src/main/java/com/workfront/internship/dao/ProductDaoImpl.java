@@ -232,7 +232,11 @@ public class ProductDaoImpl extends GeneralDao implements ProductDao {
             e.printStackTrace();
             LOGGER.error("can not get a connection");
         }
-
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

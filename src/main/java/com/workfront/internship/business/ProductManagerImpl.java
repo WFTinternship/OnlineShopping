@@ -32,9 +32,6 @@ public class ProductManagerImpl implements ProductManager {
             throw new RuntimeException("not valid product");
         int index = 0;
         index = productDao.insertProduct(product);
-        if (index > 0 && product.getMedias() != null && !(product.getMedias().isEmpty()))
-            for (int i = 0; i < product.getMedias().size(); i++)
-                mediaManager.insertMedia(product.getMedias().get(i));
 
         return index;
     }
@@ -47,19 +44,10 @@ public class ProductManagerImpl implements ProductManager {
     }
 
     public void updateProduct(Product product) {
+        if(product == null)
+            throw new RuntimeException("not valid product");
+            productDao.updateProduct(product);
 
-        productDao.updateProduct(product);
-
-        /*List<Media> oldMedias = mediaManager.getMediaByProductID(product.getProductID());
-        List<Media> newMedias = product.getMedias();
-        for (int i = 0; i < newMedias.size(); i++)
-            if (!oldMedias.contains(newMedias.get(i)))
-                mediaManager.insertMedia(newMedias.get(i));
-        for (int i = 0; i < oldMedias.size(); i++)
-            if (!newMedias.contains(oldMedias.get(i)))
-                mediaManager.deleteMediaByID(oldMedias.get(i).getMediaID());
-
-    }*/
     }
     public void updateSaleField(int id, int discount){
         if (id <= 0 || discount <0)
@@ -145,9 +133,7 @@ public class ProductManagerImpl implements ProductManager {
         }
         return result;
     }
-
-
-
-
-
+    public void deleteAllProducts(){
+        productDao.deleteAllProducts();
+    }
 }

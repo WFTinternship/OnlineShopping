@@ -1,5 +1,6 @@
 package controllerTest;
 
+
 import com.workfront.internship.business.CategoryManager;
 import com.workfront.internship.business.MediaManager;
 import com.workfront.internship.business.ProductManager;
@@ -18,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static controllerTest.TestHelper.*;
 import static org.junit.Assert.assertNotNull;
@@ -38,7 +42,7 @@ public class HomePageControllerIntegrationTest {
     @Autowired
     private MediaManager mediaManager;
 
-    private HttpServletRequestMock testRequest ;
+    private HttpServletRequestMock testRequest;
     private Product testProduct;
     private Media testMedia;
     private Category testCategory;
@@ -46,6 +50,7 @@ public class HomePageControllerIntegrationTest {
     @Before
     public void setUp() {
         testRequest = new HttpServletRequestMock();
+
         testProduct = getTestProduct();
         testMedia = getTestMedia();
         testCategory = getTestCategory();
@@ -54,16 +59,21 @@ public class HomePageControllerIntegrationTest {
         categoryManager.createNewCategory(testCategory);
         testProduct.setCategory(testCategory);
         productManager.createNewProduct(testProduct);
+
         testMedia.setProductID(testProduct.getProductID());
         mediaManager.insertMedia(testMedia);
+
+        List<Media> medias = new ArrayList<>();
+        medias.add(testMedia);
+        testProduct.setMedias(medias);
 
 
 
     }
     @After
     public void tearDown(){
-        productManager.deleteProduct(testProduct.getProductID());
-        categoryManager.deleteCategory(testCategory.getCategoryID());
+
+        categoryManager.deleteAllCategories();
     }
 
     @Test
@@ -71,7 +81,7 @@ public class HomePageControllerIntegrationTest {
         //testing method...
         homePageController.getProductsForHomePage(testRequest);
 
-        Object object1 = testRequest.getSession().getAttribute("products");
+        Object object1 = testRequest.getAttribute("products");
         Object object = testRequest.getSession().getAttribute("medias0");
 
         assertNotNull(object);

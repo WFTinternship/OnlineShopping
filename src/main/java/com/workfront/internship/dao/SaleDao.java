@@ -19,8 +19,6 @@ public interface SaleDao {
 
     int insertSale(Sale sale);
 
-    void updateSale(Sale sale);
-
     void updateSaleStatus(int id, String status);
 
     List<Sale> getAllSales();

@@ -200,6 +200,7 @@ public class AddressDaoImpl extends GeneralDao implements AddressDao {
             preparedStatement.setString(3, address.getCity());
             preparedStatement.setString(4, address.getCountry());
             preparedStatement.setString(5, address.getZipCode());
+            preparedStatement.setInt(6, address.getAddressID());
 
             preparedStatement.executeUpdate();
 

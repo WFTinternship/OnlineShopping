@@ -69,6 +69,9 @@ public class CategoryManagerImpl implements CategoryManager {
         List<Category> categories = categoryDao.getCategoriesByParentID(id);
         return  categories;
     }
+    public void deleteAllCategories(){
+        categoryDao.deleteAllCategories();
+    }
     private boolean validateCategory(Category category){
         if(category!=null && category.getName()!=null && category.getParentID()>=0)
             return true;

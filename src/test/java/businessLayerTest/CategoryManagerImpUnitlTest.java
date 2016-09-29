@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class CategoryManagerImpUnitlTest {
     private Category category;
     private CategoryManager categoryManager;
- //   LegacyDataSource dataSource;
+
     CategoryDao categoryDao;
 
     @Before

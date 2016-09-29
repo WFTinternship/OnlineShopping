@@ -80,11 +80,7 @@ public class ProductController {
             medias.add(medias1);
             products.get(i).setMedias(medias1);
             request.setAttribute("medias" + i, medias.get(i));
-
-
-
         }
-
     }
     @RequestMapping("/getSaledProducts")
     public String  getSaledProducts(HttpServletRequest request){
@@ -153,21 +149,6 @@ public class ProductController {
     }
 
 
-   /* public void getCategories(HttpServletRequest request){
-
-        List<List<Category>> categories = new ArrayList<List<Category>>();
-        List<Category> mainCategories = categoryManager.getCategoriesByParentID(0);
-
-        for (int i = 0; i < mainCategories.size(); i++) {
-            categories.add(categoryManager.getCategoriesByParentID(mainCategories.get(i).getCategoryID()));
-
-            request.getSession().setAttribute("subcategories" + i, categories.get(i));
-        }
-
-        request.getSession().setAttribute("mainCategories", mainCategories);
-
-    }
-*/
 
 }
 

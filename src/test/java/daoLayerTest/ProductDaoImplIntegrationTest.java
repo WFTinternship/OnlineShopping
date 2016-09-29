@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertEquals;
@@ -28,11 +30,11 @@ import static junit.framework.TestCase.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
 @ActiveProfiles("test")
-public class TetsProductDaoImpl{
+public class ProductDaoImplIntegrationTest {
 
-    Product product = null;
-    Category category = null;
-    int lastInsertedIndex = 0;
+    Product product;
+    Category category;
+    int lastInsertedIndex;
     @Autowired
     ProductDao productDao;
     @Autowired
@@ -56,7 +58,6 @@ public class TetsProductDaoImpl{
     @After
     public void tearDown() {
 
-        productDao.deleteAllProducts();
         categoryDao.deleteAllCategories();
     }
 
@@ -212,6 +213,21 @@ public class TetsProductDaoImpl{
         List<Product> products = productDao.getLimitedNumberOfProducts();
 
         doAssertion(product, products.get(0));
+    }
+
+    @Test
+    public void getSizeOptionQuantityMap(){
+
+        Map map = product.getSizeOptionQuantity();
+
+        productDao.setSizes(product.getProductID(), "3M", 5);
+        productDao.setSizes(product.getProductID(), "9M", 0);
+
+        Map map1 = productDao.getSizeOptionQuantityMap(product.getProductID());
+
+        assertEquals("quantities are not equal", map.get("3M"), map1.get("3M"));
+        assertEquals("quantities are not equal",map.get("9M"), map1.get("9M"));
+
     }
 
     private void doAssertion(Product product, Product product1){

@@ -12,42 +12,41 @@ import java.util.Map;
  */
 public interface ProductDao {
 
-       Product getProductByID(int productId);
+    Product getProductByID(int productId);
 
-       int getQuantity(int productId, String sizeOption);
+    int getQuantity(int productId, String sizeOption);
 
-       int insertProduct(Product product);
+    int insertProduct(Product product);
 
-       void updateProduct(Product product);
+    void updateProduct(Product product);
 
-     void updateProductQuantity(Connection connection, int productId, String sizeOption, int quantity);
+    void updateProductQuantity(Connection connection, int productId, String sizeOption, int quantity);
 
-       void deleteProductByID(int id);
+    void deleteProductByID(int id);
 
-       void deleteProductFromProductSizeTable(int id, String option);
+    void deleteProductFromProductSizeTable(int id, String option);
 
-       void deleteProductByName(String name);
+    void deleteProductByName(String name);
 
-     void updateProduct(Connection connection, Product product);
+    void updateProduct(Connection connection, Product product);
 
-       void updateSaledField(int id, int discount);
+    void updateSaledField(int id, int discount);
 
-       void deleteAllProducts();
+    void deleteAllProducts();
 
-       List<Product> getAllProducts();
+    List<Product> getAllProducts();
 
-       List<Product> getProducts(int categoryId, String str);
+    List<Product> getProducts(int categoryId, String str);
 
-       List<Product> getSaledProducts();
+    List<Product> getSaledProducts();
 
-       List<Product> getProdactsByCategoryID(int id);
+    List<Product> getProdactsByCategoryID(int id);
 
-     List<Product> getLimitedNumberOfProducts();
+    List<Product> getLimitedNumberOfProducts();
 
-     void setSizes(int productId, String sizeOption, int quantity);
+    void setSizes(int productId, String sizeOption, int quantity);
 
-     Map<String, Integer> getSizeOptionQuantityMap(int productId);
-
+    Map<String, Integer> getSizeOptionQuantityMap(int productId);
 
 
 }

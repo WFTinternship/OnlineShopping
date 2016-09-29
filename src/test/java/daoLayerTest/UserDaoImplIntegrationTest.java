@@ -4,10 +4,17 @@ import com.workfront.internship.common.Category;
 import com.workfront.internship.common.Product;
 import com.workfront.internship.common.User;
 import com.workfront.internship.dao.*;
+import com.workfront.internship.spring.TestConfiguration;
+import controllerTest.TestHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 import java.io.IOException;
@@ -19,48 +26,46 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfiguration.class)
+@ActiveProfiles("test")
+public class UserDaoImplIntegrationTest {
 
-public class TestUserDaoImpl{
-    LegacyDataSource dataSource;
-    User user = null;
-    Product product = null;
-    Category category = null;
-    int lastInsertedIndex = 0;
-    int lastIsertedProductIndex = 0;
-    UserDao userDao;
-    ProductDao productDao;
-    CategoryDao categoryDao;
+    private User user = null;
+    private Product product = null;
+    private Category category = null;
+    private int lastInsertedIndex = 0;
+    private int lastIsertedProductIndex = 0;
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private ProductDao productDao;
+    @Autowired
+    private CategoryDao categoryDao;
 
     @Before
     public void setUpDB() throws SQLException, IOException {
-        dataSource = LegacyDataSource.getInstance();
-        userDao = new UserDaoImpl();
-        Whitebox.setInternalState(userDao, "dataSource", dataSource);
-        productDao = new ProductDaoImpl();
-        Whitebox.setInternalState(productDao, "dataSource", dataSource);
-        categoryDao = new CategoryDaoImpl();
-        Whitebox.setInternalState(categoryDao, "dataSource", dataSource);
 
-        user = getRandomUser();
+        user = TestHelper.getTestUser();
+        userDao.insertUser(user);
 
-        category = getRandomCategory();
-        product = getRandomProduct();
-
-        lastInsertedIndex = userDao.insertUser(user);
-        user.setUserID(lastInsertedIndex);
-
+        category = TestHelper.getTestCategory();
         categoryDao.insertCategory(category);
 
-        lastIsertedProductIndex = productDao.insertProduct(product);
+        product = TestHelper.getTestProduct();
+        product.setCategory(category);
+        lastInsertedIndex = productDao.insertProduct(product);
     }
 
     @After
     public void tearDown() {
 
         userDao.deleteAllUsers();
-        productDao.deleteProductByID(lastIsertedProductIndex);
-        categoryDao.deleteCategoryByID(category.getCategoryID());
+
+        categoryDao.deleteAllCategories();
+
         userDao.deleteWishlistByUserID(lastInsertedIndex);
     }
 
@@ -74,16 +79,35 @@ public class TestUserDaoImpl{
 
     @Test
     public void insertIntoWishlist(){
+       //testing method...
         userDao.insertIntoWishlist(user.getUserID(), product.getProductID());
+
         List<Product> whishlist = userDao.getWishlist(user.getUserID());
+
         assertEquals(whishlist.get(0).getProductID(), product.getProductID());
 
     }
     @Test
-    public void deleteWishlistByUserID(){
+    public void deleteFromWishlist(){
+
         userDao.insertIntoWishlist(user.getUserID(), product.getProductID());
-        userDao.deleteWishlistByUserID(user.getUserID());
+        //testing method...
+        userDao.deleteFromWishlistByUserIDAndProductID(user.getUserID(), product.getProductID());
+
         List<Product> whishlist = userDao.getWishlist(user.getUserID());
+
+        assertTrue(whishlist.isEmpty());
+
+    }
+    @Test
+    public void deleteWishlistByUserID(){
+
+        userDao.insertIntoWishlist(user.getUserID(), product.getProductID());
+        //testing method...
+        userDao.deleteWishlistByUserID(user.getUserID());
+
+        List<Product> whishlist = userDao.getWishlist(user.getUserID());
+
         assertEquals(true, whishlist.isEmpty());
 
     }
@@ -95,7 +119,7 @@ public class TestUserDaoImpl{
     @Test
     public void insertUser() {
 
-        User user1 = getRandomUser();
+        User user1 = TestHelper.getTestUser();
         user1.setUsername("newUsername").setEmail("newEmail@gmail.com");
         int insertindex = userDao.insertUser(user1);
         user1.setUserID(insertindex);
@@ -105,11 +129,15 @@ public class TestUserDaoImpl{
 
         userDao.deleteUser(insertindex);
     }
+    @Test(expected = RuntimeException.class)
+    public void insertUser_duplicate(){
+        userDao.insertUser(user);
+    }
 
     @Test
     public void getUserByID() {
 
-        User user1 = userDao.getUserByID(lastInsertedIndex);
+        User user1 = userDao.getUserByID(user.getUserID());
 
         doAssertion(user, user1);
     }
@@ -136,7 +164,7 @@ public class TestUserDaoImpl{
         user.setUsername("new username");
         userDao.updateUser(user);
 
-        User user1 = userDao.getUserByID(lastInsertedIndex);
+        User user1 = userDao.getUserByID(user.getUserID());
 
         doAssertion(user, user1);
 
@@ -149,12 +177,12 @@ public class TestUserDaoImpl{
         List<User> users = new ArrayList<>();
         List<User> users1 = new ArrayList<>();
 
-        User user = getRandomUser();
+        User user = TestHelper.getTestUser();
         int insertindex = userDao.insertUser(user);
         user.setUserID(insertindex);
         users.add(user);
 
-        User user1 = getRandomUser();
+        User user1 = TestHelper.getTestUser();
         user1.setUsername("newUsername").setEmail("newEmail@gmail.com");
         insertindex = userDao.insertUser(user1);
         user1.setUserID(insertindex);
@@ -170,23 +198,7 @@ public class TestUserDaoImpl{
         }
     }
 
-    private User getRandomUser() {
-        user = new User();
-        user.setFirstname("Anahit").setLastname("galstyan").setUsername("anigal").setPassword("anahitgal85").setEmail("galstyan@gmailgom").setConfirmationStatus(true).setAccessPrivilege("user");
-        return user;
-    }
 
-    private Category getRandomCategory(){
-        category = new Category();
-        category.setName("hat");
-        return category;
-    }
-
-    private Product getRandomProduct(){
-        product = new Product();
-        product.setName("baby hat").setPrice(50).setDescription("color:white").setShippingPrice(1).setCategory(category);
-        return product;
-    }
     private void doAssertion(User user, User user1){
 
         assertEquals(user.getUserID(), user1.getUserID());

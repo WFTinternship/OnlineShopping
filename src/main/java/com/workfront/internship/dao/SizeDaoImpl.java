@@ -65,43 +65,44 @@ public class SizeDaoImpl extends GeneralDao implements SizeDao{
         }
         return sizes;
     }
-    public int getSizeIdBySizeOptionAndQuantity(String sizeOption, int categoryId){
+
+
+    public int insertSize(Size size){
+        int lastId = 0;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        Size size = null;
         try {
-
             connection = dataSource.getConnection();
+            //inserting a new user into a db...
+            String sql = "INSERT into sizes(category_id, size_option)" +
+                    " VALUES (?, ?)";
+            preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
 
-            String sql = "SELECT * from sizes where category_id =? AND size_option = ?";
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, categoryId);
-            preparedStatement.setString(2, sizeOption);
-            resultSet = preparedStatement.executeQuery();
-            size = createSize(resultSet);
+            preparedStatement.setInt(1, size.getCategoryId());
+            preparedStatement.setString(2, size.getSizeOption());
 
-        }  catch (SQLException e) {
+            preparedStatement.executeUpdate();
+            resultSet = preparedStatement.getGeneratedKeys();
+
+            while (resultSet.next()) {
+                lastId = resultSet.getInt(1);
+                size.setSizeId(lastId);
+            }
+
+        }catch(SQLIntegrityConstraintViolationException e){
+            e.printStackTrace();
+            LOGGER.error("Duplicate entry!");
+            throw new RuntimeException("Duplicate entry!");
+        }catch (SQLException  e) {
             e.printStackTrace();
             LOGGER.error("SQL exception occurred!");
             throw new RuntimeException(e);
-
         } finally {
             close(resultSet, preparedStatement, connection);
         }
-        return size.getSizeId();
-    }
+        return lastId;
 
-    private Size createSize(ResultSet resultSet) throws SQLException {
-
-        Size size = null;
-        while (resultSet.next()) {
-            //setting values from resultset...
-            size.setCategoryId(resultSet.getInt("category_id")).
-                    setSizeOption(resultSet.getString("size_option")).setSizeId(resultSet.getInt("id"));
-
-        }
-        return size;
     }
 
 }

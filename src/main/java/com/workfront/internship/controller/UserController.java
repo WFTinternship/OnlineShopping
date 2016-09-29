@@ -37,6 +37,7 @@ public class UserController {
 
         String username = (String) request.getParameter("username");
         String password = (String) request.getParameter("password");
+        List<Product> products = productManager.getLimitedNumberOfProducts();
 
         User user = userManager.login(username, password);
         if (user == null) {
@@ -54,6 +55,7 @@ public class UserController {
             request.getSession().setAttribute("user", user);
 
 
+
             // Forward to/signin.jsp
 
             return "signin";
@@ -67,6 +69,7 @@ public class UserController {
             }
             request.getSession().setAttribute("number", numberOfItemsInBasket);
             request.getSession().setAttribute("user", user);
+            request.setAttribute("products", products);
             return "index";
         }
     }
@@ -81,6 +84,7 @@ public class UserController {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String repassword = request.getParameter("repeatpassword");
+        List<Product> products = productManager.getLimitedNumberOfProducts();
         //create new user and set params...
         User user = new User();
         user.setFirstname(firstname).setLastname(lastname).setUsername(username).setEmail(email).setPassword(password).setAccessPrivilege("user").setConfirmationStatus(true);
@@ -101,6 +105,7 @@ public class UserController {
         } else {
 
             request.getSession().setAttribute("user", user);
+            request.setAttribute("products", products);
             return ("index");
         }
 
@@ -133,8 +138,9 @@ public class UserController {
 
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request) {
-
+        List<Product> products = productManager.getLimitedNumberOfProducts();
         request.getSession().setAttribute("user", null);
+        request.setAttribute("products", products);
         return "index";
     }
 

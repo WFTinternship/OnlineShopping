@@ -45,7 +45,7 @@ public class UserManagerImplTest {
 
     @After
     public void tearDown() {
-        userManager.deleteAccount(user.getUserID());
+        userManager.deleteAllUsers();
     }
 
     @Test

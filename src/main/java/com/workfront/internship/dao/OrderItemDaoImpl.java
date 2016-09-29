@@ -171,7 +171,7 @@ public class OrderItemDaoImpl extends GeneralDao implements OrderItemDao {
         try {
             connection = dataSource.getConnection();
             connection.setAutoCommit(false);
-            Basket basket = basketDao.getBasketByItemId(connection, itemid);
+            Basket basket = basketDao.getBasketByItemId(itemid);
             //set new price to basket
             OrderItem orderItem = getOrderItemByItemID(itemid);
             basket.setTotalPrice(basket.getTotalPrice() - orderItem.getProduct().getShippingPrice() - orderItem.getProduct().getPrice() * orderItem.getQuantity());

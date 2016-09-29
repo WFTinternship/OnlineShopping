@@ -7,7 +7,8 @@ import java.util.List;
  * Created by Anna Asmangulyan on 03.09.2016.
  */
 public interface SizeManager {
-    List<Size> getSizesByCategoryId(int categoryId);
-    int getSizeIdBySizeOptionAndQuantity(String sizeOption, int quantity);
 
+    List<Size> getSizesByCategoryId(int categoryId);
+
+    int insertSize(Size size);
 }

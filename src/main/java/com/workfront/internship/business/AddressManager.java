@@ -13,9 +13,9 @@ public interface AddressManager {
     void deleteAddressesByUserID(int userId);
     void deleteAddressesByAddressID(int addressId);
     int insertAddress(Address address);
-   void updateAddress(Address address);
+    void updateAddress(Address address);
 
-   Address getAddressByID(int id);
+    Address getAddressByID(int id);
     void deleteAllAddresses();
-   // List<Address> getAllAddresses();
+
 }

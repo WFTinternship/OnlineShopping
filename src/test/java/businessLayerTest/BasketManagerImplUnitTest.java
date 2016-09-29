@@ -21,6 +21,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class BasketManagerImplUnitTest {
     private User user;
@@ -28,7 +29,7 @@ public class BasketManagerImplUnitTest {
     private OrderItem orderItem;
     Product product;
     private BasketManager basketManager;
-   // LegacyDataSource dataSource;
+
     BasketDao basketDao;
     OrderItemDao orderItemDao;
 
@@ -46,6 +47,7 @@ public class BasketManagerImplUnitTest {
         Whitebox.setInternalState(basketManager, "orderItemDao", orderItemDao);
 
     }
+
     @After
     public void tearDown() {
         product = null;
@@ -54,52 +56,58 @@ public class BasketManagerImplUnitTest {
         user = null;
         basketManager = null;
     }
+
     @Test
-    public void createNewBasket(){
+    public void createNewBasket() {
         when(basketDao.insertBasket(basket)).thenReturn(10);
         int result = basketManager.createNewBasket(basket);
         assertEquals("basket was not created", 10, result);
     }
+
     @Test(expected = RuntimeException.class)
-    public void createNewBasket_nullEntry(){
+    public void createNewBasket_nullEntry() {
         basketManager.createNewBasket(null);
     }
+
     @Test
-    public void addToBasket_already_exists(){
+    public void addToBasket_already_exists() {
 
-       // when(orderItemDao.getOrderItemByProductAndBasketID(product.getProductID(), user.getBasket().getBasketID())).thenReturn(orderItem);
+        when(orderItemDao.getOrderItemByProductIDBasketIDSizeOption(product.getProductID(), user.getBasket().getBasketID(), "3M")).thenReturn(orderItem);
 
-      //  basketManager.addToBasket(user, product, 5);
+        basketManager.addToBasket(user, product, "3M", 5);
         Mockito.verify(orderItemDao, Mockito.never()).insertOrderItem(any(OrderItem.class));
         Mockito.verify(orderItemDao).updateOrderItem(any(OrderItem.class));
 
     }
 
     @Test
-    public void addToBasket_does_not_exist(){
+    public void addToBasket_does_not_exist() {
 
-     //   when(orderItemDao.getOrderItemByProductAndBasketID(product.getProductID(), user.getBasket().getBasketID())).thenReturn(null);
+        when(orderItemDao.getOrderItemByProductIDBasketIDSizeOption(product.getProductID(), user.getBasket().getBasketID(), "3M")).thenReturn(null);
 
-     //   basketManager.addToBasket(user, product, 5);
+        basketManager.addToBasket(user, product, "3M", 5);
         Mockito.verify(orderItemDao).insertOrderItem(any(OrderItem.class));
         Mockito.verify(orderItemDao, Mockito.never()).updateOrderItem(any(OrderItem.class));
 
     }
+
     @Test
-    public void addToBasket_null_basket(){
+    public void addToBasket_null_basket() {
 
         user.setBasket(null);
 
-     //   basketManager.addToBasket(user, product, 5);
-        Mockito.verify(basketDao).getCurrentBasket(user.getUserID());
+        basketManager.addToBasket(user, product, "3M", 5);
+        Mockito.verify(basketDao, times(2)).getCurrentBasket(user.getUserID());
     }
+
     @Test(expected = RuntimeException.class)
-    public void addToBasket_invalid_entry(){
-    //    basketManager.addToBasket(user, null, 5);
+    public void addToBasket_invalid_entry() {
+            basketManager.addToBasket(user, null, "3M", 5);
 
     }
+
     @Test
-    public void getBasket(){
+    public void getBasket() {
 
         when(basketDao.getBasket(basket.getBasketID())).thenReturn(basket);
 
@@ -110,7 +118,7 @@ public class BasketManagerImplUnitTest {
     }
 
     @Test
-    public void showItemsInBasket_is_not_empty(){
+    public void showItemsInBasket_is_not_empty() {
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(orderItem);
         basket.setOrderItems(orderItems);
@@ -124,7 +132,7 @@ public class BasketManagerImplUnitTest {
     }
 
     @Test
-    public void showItemsInBasket_is_empty(){
+    public void showItemsInBasket_is_empty() {
         List<OrderItem> orderItems = new ArrayList<>();
 
         basket.setOrderItems(orderItems);
@@ -136,12 +144,13 @@ public class BasketManagerImplUnitTest {
         assertEquals(true, orderItems.isEmpty());
 
     }
+
     @Test
-    public void showItemsInBasket_userBasket_null_current_basket_notNull(){
+    public void showItemsInBasket_userBasket_null_current_basket_notNull() {
         user.setBasket(null);
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(orderItem);
-       // basket.setOrderItems(orderItems);
+        // basket.setOrderItems(orderItems);
         when(basketDao.getCurrentBasket(user.getUserID())).thenReturn(basket);
 
         when(orderItemDao.getOrderItemByBasketID(basket.getBasketID())).thenReturn(orderItems);
@@ -151,10 +160,10 @@ public class BasketManagerImplUnitTest {
         assertEquals(orderItems.get(0), orderItems1.get(0));
 
 
-
     }
+
     @Test
-    public void showItemsInBasket_userBasket_null_current_basket_Null(){
+    public void showItemsInBasket_userBasket_null_current_basket_Null() {
         user.setBasket(null);
 
         when(basketDao.getCurrentBasket(user.getUserID())).thenReturn(null);
@@ -166,17 +175,18 @@ public class BasketManagerImplUnitTest {
         assertTrue(orderItems.isEmpty());
 
 
-
     }
+
     @Test(expected = RuntimeException.class)
-    public void showItemsInBasket_invalid_user(){
+    public void showItemsInBasket_invalid_user() {
 
         user = null;
         basketManager.showItemsInCurrentBasket(user);
 
     }
+
     @Test
-    public void getCurrentBasket(){
+    public void getCurrentBasket() {
 
         when(basketDao.getCurrentBasket(user.getUserID())).thenReturn(basket);
 
@@ -185,8 +195,9 @@ public class BasketManagerImplUnitTest {
         assertEquals("could not get current basket", basket, basket1);
 
     }
+
     @Test
-    public void getCurrentBasket_does_not_exist(){
+    public void getCurrentBasket_does_not_exist() {
 
         Basket emptyBasket = new Basket();
         emptyBasket.setBasketStatus("current").setTotalPrice(0.0).setUserID(user.getUserID()).setBasketID(5).setOrderItems(new ArrayList<OrderItem>());
@@ -200,12 +211,14 @@ public class BasketManagerImplUnitTest {
         assertEquals("could not get current basket", emptyBasket, basket1);
 
     }
+
     @Test(expected = RuntimeException.class)
-    public void getCurrentBasket_invalid_user(){
+    public void getCurrentBasket_invalid_user() {
         basketManager.getCurrentBasket(null);
     }
+
     @Test
-    public void deleteFromBasket(){
+    public void deleteFromBasket() {
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(orderItem);
         user.getBasket().setOrderItems(orderItems);
@@ -215,20 +228,23 @@ public class BasketManagerImplUnitTest {
 
         Mockito.verify(orderItemDao).deleteOrderItemByItemID(orderItem.getOrderItemID());
     }
+
     @Test(expected = RuntimeException.class)
-    public void deleteFromBasket_invalid_entry(){
+    public void deleteFromBasket_invalid_entry() {
         basketManager.deleteFromBasket(null, 0);
     }
+
     @Test
-    public void updateBasket(){
+    public void updateBasket() {
         basketManager.updateBasket(user, orderItem);
 
         Mockito.verify(orderItemDao).updateOrderItem(orderItem);
         Mockito.verify(orderItemDao).getOrderItemByBasketID(orderItem.getBasketID());
 
     }
+
     @Test(expected = RuntimeException.class)
-    public void updateBasket_invalid_entry(){
+    public void updateBasket_invalid_entry() {
 
         basketManager.updateBasket(null, orderItem);
 
@@ -239,16 +255,19 @@ public class BasketManagerImplUnitTest {
         basket.setTotalPrice(100).setBasketStatus("current").setBasketID(10).setOrderItems(new ArrayList<OrderItem>());
         return basket;
     }
+
     private OrderItem getTestOrderItem() {
         OrderItem orderItem = new OrderItem();
         orderItem.setQuantity(10).setBasketID(basket.getBasketID()).setProduct(product).setOrderItemID(1);
-        return  orderItem;
+        return orderItem;
     }
-    private Product getTestProduct(){
+
+    private Product getTestProduct() {
         product = new Product();
         product.setProductID(5).setName("hat");
         return product;
     }
+
     private User getTestUser() {
         User user = new User();
         user.setFirstname("Anahit").setLastname("galstyan").

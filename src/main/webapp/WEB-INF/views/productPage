@@ -1,0 +1,125 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Box</title>
+
+    <!-- CSS styles for standard search box -->
+    <link rel="stylesheet" type="text/css" href="./css/reset.css">
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
+
+       
+</head>
+<body>
+<!-- HTML for SEARCH BAR -->
+<div class="image"><img src="./image/logo3.PNG" width="140px;" alt="logo"></div>
+<div class="wrapper">
+<div class="wrapper1">
+   
+    <form  method="get" action="http://www.google.com"><br><br><br><br>
+        <select name="category">
+            <option value="all" selected>All</option>
+            <option value="cat1">cat1</option>
+            <option value="cat2">cat1</option>
+            <option value="cat3">cat1</option>
+
+        </select><input type="text" class="textinput" name="productName" size="60" maxlength="120"><input type="submit" value="search" class="button">
+
+    </form><br>
+</div>
+    <div class="some">
+<div class="category">
+
+
+
+
+       <div class="dropdown">
+           <button class="dropbtn">BABY GIRL</button>
+           <div class="dropdown-content">
+
+               <a href="#">cat1</a>
+               <a href="#">cat1</a>
+               <a href="#">cat1</a>
+
+           </div>
+       </div>
+    <div class="dropdown">
+        <button class="dropbtn">BABY BOY</button>
+        <div class="dropdown-content">
+
+            <a href="#">cat1</a>
+            <a href="#">cat1</a>
+            <a href="#">cat1</a>
+
+        </div>
+    </div>
+</div>
+
+
+
+    <div class="signinRegister" >
+        <a href="/signin.jsp"  class="register" id="login_button" >SIGN IN</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/registration.jsp" class="register" id="registration_button">CREATE ACCOUNT</a>
+    </div>
+
+    <div class="clear"></div>
+
+
+
+    <a href="./cart.jsp" class="cart">
+        <img src="./image/cart.PNG" class="cart" alt="cart image">
+    </a>
+    <div class="dropdown">
+        <span class="greeting"></span>
+        <button class="dropbtn" id="your_account">YOUR ACCOUNT</button>
+        <div class="dropdown-content">
+            <a href="#">edit account</a>
+            <a href="#">your orders</a>
+            <a href="#">your wish list</a>
+            <a href="/index.jsp?user=null" id="logout_button">logout</a>
+        </div>
+    </div>
+
+    <div class="clear"></div>
+
+
+    </div>
+   
+
+
+
+    
+
+    
+
+</div>
+
+    <img src="./image/pic4.jpg"  alt="image1" class="backimg1">
+
+
+    <img src="./image/pic1.jpg"  alt="image2" class="backimg2">
+
+
+<div class="productImage">
+        
+        
+            <img src="./image/girldress11.jpg"  alt="cart image"  class="img1">
+            <img src="./image/girldress21.jpg"  alt="cart image"  class="img2">
+            
+</div>
+<div class="productdesc">
+<h1 class="productName">product full name</h1>
+<span class="price">price</span>
+<span class="size">size:</span>
+<span class="quantity">size:</span>    
+</div>
+<div class="productButtons">
+<input type="image" class="littleImage" style="height:100px;width:100px;" src="./image/girldress11.jpg">
+<input type="image" class="littleImage" style="height:100px;width:100px;" src="./image/girldress21.jpg">
+</div>
+
+</body>
+</html>
+

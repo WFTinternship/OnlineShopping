@@ -20,8 +20,6 @@ public interface UserDao {
 
     void updateUserWiyhoutPassword(User user);
 
-    void updateUserStatus(int id);
-
     void deleteUser(int userid);
 
     List<Product> getWishlist(int userid);
@@ -31,8 +29,6 @@ public interface UserDao {
     void deleteFromWishlistByUserIDAndProductID(int userid, int productid);
 
     int insertIntoWishlist(int userID, int productID);
-
-    boolean isInWishList(int userID, int productID);
 
     void deleteAllUsers();
 

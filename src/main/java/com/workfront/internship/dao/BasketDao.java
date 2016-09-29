@@ -19,8 +19,6 @@ public interface BasketDao {
 
     Basket getBasketByItemId(int id);
 
-    Basket getBasketByItemId(Connection connection, int id);
-
     Basket getCurrentBasket(int userId);
 
     void updateBasket(Basket basket);
@@ -30,8 +28,6 @@ public interface BasketDao {
     void updateBasket(Connection connection, Basket basket);
 
     void deleteBasketByBasketID(int basketid);
-
-    void deleteBasketByUserId(int userid);
 
     void deleteAllBaskets();
 

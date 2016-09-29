@@ -36,6 +36,8 @@ public class UserControllerUnitTest {
     private UserManager userManager;
     private BasketManager basketManager;
     private AddressManager addressManager;
+    private ProductManager productManager;
+    private MediaManager mediaManager;
 
     private UserController userController;
     private HttpServletRequest testRequest;
@@ -51,10 +53,14 @@ public class UserControllerUnitTest {
         userManager = mock(UserManager.class);
         basketManager = mock(BasketManager.class);
         addressManager = mock(AddressManager.class);
+        productManager = mock(ProductManager.class);
+        mediaManager = mock(MediaManager.class);
 
         Whitebox.setInternalState(userController, "userManager", userManager);
         Whitebox.setInternalState(userController, "basketManager", basketManager);
         Whitebox.setInternalState(userController, "addressManager", addressManager);
+        Whitebox.setInternalState(userController, "productManager", productManager);
+        Whitebox.setInternalState(userController, "mediaManager", mediaManager);
 
         testRequest = mock(HttpServletRequest.class);
         testSession = mock(HttpSession.class);

@@ -45,20 +45,8 @@ public class ProductManagerUnitTest {
         productDao = null;
 
     }
-
     @Test
-    public void createNewProduct_with_medias(){
-        when(productDao.insertProduct(product)).thenReturn(20);
-
-        int result = productManager.createNewProduct(product);
-
-        verify(mediaManager, times(product.getMedias().size())).insertMedia(any(Media.class));
-        assertEquals("insertion failed!", result, 20);
-
-    }
-
-    @Test
-    public void createNewProduct_with_no_medias(){
+    public void createNewProduct(){
 
         when(productDao.insertProduct(product)).thenReturn(20);
         List<Media> emptyMediaList = new ArrayList<>();
@@ -114,37 +102,17 @@ public class ProductManagerUnitTest {
     }
     @Test
     public void updateProduct_add_media(){
+
         Product newProduct = getTestProduct();
-        Media media = new Media();
-        media.setProductID(newProduct.getProductID()).setMediaPath("newPath").setMediaID(3);
-        newProduct.getMedias().add(media);
-        System.out.println(product.getMedias().size() + "    " + newProduct.getMedias().size());
+
         when(mediaManager.getMediaByProductID(newProduct.getProductID())).thenReturn(product.getMedias());
 
         productManager.updateProduct(newProduct);
 
-        verify(mediaManager).insertMedia(newProduct.getMedias().get(1));
-        verify(mediaManager, never()).deleteMediaByID(any(Integer.class));
-
+        verify(productDao).updateProduct(newProduct);
 
     }
 
-    @Test
-    public void updateProduct_remove_media(){
-        Product newProduct = getTestProduct();
-        List<Media> medias = new ArrayList<>();
-
-        newProduct.setMedias(medias);
-        System.out.println(product.getMedias().size() + "    " + newProduct.getMedias().size());
-        when(mediaManager.getMediaByProductID(newProduct.getProductID())).thenReturn(product.getMedias());
-
-        productManager.updateProduct(newProduct);
-
-        verify(mediaManager, never()).insertMedia(any(Media.class));
-        verify(mediaManager).deleteMediaByID(product.getMedias().get(0).getMediaID());
-
-
-    }
     @Test(expected = RuntimeException.class)
     public void updateProduct(){
         productManager.updateProduct(null);
@@ -161,6 +129,7 @@ public class ProductManagerUnitTest {
     public void getProductsByCategoryID(){
         List<Product> expectedProducts = new ArrayList<>();
         List<Product> actualProducts = new ArrayList<>();
+
         Product product1 = getTestProduct();
         product1.setName("girl hat");
         expectedProducts.add(product);
@@ -173,12 +142,6 @@ public class ProductManagerUnitTest {
         doAssertion(actualProducts.get(1), expectedProducts.get(1));
 
     }
-
-
-
-
-
-
     private Product getTestProduct(){
         List<Media> medias = new ArrayList<>();
         Media media = new Media();

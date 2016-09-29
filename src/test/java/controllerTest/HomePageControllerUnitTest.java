@@ -90,7 +90,7 @@ public class HomePageControllerUnitTest {
        //testing method... returns products for the homePage...
        homePageController.getProductsForHomePage(testRequest);
 
-       verify(testSession).setAttribute("products", products);
+       verify(testRequest).setAttribute("products", products);
        verify(mediaManager).getMediaByProductID(products.get(0).getProductID());
 
        verify(testSession).setAttribute("medias0", medias);

@@ -37,16 +37,17 @@ public class CreditCardManagerImplTest {
     }
     @After
     public void tearDown()  {
-        creditcardManager.deleteCreditCard(creditCard.getCardID());
+        creditcardManager.deleteAllCards();
     }
     @Test
     public void createCreditCard(){
+
         int id = creditcardManager.createCreditCard(creditCard);
         assertFalse(id == 0);
     }
     private CreditCard getTestCreditCard(){
         creditCard = new CreditCard();
-        creditCard.setBalance(1000).setBillingAddress("someAddress");
+        creditCard.setBalance(1000).setBillingAddress("someAddress").setCvc(111).setCardNumber("1234");
         return creditCard;
     }
 }

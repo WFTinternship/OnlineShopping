@@ -35,6 +35,7 @@
     <script src="<c:url value="/resources/js/jquery.elevateZoom-3.0.8.min.js" />"></script>
     <script src="<c:url value="/resources/js/jzoom.min.js" />"></script>
 
+
     <script>
         function addToCart(productId) {
             var sizeOption = $('#sizeOptions').val();

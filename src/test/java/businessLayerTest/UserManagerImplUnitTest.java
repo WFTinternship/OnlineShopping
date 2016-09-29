@@ -130,45 +130,24 @@ public class UserManagerImplUnitTest {
     }
 
     @Test
-    public void editProfile_updateUser_and_getShippingAddressByUserID_is_called() {
+    public void editProfile() {
 
         userManager.editProfile(user);
         //testing method...
         Mockito.verify(userDao).updateUser(user);
-        Mockito.verify(addressDao).getShippingAddressByUserID(user.getUserID());
 
     }
+    @Test(expected = RuntimeException.class)
+    public void updateUserWithoutPassword_invalid_user(){
 
-    @Test
-    public void editProfile_shippingAddress_added() {
-        User updatedUser = getTestUser();
-        Address newAddress = new Address();
-        newAddress.setAddress("newAddress");
-        updatedUser.getShippingAddresses().add(newAddress);
-
-        when(addressDao.getShippingAddressByUserID(user.getUserID())).thenReturn(user.getShippingAddresses());
-        //testing method... when new shipping addresses are added
-        userManager.editProfile(updatedUser);
-
-        Mockito.verify(addressDao).insertAddress(any(Address.class));
-        Mockito.verify(addressDao, Mockito.never()).deleteAddressesByAddressID(any(Integer.class));
-
+        userManager.editProfileWiyhoutPassword(null);
     }
-
     @Test
-    public void editProfile_shippingAddress_removed() {
-        User updatedUser = getTestUser();
-        Address newAddress = new Address();
-        newAddress.setAddress("newAddress");
-        user.getShippingAddresses().add(newAddress);
+    public void updateUserWithoutPassword(){
 
-        when(addressDao.getShippingAddressByUserID(user.getUserID())).thenReturn(user.getShippingAddresses());
-        //testing method... when some shipping addresses are removed
-        userManager.editProfile(updatedUser);
+        userManager.editProfileWiyhoutPassword(user);
 
-        Mockito.verify(addressDao, Mockito.never()).insertAddress(any(Address.class));
-        Mockito.verify(addressDao).deleteAddressesByAddressID(any(Integer.class));
-
+        verify(userDao).updateUserWiyhoutPassword(user);
     }
 
     @Test(expected = RuntimeException.class)

@@ -61,13 +61,8 @@ public class SaleManagerImplTest {
         addresses.add(address);
         user.setShippingAddresses(addresses);
 
-
-
-
-
         basket = getTestBasket();
         creditCard = getTestCreditCard();
-
 
         basketManager.createNewBasket(basket);
         creditcardManager.createCreditCard(creditCard);
@@ -76,9 +71,10 @@ public class SaleManagerImplTest {
     }
     @After
     public void tearDown(){
+
         salesManager.deleteSaleBySaleID(sale.getSaleID());
-        userManager.deleteAccount(user.getUserID());
-        creditcardManager.deleteCreditCard(creditCard.getCardID());
+        userManager.deleteAllUsers();
+        creditcardManager.deleteAllCards();
 
 
     }
@@ -107,7 +103,7 @@ public class SaleManagerImplTest {
 
     private CreditCard getTestCreditCard(){
         creditCard = new CreditCard();
-        creditCard.setBalance(1000).setBillingAddress("someAddress");
+        creditCard.setBalance(1000).setBillingAddress("someAddress").setCardNumber("1234").setCvc(111);
         return creditCard;
     }
     private Sale getTestSale(){
@@ -117,13 +113,13 @@ public class SaleManagerImplTest {
                 setBasket(basket).
                 setCreditCard(creditCard.getCardID()).
                 setAddressID(user.getShippingAddresses().get(0).getAddressID()).
-                setDate(new Timestamp(date.getTime()));
+                setDate(new Timestamp(date.getTime())).setFullName("Anna");
         return sale;
 
     }
     private Address getTestAddress(){
         address = new Address();
-        address.setUserID(user.getUserID()).setAddress("someaddress");
+        address.setUserID(user.getUserID()).setAddress("someaddress").setCity("Yerevan").setCountry("Armenia").setZipCode("0026");
         return address;
     }
 }

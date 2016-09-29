@@ -40,7 +40,7 @@ public class CategoryManagerImplTest {
 
     @After
     public void tearDown()  {
-       categoryManager.deleteCategory(category.getCategoryID());
+       categoryManager.deleteAllCategories();
     }
     @Test
     public void createNewCategory(){

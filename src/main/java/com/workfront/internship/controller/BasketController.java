@@ -103,7 +103,9 @@ public class BasketController {
         for (int i = 0; i < orderItemList.size(); i++) {
             productId = orderItemList.get(i).getProduct().getProductID();
             medias = mediaManager.getMediaByProductID(productId);
-            request.setAttribute("media" + productId, medias.get(0));
+            if(!medias.isEmpty()) {
+                request.setAttribute("media" + productId, medias.get(0));
+            }
         }
         //set Attributes to request...
         request.setAttribute("orderItemList", orderItemList);
